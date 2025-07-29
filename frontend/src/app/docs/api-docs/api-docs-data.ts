@@ -1471,6 +1471,104 @@ export const restApiDocsData = [
     }
   },
   {
+    type: "endpoint",
+    category: "addresses",
+    httpRequestMethod: "GET",
+    fragment: "get-address-utxo-hex",
+    title: "GET Address UTXO with Hex",
+    description: {
+      default: "Get the list of unspent transaction outputs associated with the address, including the raw transaction hex for each UTXO. Available fields: <code>txid</code>, <code>vout</code>, <code>value</code>, <code>status</code> (with the status of the funding tx), and <code>hex</code> (raw transaction hex). This endpoint combines the functionality of <code>/address/:address/utxo</code> and <code>/tx/:txid/hex</code> for improved efficiency.",
+    },
+    urlString: "/address/:address/utxo-hex",
+    showConditions: bitcoinNetworks,
+    showJsExamples: showJsExamplesDefault,
+    codeExample: {
+      default: {
+        codeTemplate: {
+          curl: `/api/address/%{1}/utxo-hex`,
+          commonJS: `
+        const { %{0}: { addresses } } = mempoolJS();
+
+        const address = '%{1}';
+        // Note: This endpoint is not yet available in mempoolJS, use direct fetch:
+        const response = await fetch(\`https://litecoinspace.org/api/address/\${address}/utxo-hex\`);
+        const addressUtxoHex = await response.json();
+
+        document.getElementById("result").textContent = JSON.stringify(addressUtxoHex, undefined, 2);
+        `,
+          esModule: `
+  // Note: This endpoint is not yet available in mempoolJS, use direct fetch:
+  const address = '%{1}';
+  const response = await fetch(\`https://litecoinspace.org/api/address/\${address}/utxo-hex\`);
+  const addressUtxoHex = await response.json();
+  console.log(addressUtxoHex);
+          `,
+        },
+        codeSampleMainnet: {
+          esModule: [`ltc1q9yxj6rqwj2p8vqz6j7w3k9p8l2w9j4x5n6k7q`],
+          commonJS: [`ltc1q9yxj6rqwj2p8vqz6j7w3k9p8l2w9j4x5n6k7q`],
+          curl: [`ltc1q9yxj6rqwj2p8vqz6j7w3k9p8l2w9j4x5n6k7q`],
+          response: `[
+  {
+    txid: "a4b5c6d7e8f9012345678901234567890123456789012345678901234567890",
+    vout: 0,
+    status: {
+      confirmed: true,
+      block_height: 2450000,
+      block_hash: "000000000000000000012345678901234567890123456789012345678901234",
+      block_time: 1680000000
+    },
+    value: 100000000,
+    hex: "0100000001a1b2c3d4e5f6071829384756019283746501928374650192837465..."
+  },
+  ...
+]`
+        },
+        codeSampleTestnet: {
+          esModule: [`tltc1q4kgratttzjvkxfmgd95z54qcq7y6hekdm3w56u`],
+          commonJS: [`tltc1q4kgratttzjvkxfmgd95z54qcq7y6hekdm3w56u`],
+          curl: [`tltc1q4kgratttzjvkxfmgd95z54qcq7y6hekdm3w56u`],
+          response: `[
+  {
+    txid: "c404bc4ba89e9423ff772cb45268ba6fba8b713f809484c1216f1a657aafa088",
+    vout: 1,
+    status: {
+      confirmed: true,
+      block_height: 2086944,
+      block_hash: "000000000000039a27007892b0f3ac646afa4eb3ef3d4a4e75e8bdf636b4d006",
+      block_time: 1630159123
+    },
+    value: 1973787,
+    hex: "01000000010a482dc0e4e74b4a9b1b1ff5e5d7b9b5f6f7a0c3f8b4c5b1c5b..."
+  },
+  ...
+]`
+        },
+        codeSampleSignet: {
+          esModule: [`ltc1qkz2w3tr9v8l4j6g5p2m8n1k7q4b6c3x9y5z8s`],
+          commonJS: [`ltc1qkz2w3tr9v8l4j6g5p2m8n1k7q4b6c3x9y5z8s`],
+          curl: [`ltc1qkz2w3tr9v8l4j6g5p2m8n1k7q4b6c3x9y5z8s`],
+          response: `[
+  {
+    txid: "e58b47f657b496a083ad9a4fb10c744d5e993028efd9cfba149885334d98bdf5",
+    vout: 0,
+    status: {
+      confirmed: true,
+      block_height: 698571,
+      block_hash: "00000000000000000007536c0a664a7d2a01c31569623183eba0768d9a0c163d",
+      block_time: 1630520708
+    },
+    value: 642070789,
+    hex: "0100000001d1a43e4c1b2a7e9c8d5e3f8c2b7f4e5c8d2f3e7c8b5f4e3d8c..."
+  },
+  ...
+]`
+        },
+        codeSampleBisq: emptyCodeSample,
+      }
+    }
+  },
+  {
     type: "category",
     category: "assets",
     fragment: "assets",
