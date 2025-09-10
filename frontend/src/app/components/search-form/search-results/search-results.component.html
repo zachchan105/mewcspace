@@ -6,7 +6,7 @@
     </button>
   </ng-template>
   <ng-template [ngIf]="results.txId">
-    <div class="card-title" i18n="search.bitcoin-transaction">Litecoin Transaction</div>
+    <div class="card-title" i18n="search.bitcoin-transaction">Meowcoin Trasnsaction</div>
     <button (click)="clickItem(0)" [class.active]="0 === activeIdx" type="button" role="option" class="dropdown-item">
       <ng-container *ngTemplateOutlet="goTo; context: { $implicit: results.searchText | shortenString : 13 }"></ng-container>
     </button>

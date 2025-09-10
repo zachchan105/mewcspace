@@ -184,7 +184,7 @@ class Server {
       <head>
         <meta charset="utf-8">
         <title>${ogTitle}</title>
-        <meta name="description" content="Litecoin Space - Gateway to Explore Litecoin"/>
+        <meta name="description" content="Litecoin Space - Gateway to Explore Meowcoin"/>
         <meta property="og:image" content="${ogImageUrl}"/>
         <meta property="og:image:type" content="image/png"/>
         <meta property="og:image:width" content="${matchedRoute.render ? 1200 : 1000}"/>
@@ -194,9 +194,9 @@ class Server {
         <meta property="twitter:site" content="@litecoin">
         <meta property="twitter:creator" content="@litecoin">
         <meta property="twitter:title" content="${ogTitle}">
-        <meta property="twitter:description" content="Your Gateway to Explore Litecoin"/>
+        <meta property="twitter:description" content="Your Gateway to Explore Meowcoin"/>
         <meta property="twitter:image:src" content="${ogImageUrl}"/>
-        <meta property="twitter:domain" content="litecoinspace.org">
+        <meta property="twitter:domain" content="explorer.mewccrypto.com">
       <body></body>
       </html>
     `);

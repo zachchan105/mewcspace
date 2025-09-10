@@ -49,7 +49,7 @@
     "PASSWORD": ""
   },
   "EXTERNAL_DATA_SERVER": {
-    "MEMPOOL_API": "https://litecoinspace.org/api/v1",
+    "MEMPOOL_API": "https://explorer.mewccrypto.com/api/v1",
     "MEMPOOL_ONION": "http://REPLACEME.onion/api/v1"
   }
 }

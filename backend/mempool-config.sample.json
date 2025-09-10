@@ -105,7 +105,7 @@
     "CLEARNET_URL": "https://price.bisq.wiz.biz/getAllMarketPrices"
   },
   "EXTERNAL_DATA_SERVER": {
-    "MEMPOOL_API": "https://litecoinspace.org/api/v1",
+    "MEMPOOL_API": "https://explorer.mewccrypto.com/api/v1",
     "MEMPOOL_ONION": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api/v1"
   }
 }

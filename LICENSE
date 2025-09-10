@@ -1,31 +1,15 @@
-LITE.SPACE
-Copyright (c) 2019-2023 The Mempool Open Source Project Developers
+MEOWCOIN EXPLORER
+
+Copyright (c) 2019–2025 The Mempool Open Source Project Developers
 Copyright (c) 2023 Litecoin Foundation
+Copyright (c) 2025 The Meowcoin Foundation
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of (at your option) either:
+This program is free software; you can redistribute it and/or modify it under the licensing terms included with this source code (see the LICENSE file), which include the GNU Affero General Public License version 3 and/or the GNU General Public License version 3, as applicable.
 
-1.  the GNU Affero General Public License as published by the Free Software
-    Foundation, either version 3 of the License or any later version approved by a
-    proxy statement published on <https://litecoinspace.org/about>; or
+This website/software is **not affiliated with or endorsed by Mempool Space K.K. or the Litecoin Foundation**.
 
-2.  the GNU General Public License as published by the Free Software
-    Foundation, either version 3 of the License or any later version approved by a
-    proxy statement published on <https://litecoinspace.org/about>.
+The Meowcoin Explorer is a fork of the Litecoin Space explorer, which in turn is a fork of the mempool.space open-source Bitcoin explorer developed by Mempool Space K.K. In accordance with their published Trademark Policy, this project does **not** use Mempool Space K.K.’s “Word Marks”, “Logos”, or “Trade Dress” except where necessary to display licensing and original copyright authors. See: [https://mempool.space/trademark-policy](https://mempool.space/trademark-policy)
 
-This website is not affiliated or endorsed by Mempool Space K.K.
+This program is distributed in the hope that it will be useful, but **WITHOUT ANY WARRANTY**; without even the implied warranty of **MERCHANTABILITY** or **FITNESS FOR A PARTICULAR PURPOSE**. See the full license terms for more details.
 
-The Litecoin Space explorer is a fork of the mempool.space™ repo, an open source Bitcoin
-explorer, developed by Mempool Space K.K. In accordance with Section (III) of their
-trademark policy, Litecoin Space does not include any usage of "Word Marks", "Logos",
-or "Trade Dress", except where necessary to display licensing and original copyright
-authors. See Mempool Space K.K's full Trademark Policy and Guidelines for more
-details, published on <https://mempool.space/trademark-policy>.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the full license terms for more details.
-
-You should have received a copy of both the GNU Affero General Public License
-and the GNU General Public License along with this program. If not, see
-<http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License and the GNU General Public License along with this program. If not, see: [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/)

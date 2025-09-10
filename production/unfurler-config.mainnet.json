@@ -1,6 +1,6 @@
 {
   "SERVER": {
-    "HOST": "https://litecoinspace.org",
+    "HOST": "https://explorer.mewccrypto.com",
     "HTTP_PORT": 8001
   },
   "MEMPOOL": {

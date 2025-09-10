@@ -18,7 +18,7 @@ Jump to a section in this doc:
 Get the latest Litepool code:
 
 ```
-git clone https://github.com/litecoin-foundation/ltcspace
+git clone https://github.com/Meowcoin-Foundation/mewcspace
 cd Litepool
 ```
 
@@ -42,7 +42,7 @@ rpcpassword=mempool
 
 ### 3. Configure Electrum Server
 
-[Pick an Electrum Server implementation](https://litecoinspace.org/docs/faq#address-lookup-issues), configure it, and make sure it's synced.
+[Pick an Electrum Server implementation](https://explorer.mewccrypto.com/docs/faq#address-lookup-issues), configure it, and make sure it's synced.
 
 **This step is optional.** You can run Litepool without configuring an Electrum Server for it, but address lookups will be disabled.
 
@@ -204,7 +204,7 @@ Mine blocks to the previously generated address. You need at least 101 blocks be
 litecoin-cli -regtest generatetoaddress 101 $address
 ```
 
-Send 0.1 BTC at 5 lit/vB to another address:
+Send 0.1 BTC at 5 mew/vB to another address:
 
 ```
 litecoin-cli -named -regtest sendtoaddress address=$(litecoin-cli -regtest getnewaddress) amount=0.1 fee_rate=5

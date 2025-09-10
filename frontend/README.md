@@ -10,20 +10,20 @@ Jump to a section in this doc:
 
 ## Quick Setup for Frontend Development
 
-If you want to quickly improve the UI, fix typos, or make other updates that don't require any backend changes, you don't need to set up an entire backend—you can simply run the Litepool frontend locally and proxy to the litecoinspace.org backend.
+If you want to quickly improve the UI, fix typos, or make other updates that don't require any backend changes, you don't need to set up an entire backend—you can simply run the Litepool frontend locally and proxy to the explorer.mewccrypto.com backend.
 
 ### 1. Clone Litepool Repository
 
 Get the latest Litepool code:
 
 ```
-git clone https://github.com/litecoin-foundation/ltcspace
+git clone https://github.com/Meowcoin-Foundation/mewcspace
 cd litepool
 ```
 
 ### 2. Specify Website
 
-The same frontend codebase is used for https://litecoinspace.org and https://explorer.litecoinspace.org.
+The same frontend codebase is used for https://explorer.mewccrypto.com and https://explorer.explorer.mewccrypto.com.
 
 Configure the frontend for the site you want by running the corresponding command:
 
@@ -42,7 +42,7 @@ $ npm install
 $ npm run serve:local-prod
 ```
 
-The frontend will be available at http://localhost:4200/ and all API requests will be proxied to the production server at https://litecoinspace.org.
+The frontend will be available at http://localhost:4200/ and all API requests will be proxied to the production server at https://explorer.mewccrypto.com.
 
 ### 4. Test
 

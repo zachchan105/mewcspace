@@ -10,7 +10,7 @@ $nav-tabs-link-active-bg: #11131f;
 $primary: #2368d9;
 $secondary: #1a1a1a; // LTCbrand: nav bar network selector
 $success: #1a9436;
-$info: #4c92ff;
+$info: #bb8400;
 
 $h5-font-size: 1.15rem !default;
 
@@ -19,7 +19,7 @@ $pagination-border-color: $gray-800;
 $pagination-disabled-bg:           #FFF;
 $pagination-disabled-border-color: #0d0d0d;
 $pagination-active-color:          #fff;
-$pagination-active-bg:             #4c92ff; // LTCbrand: active pagination button
+$pagination-active-bg:             #bb8400; // LTCbrand: active pagination button
 $pagination-hover-bg:              #12131e;
 $pagination-hover-border-color:     #0d0d0d;
 $pagination-disabled-bg:          #0d0d0d;
@@ -31,7 +31,7 @@ $custom-select-indicator-color: #FFF;
   border: 1px solid #20263e !important;
 }
 
-$link-color:                #4c92ff; // LTCbrand: link text color
+$link-color:                #bb8400; // LTCbrand: link text color
 $link-decoration:           none !default;
 $link-hover-color:          #2368d9 !default; // LTCbrand: link text hover color
 $link-hover-decoration:     underline !default;
@@ -82,7 +82,7 @@ main {
   position: relative;
   min-width: 0;
   word-wrap: break-word;
-  background-color: #0d0d0d; // LTCbrand: block info boxes
+  background-color: #1f2937; // LTCbrand: block info boxes
   background-clip: border-box;
   border: 1px solid rgba(0,0,0,.125);
   box-shadow: 0.125rem 0.125rem 0.25rem rgba(0,0,0,0.075);
@@ -132,8 +132,8 @@ main {
 }
 
 .btn-purple { // LTCbrand: search button
-  background-color: #4c92ff;
-  border-color: #4c92ff;
+  background-color: #bb8400;
+  border-color: #bb8400;
 }
 
 .btn-purple:not(:disabled):not(.disabled):active, .btn-purple:not(:disabled):not(.disabled).active, .show > .btn-purple.dropdown-toggle {
@@ -713,7 +713,7 @@ h1, h2, h3 {
 
 .alert-mempool {
   color: #ffffff;
-  background-color: #4c92ff;
+  background-color: #bb8400;
   border-color: #3a1c61;
   width: 100%;
   display: inline-flex;

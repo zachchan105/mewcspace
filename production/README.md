@@ -219,4 +219,4 @@ service nginx restart
 
 ### Done
 
-If everything went well, your site should look like the one at https://litecoinspace.org/.
+If everything went well, your site should look like the one at https://explorer.mewccrypto.com/.
