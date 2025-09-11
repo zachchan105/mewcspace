@@ -24,7 +24,7 @@ class BitcoinApi implements AbstractBitcoinApi {
       nonce: block.nonce,
       difficulty: block.difficulty,
       merkle_root: block.merkleroot,
-      tx_count: block.nTx,
+      tx_count: block.nTx || (block.tx ? block.tx.length : 0),
       size: block.size,
       weight: block.weight,
       previousblockhash: block.previousblockhash,
