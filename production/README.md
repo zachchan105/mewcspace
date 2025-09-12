@@ -1,6 +1,6 @@
 # Deploying an Enterprise Production Instance
 
-These instructions are for setting up a serious production Litepool website for Litecoin (mainnet, testnet).
+These instructions are for setting up a serious production Meowcoin Space website for Litecoin (mainnet, testnet).
 
 Again, this setup is no joke—home users should use [one of the other installation methods](../#installation-methods).
 

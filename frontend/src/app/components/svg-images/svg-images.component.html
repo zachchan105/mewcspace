@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="name">
   <ng-container *ngSwitchCase="'officialMempoolSpace'">
-    <svg xmlns="http://www.w3.org/2000/svg" width="788" height="128" viewBox="0 0 788 128">
+    <svg xmlns="http://www.w3.org/2000/svg" [class]="class" [style]="style" [attr.width]="width" [attr.height]="height" [attr.viewBox]="viewBox">
       <!-- Minimal cat head with bigger ears -->
       <g transform="translate(80,64) scale(1.2)">
         <!-- Circle head -->
@@ -34,7 +34,7 @@
     </svg>
   </ng-container>
   <ng-container *ngSwitchCase="'mempoolSpace'">
-    <svg xmlns="http://www.w3.org/2000/svg" width="788" height="128" viewBox="0 0 788 128">
+    <svg xmlns="http://www.w3.org/2000/svg" [class]="class" [style]="style" [attr.width]="width" [attr.height]="height" [attr.viewBox]="viewBox">
       <!-- Minimal cat head with bigger ears -->
       <g transform="translate(80,64) scale(1.2)">
         <!-- Circle head -->

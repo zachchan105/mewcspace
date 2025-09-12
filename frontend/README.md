@@ -1,6 +1,6 @@
-# Litepool Frontend
+# Meowcoin Space Frontend
 
-You can build and run the Litepool frontend and proxy to the production Litepool backend (for easier frontend development), or you can connect it to your own backend for a full Litepool development instance, custom deployment, etc.
+You can build and run the Meowcoin Space frontend and proxy to the production Meowcoin Space backend (for easier frontend development), or you can connect it to your own backend for a full Meowcoin Space development instance, custom deployment, etc.
 
 Jump to a section in this doc:
 
@@ -10,15 +10,15 @@ Jump to a section in this doc:
 
 ## Quick Setup for Frontend Development
 
-If you want to quickly improve the UI, fix typos, or make other updates that don't require any backend changes, you don't need to set up an entire backend—you can simply run the Litepool frontend locally and proxy to the explorer.mewccrypto.com backend.
+If you want to quickly improve the UI, fix typos, or make other updates that don't require any backend changes, you don't need to set up an entire backend—you can simply run the Meowcoin Space frontend locally and proxy to the explorer.mewccrypto.com backend.
 
-### 1. Clone Litepool Repository
+### 1. Clone Meowcoin Space Repository
 
-Get the latest Litepool code:
+Get the latest Meowcoin Space code:
 
 ```
 git clone https://github.com/Meowcoin-Foundation/mewcspace
-cd litepool
+cd Meowcoin Space
 ```
 
 ### 2. Specify Website
@@ -66,7 +66,7 @@ If all tests are green, submit your PR, and it will be reviewed by someone on th
 
 ## Manual Setup
 
-Set up the [Litepool backend](../backend/) first, if you haven't already.
+Set up the [Meowcoin Space backend](../backend/) first, if you haven't already.
 
 ### 1. Build the Frontend
 
@@ -84,7 +84,7 @@ npm run build
 
 #### Development
 
-To run your local Litepool frontend with your local Litepool backend:
+To run your local Meowcoin Space frontend with your local Meowcoin Space backend:
 
 ```
 npm run serve
@@ -98,7 +98,7 @@ You will probably want to set up a reverse proxy, TLS, etc. There are sample ngi
 
 ## Translations: Transifex Project
 
-Litepool merges translations from upstream, so please help through the link below.
+Meowcoin Space merges translations from upstream, so please help through the link below.
 https://www.transifex.com/mempool/mempool/dashboard/
 
 ### Translators

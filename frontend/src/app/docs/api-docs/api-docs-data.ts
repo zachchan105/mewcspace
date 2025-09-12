@@ -9042,7 +9042,7 @@ export const faqData = [
     category: "self-hosting",
     showConditions: bitcoinNetworks,
     fragment: "install-mempool-with-docker",
-    title: "Can I install Litepool using Docker?",
+    title: "Can I install Meowcoin Space using Docker?",
   },
   {
     type: "endpoint",
