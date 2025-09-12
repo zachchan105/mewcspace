@@ -12,6 +12,9 @@ JsonRPC.prototype.call = function (method, params) {
   return new Promise((resolve, reject) => {
     var time = Date.now()
     var requestJSON
+    
+    // TEMPORARY RPC LOGGING - Remove after debugging
+    console.log(`[RPC CALL] ${new Date().toISOString()} - Method: ${method}, Params: ${JSON.stringify(params)}`)
 
     if (Array.isArray(method)) {
       // multiple rpc batch call
@@ -133,6 +136,8 @@ JsonRPC.prototype.call = function (method, params) {
         // unless a batch rpc call response is being processed
         decoded.forEach(function (decodedResponse, i) {
           if (decodedResponse.hasOwnProperty('error') && decodedResponse.error != null) {
+            // TEMPORARY RPC LOGGING - Remove after debugging
+            console.log(`[RPC ERROR] ${new Date().toISOString()} - Method: ${method}, Error: ${JSON.stringify(decodedResponse.error)}`)
             if (reject) {
               err = new Error(decodedResponse.error.message || '')
               if (decodedResponse.error.code) {
@@ -141,6 +146,8 @@ JsonRPC.prototype.call = function (method, params) {
               reject(err)
             }
           } else if (decodedResponse.hasOwnProperty('result')) {
+            // TEMPORARY RPC LOGGING - Remove after debugging
+            console.log(`[RPC SUCCESS] ${new Date().toISOString()} - Method: ${method}, Response size: ${JSON.stringify(decodedResponse.result).length} chars`)
             // @ts-ignore
             resolve(decodedResponse.result, response.headers)
           } else {
