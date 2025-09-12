@@ -2,13 +2,13 @@
 
 $body-bg: #0d0d0d;
 $body-color: #fff;
-$gray-800: #0d0d0d; // LTCbrand: nav bar background
+$gray-800: #0d0d0d; // MEWCbrand: nav bar background
 $gray-700: #fff;
 
 $nav-tabs-link-active-bg: #11131f;
 
 $primary: #2368d9;
-$secondary: #1a1a1a; // LTCbrand: nav bar network selector
+$secondary: #1a1a1a; // MEWCbrand: nav bar network selector
 $success: #1a9436;
 $info: #bb8400;
 
@@ -19,7 +19,7 @@ $pagination-border-color: $gray-800;
 $pagination-disabled-bg:           #FFF;
 $pagination-disabled-border-color: #0d0d0d;
 $pagination-active-color:          #fff;
-$pagination-active-bg:             #bb8400; // LTCbrand: active pagination button
+$pagination-active-bg:             #bb8400; // MEWCbrand: active pagination button
 $pagination-hover-bg:              #12131e;
 $pagination-hover-border-color:     #0d0d0d;
 $pagination-disabled-bg:          #0d0d0d;
@@ -31,9 +31,9 @@ $custom-select-indicator-color: #FFF;
   border: 1px solid #20263e !important;
 }
 
-$link-color:                #bb8400; // LTCbrand: link text color
+$link-color:                #bb8400; // MEWCbrand: link text color
 $link-decoration:           none !default;
-$link-hover-color:          #2368d9 !default; // LTCbrand: link text hover color
+$link-hover-color:          #2368d9 !default; // MEWCbrand: link text hover color
 $link-hover-decoration:     underline !default;
 
 $dropdown-bg: #0d0d0d;
@@ -53,7 +53,7 @@ html, body {
 }
 
 body {
-  background-color: #000000; // LTCbrand: main background colour
+  background-color: #000000; // MEWCbrand: main background colour
   min-width: 375px;
   padding-bottom: 60px;
 }
@@ -82,7 +82,7 @@ main {
   position: relative;
   min-width: 0;
   word-wrap: break-word;
-  background-color: #1f2937; // LTCbrand: block info boxes
+  background-color: #1f2937; // MEWCbrand: block info boxes
   background-clip: border-box;
   border: 1px solid rgba(0,0,0,.125);
   box-shadow: 0.125rem 0.125rem 0.25rem rgba(0,0,0,0.075);
@@ -118,7 +118,7 @@ main {
 
 .form-control {
   color: #fff;
-  background-color: #1a1a1a; // LTCbrand: search bar
+  background-color: #1a1a1a; // MEWCbrand: search bar
   border: 1px solid rgba(17, 19, 31, 0.2);
 }
 
@@ -131,7 +131,7 @@ main {
   background-color: #1a1a1a;
 }
 
-.btn-purple { // LTCbrand: search button
+.btn-purple { // MEWCbrand: search button
   background-color: #bb8400;
   border-color: #bb8400;
 }
@@ -168,7 +168,7 @@ main {
   padding-left: .65rem;
 }
 
-.skeleton-loader { // LTCbrand: skeleton loader
+.skeleton-loader { // MEWCbrand: skeleton loader
   box-sizing: border-box;
   /**
   * `overflow` and `position` are required steps to make sure
@@ -311,7 +311,7 @@ main {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: #1a1a1a; // LTCbrand: table lines
+  background-color: #1a1a1a; // MEWCbrand: table lines
 }
 
 .bordertop {
@@ -678,7 +678,7 @@ h1, h2, h3 {
   text-align: center;
 }
 
-.progress-mempool { // LTCbrand: latest blocks progress bar
+.progress-mempool { // MEWCbrand: latest blocks progress bar
   background: repeating-linear-gradient(to right, #4d4d4d, #4d4d4d 0%, #2368d9 0%, #2396d9 100%);
 }
 

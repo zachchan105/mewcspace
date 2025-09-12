@@ -88,14 +88,14 @@ class PriceUpdater {
         await this.$insertHistoricalPrices();
       }
     } catch (e: any) {
-      logger.err(`Cannot save LTC prices in db. Reason: ${e instanceof Error ? e.message : e}`, logger.tags.mining);
+      logger.err(`Cannot save MEWC prices in db. Reason: ${e instanceof Error ? e.message : e}`, logger.tags.mining);
     }
 
     this.running = false;
   }
 
   /**
-   * Fetch last LTC price from exchanges, average them, and save it in the database once every hour
+   * Fetch last MEWC price from exchanges, average them, and save it in the database once every hour
    */
   private async $updatePrice(): Promise<void> {
     if (this.lastRun === 0 && config.DATABASE.ENABLED === true) {
@@ -121,14 +121,14 @@ class PriceUpdater {
             if (price > -1 && price < MAX_PRICES[currency]) {
               prices.push(price);
             }
-            logger.debug(`${feed.name} LTC/${currency} price: ${price}`, logger.tags.mining);
+            logger.debug(`${feed.name} MEWC/${currency} price: ${price}`, logger.tags.mining);
           } catch (e) {
-            logger.debug(`Could not fetch LTC/${currency} price at ${feed.name}. Reason: ${(e instanceof Error ? e.message : e)}`, logger.tags.mining);
+            logger.debug(`Could not fetch MEWC/${currency} price at ${feed.name}. Reason: ${(e instanceof Error ? e.message : e)}`, logger.tags.mining);
           }
         }
       }
       if (prices.length === 1) {
-        logger.debug(`Only ${prices.length} feed available for LTC/${currency} price`, logger.tags.mining);
+        logger.debug(`Only ${prices.length} feed available for MEWC/${currency} price`, logger.tags.mining);
       }
 
       // Compute average price, non weighted
@@ -140,7 +140,7 @@ class PriceUpdater {
       }
     }
 
-    logger.info(`Latest LTC fiat averaged price: ${JSON.stringify(this.latestPrices)}`);
+    logger.info(`Latest MEWC fiat averaged price: ${JSON.stringify(this.latestPrices)}`);
 
     if (config.DATABASE.ENABLED === true) {
       // Save everything in db
