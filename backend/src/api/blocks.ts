@@ -201,48 +201,19 @@ class Blocks {
       extras.segwitTotalSize = 0;
       extras.segwitTotalWeight = 0;
     } else {
-      // Calculate fees manually instead of using getblockstats
-      let totalFees = 0;
-      let avgFee = 0;
-      let avgFeeRate = 0;
-      let medianFee = 0;
-      let feeRange = [0, 0, 0, 0, 0, 0, 0];
-      
-      if (transactions && transactions.length > 1) {
-        // Calculate total fees from individual transactions (skip coinbase)
-        const nonCoinbaseTxs = transactions.filter(tx => tx.fee >= 0); // Filter out -1 placeholders
-        totalFees = nonCoinbaseTxs.reduce((sum, tx) => sum + (tx.fee || 0), 0);
-        
-        if (nonCoinbaseTxs.length > 0) {
-          avgFee = totalFees / nonCoinbaseTxs.length;
-          
-          // Calculate fee rates and get median
-          const feeRates = nonCoinbaseTxs.map(tx => (tx.fee || 0) / (tx.weight / 4));
-          feeRates.sort((a, b) => a - b);
-          
-          if (feeRates.length > 0) {
-            medianFee = feeRates[Math.floor(feeRates.length / 2)];
-            avgFeeRate = feeRates.reduce((sum, rate) => sum + rate, 0) / feeRates.length;
-            
-            // Calculate fee range percentiles
-            const percentiles = [0, 10, 25, 50, 75, 90, 100];
-            feeRange = percentiles.map(p => {
-              const index = Math.floor((feeRates.length - 1) * p / 100);
-              return feeRates[index] || 0;
-            });
-          }
-        }
-        
-        logger.debug(`Block ${block.height} - Manual fee calculation: totalFees=${totalFees}, avgFee=${avgFee}, medianFee=${medianFee}`, logger.tags.mining);
-      }
-      
-      extras.medianFee = Math.max(0, Math.min(medianFee, Number.MAX_SAFE_INTEGER));
-      extras.feeRange = feeRange;
-      extras.totalFees = Math.max(0, Math.min(totalFees, Number.MAX_SAFE_INTEGER));
-      extras.avgFee = Math.max(0, Math.min(avgFee, Number.MAX_SAFE_INTEGER));
-      extras.avgFeeRate = Math.max(0, Math.min(avgFeeRate, Number.MAX_SAFE_INTEGER));
-      // Get basic block stats for non-fee data
       const stats: IBitcoinApi.BlockStats = await bitcoinClient.getBlockStats(block.id);
+      let feeStats = {
+        medianFee: stats.feerate_percentiles && stats.feerate_percentiles.length > 2 ? stats.feerate_percentiles[2] : (stats.medianfee || 0), // 50th percentiles
+        feeRange: [stats.minfeerate, stats.feerate_percentiles && stats.feerate_percentiles.length > 0 ? stats.feerate_percentiles : [0, 0, 0, 0, 0, 0, 0], stats.maxfeerate].flat(),
+      };
+      if (transactions?.length > 1) {
+        feeStats = Common.calcEffectiveFeeStatistics(transactions);
+      }
+      extras.medianFee = feeStats.medianFee;
+      extras.feeRange = feeStats.feeRange;
+      extras.totalFees = stats.totalfee;
+      extras.avgFee = stats.avgfee;
+      extras.avgFeeRate = stats.avgfeerate;
       extras.utxoSetChange = stats.utxo_increase;
       extras.avgTxSize = Math.round(stats.total_size / stats.txs * 100) * 0.01;
       extras.totalInputs = stats.ins;

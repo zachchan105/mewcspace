@@ -135,9 +135,6 @@ class BlocksRepository {
         throw Error(`Could not find a mining pool with the unique_id = ${block.extras.pool.id}. This error should never be printed.`);
       }
 
-      // Debug logging for database insertion
-      logger.debug(`Saving block ${block.height} to database - totalFees: ${block.extras.totalFees}, medianFee: ${block.extras.medianFee}, avgFee: ${block.extras.avgFee}`, logger.tags.mining);
-
       const params: any[] = [
         block.height,
         block.id,
