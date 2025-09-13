@@ -248,7 +248,7 @@ class Blocks {
     }
 
     const header = await bitcoinClient.getBlockHeader(block.id, false);
-    extras.header = header.substring(0, 160); // Truncate to fit database varchar(160)
+    extras.header = header; // Full header - database field supports 300 characters
 
     const coinStatsIndex = indexer.isCoreIndexReady('coinstatsindex');
     if (coinStatsIndex !== null && coinStatsIndex.best_block_height >= block.height) {
