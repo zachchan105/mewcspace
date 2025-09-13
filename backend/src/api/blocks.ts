@@ -211,7 +211,7 @@ class Blocks {
           feeStats = Common.calcEffectiveFeeStatistics(transactions);
         } catch (e) {
           // Fallback to getblockstats data if calcEffectiveFeeStatistics fails
-          console.log(`[FEE CALC] Fallback to getblockstats for block ${block.id}: ${e.message}`);
+          console.log(`[FEE CALC] Fallback to getblockstats for block ${block.id}: ${e instanceof Error ? e.message : e}`);
         }
       }
       extras.medianFee = Math.max(0, feeStats.medianFee || 0);
