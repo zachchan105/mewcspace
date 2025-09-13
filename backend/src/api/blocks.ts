@@ -203,25 +203,30 @@ class Blocks {
     } else {
       const stats: IBitcoinApi.BlockStats = await bitcoinClient.getBlockStats(block.id);
       let feeStats = {
-        medianFee: stats.feerate_percentiles[2], // 50th percentiles
+        medianFee: stats.feerate_percentiles && stats.feerate_percentiles.length > 2 ? stats.feerate_percentiles[2] : (stats.medianfee || 0), // 50th percentiles
         feeRange: [stats.minfeerate, stats.feerate_percentiles, stats.maxfeerate].flat(),
       };
       if (transactions?.length > 1) {
-        feeStats = Common.calcEffectiveFeeStatistics(transactions);
+        try {
+          feeStats = Common.calcEffectiveFeeStatistics(transactions);
+        } catch (e) {
+          // Fallback to getblockstats data if calcEffectiveFeeStatistics fails
+          console.log(`[FEE CALC] Fallback to getblockstats for block ${block.id}: ${e.message}`);
+        }
       }
-      extras.medianFee = feeStats.medianFee;
-      extras.feeRange = feeStats.feeRange;
-      extras.totalFees = stats.totalfee;
-      extras.avgFee = stats.avgfee;
-      extras.avgFeeRate = stats.avgfeerate;
-      extras.utxoSetChange = stats.utxo_increase;
-      extras.avgTxSize = Math.round(stats.total_size / stats.txs * 100) * 0.01;
-      extras.totalInputs = stats.ins;
-      extras.totalOutputs = stats.outs;
-      extras.totalOutputAmt = stats.total_out;
-      extras.segwitTotalTxs = stats.swtxs;
-      extras.segwitTotalSize = stats.swtotal_size;
-      extras.segwitTotalWeight = stats.swtotal_weight;
+      extras.medianFee = Math.max(0, feeStats.medianFee || 0);
+      extras.feeRange = feeStats.feeRange || [0, 0, 0, 0, 0, 0, 0];
+      extras.totalFees = Math.max(0, stats.totalfee || 0);
+      extras.avgFee = Math.max(0, stats.avgfee || 0);
+      extras.avgFeeRate = Math.max(0, stats.avgfeerate || 0);
+      extras.utxoSetChange = stats.utxo_increase || 0;
+      extras.avgTxSize = stats.txs > 0 ? Math.round((stats.total_size || 0) / stats.txs * 100) * 0.01 : 0;
+      extras.totalInputs = stats.ins || 0;
+      extras.totalOutputs = stats.outs || 0;
+      extras.totalOutputAmt = stats.total_out || 0;
+      extras.segwitTotalTxs = stats.swtxs || 0;
+      extras.segwitTotalSize = stats.swtotal_size || 0;
+      extras.segwitTotalWeight = stats.swtotal_weight || 0;
     }
 
     if (Common.blocksSummariesIndexingEnabled()) {
