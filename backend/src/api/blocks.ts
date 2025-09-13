@@ -203,8 +203,8 @@ class Blocks {
     } else {
       const stats: IBitcoinApi.BlockStats = await bitcoinClient.getBlockStats(block.id);
       let feeStats = {
-        medianFee: stats.feerate_percentiles && stats.feerate_percentiles.length > 2 ? stats.feerate_percentiles[2] : (stats.medianfee || 0), // 50th percentiles
-        feeRange: [stats.minfeerate, stats.feerate_percentiles && stats.feerate_percentiles.length > 0 ? stats.feerate_percentiles : [0, 0, 0, 0, 0, 0, 0], stats.maxfeerate].flat(),
+        medianFee: stats.feerate_percentiles[2], // 50th percentiles
+        feeRange: [stats.minfeerate, stats.feerate_percentiles, stats.maxfeerate].flat(),
       };
       if (transactions?.length > 1) {
         feeStats = Common.calcEffectiveFeeStatistics(transactions);
