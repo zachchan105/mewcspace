@@ -171,7 +171,7 @@ class Server {
     const { lang, path } = parseLanguageUrl(rawPath);
     const matchedRoute = matchRoute(this.network, path);
     let ogImageUrl = config.SERVER.HOST + (matchedRoute.staticImg || matchedRoute.fallbackImg);
-    let ogTitle = 'Litecoin Space';
+    let ogTitle = 'Meowcoin Space';
 
     if (matchedRoute.render) {
       ogImageUrl = `${config.SERVER.HOST}/render/${lang || 'en'}/preview${path}`;
@@ -184,15 +184,15 @@ class Server {
       <head>
         <meta charset="utf-8">
         <title>${ogTitle}</title>
-        <meta name="description" content="Litecoin Space - Gateway to Explore Meowcoin"/>
+        <meta name="description" content="Meowcoin Space - Gateway to Explore Meowcoin"/>
         <meta property="og:image" content="${ogImageUrl}"/>
         <meta property="og:image:type" content="image/png"/>
         <meta property="og:image:width" content="${matchedRoute.render ? 1200 : 1000}"/>
         <meta property="og:image:height" content="${matchedRoute.render ? 600 : 500}"/>
         <meta property="og:title" content="${ogTitle}">
         <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:site" content="@litecoin">
-        <meta property="twitter:creator" content="@litecoin">
+        <meta property="twitter:site" content="@MeowcoinProject">
+        <meta property="twitter:creator" content="@MeowcoinProject">
         <meta property="twitter:title" content="${ogTitle}">
         <meta property="twitter:description" content="Your Gateway to Explore Meowcoin"/>
         <meta property="twitter:image:src" content="${ogImageUrl}"/>
