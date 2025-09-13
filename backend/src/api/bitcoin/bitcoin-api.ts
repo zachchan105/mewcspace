@@ -40,10 +40,8 @@ class BitcoinApi implements AbstractBitcoinApi {
       return this.$addPrevouts(txInMempool);
     }
 
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getRawTransaction(${txId}) - Getting raw transaction`);
     return this.bitcoindClient.getRawTransaction(txId, true)
       .then((transaction: IBitcoinApi.Transaction) => {
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getRawTransaction(${txId}) - SUCCESS - TX size: ${transaction.size}, Inputs: ${transaction.vin?.length || 0}, Outputs: ${transaction.vout?.length || 0}`);
         if (skipConversion) {
           transaction.vout.forEach((vout) => {
             vout.value = Math.round(vout.value * 100000000);
@@ -61,68 +59,40 @@ class BitcoinApi implements AbstractBitcoinApi {
   }
 
   $getTransactionHex(txId: string): Promise<string> {
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getTransactionHex(${txId}) - Getting transaction hex`);
     return this.$getRawTransaction(txId, true)
-      .then((tx) => {
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getTransactionHex(${txId}) - SUCCESS - Hex size: ${tx.hex?.length || 0} chars`);
-        return tx.hex || '';
-      });
+      .then((tx) => tx.hex || '');
   }
 
   $getBlockHeightTip(): Promise<number> {
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getChainTips() - Getting block height tip`);
     return this.bitcoindClient.getChainTips()
       .then((result: IBitcoinApi.ChainTips[]) => {
-        const activeTip = result.find(tip => tip.status === 'active');
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getChainTips() - SUCCESS - Active tip height: ${activeTip?.height || 'unknown'}`);
-        return activeTip!.height;
+        return result.find(tip => tip.status === 'active')!.height;
       });
   }
 
   $getBlockHashTip(): Promise<string> {
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getChainTips() - Getting block hash tip`);
     return this.bitcoindClient.getChainTips()
       .then((result: IBitcoinApi.ChainTips[]) => {
-        const activeTip = result.find(tip => tip.status === 'active');
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getChainTips() - SUCCESS - Active tip hash: ${activeTip?.hash || 'unknown'}`);
-        return activeTip!.hash;
+        return result.find(tip => tip.status === 'active')!.hash;
       });
   }
 
   $getTxIdsForBlock(hash: string): Promise<string[]> {
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlock(${hash}, 1) - Getting TX IDs for block`);
     return this.bitcoindClient.getBlock(hash, 1)
-      .then((rpcBlock: IBitcoinApi.Block) => {
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlock(${hash}, 1) - SUCCESS - TX count: ${rpcBlock.tx?.length || 0}`);
-        return rpcBlock.tx;
-      });
+      .then((rpcBlock: IBitcoinApi.Block) => rpcBlock.tx);
   }
 
   $getRawBlock(hash: string): Promise<Buffer> {
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlock(${hash}, 0) - Getting raw block data`);
     return this.bitcoindClient.getBlock(hash, 0)
-      .then((raw: string) => {
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlock(${hash}, 0) - SUCCESS - Raw data size: ${raw.length} chars`);
-        return Buffer.from(raw, "hex");
-      });
+      .then((raw: string) => Buffer.from(raw, "hex"));
   }
 
   $getBlockHash(height: number): Promise<string> {
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlockHash(${height}) - Getting block hash`);
-    return this.bitcoindClient.getBlockHash(height)
-      .then((hash: string) => {
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlockHash(${height}) - SUCCESS - Hash: ${hash}`);
-        return hash;
-      });
+    return this.bitcoindClient.getBlockHash(height);
   }
 
   $getBlockHeader(hash: string): Promise<string> {
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlockHeader(${hash}) - Getting block header`);
-    return this.bitcoindClient.getBlockHeader(hash, false)
-      .then((header: string) => {
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlockHeader(${hash}) - SUCCESS - Header size: ${header.length} chars`);
-        return header;
-      });
+    return this.bitcoindClient.getBlockHeader(hash, false);
   }
 
   async $getBlock(hash: string): Promise<IEsploraApi.Block> {
@@ -131,12 +101,8 @@ class BitcoinApi implements AbstractBitcoinApi {
       return foundBlock;
     }
 
-    console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlock(${hash}) - Getting block from Bitcoin Core`);
     return this.bitcoindClient.getBlock(hash)
-      .then((block: IBitcoinApi.Block) => {
-        console.log(`[BITCOIN API] ${new Date().toISOString()} - getBlock(${hash}) - SUCCESS - Block height: ${block.height}, TX count: ${block.tx?.length || 0}`);
-        return BitcoinApi.convertBlock(block);
-      });
+      .then((block: IBitcoinApi.Block) => BitcoinApi.convertBlock(block));
   }
 
   $getAddress(address: string): Promise<IEsploraApi.Address> {

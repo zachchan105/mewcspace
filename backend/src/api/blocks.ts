@@ -242,9 +242,7 @@ class Blocks {
       extras.avgFee = Math.max(0, Math.min(avgFee, Number.MAX_SAFE_INTEGER));
       extras.avgFeeRate = Math.max(0, Math.min(avgFeeRate, Number.MAX_SAFE_INTEGER));
       // Get basic block stats for non-fee data
-      console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlockStats(${block.id}) - Getting block stats`);
       const stats: IBitcoinApi.BlockStats = await bitcoinClient.getBlockStats(block.id);
-      console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlockStats(${block.id}) - SUCCESS - TotalFee: ${stats.totalfee}, AvgFee: ${stats.avgfee}, MedianFee: ${stats.medianfee}`);
       extras.utxoSetChange = stats.utxo_increase;
       extras.avgTxSize = Math.round(stats.total_size / stats.txs * 100) * 0.01;
       extras.totalInputs = stats.ins;
@@ -624,9 +622,7 @@ class Blocks {
 
       this.updateTimerProgress(timer, `getting block data for ${this.currentBlockHeight}`);
       const blockHash = await bitcoinApi.$getBlockHash(this.currentBlockHeight);
-      console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlock(${blockHash}, 2) - Getting verbose block for indexing`);
       const verboseBlock = await bitcoinClient.getBlock(blockHash, 2);
-      console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlock(${blockHash}, 2) - SUCCESS - Block height: ${verboseBlock.height}, TX count: ${verboseBlock.tx?.length || 0}`);
       const block = BitcoinApi.convertBlock(verboseBlock);
       const txIds: string[] = await bitcoinApi.$getTxIdsForBlock(blockHash);
       const transactions = await this.$getTransactionsExtended(blockHash, block.height, false);
@@ -829,9 +825,7 @@ class Blocks {
     }
 
     // Call Core RPC
-    console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlock(${hash}, 2) - Getting stripped block transactions`);
     const block = await bitcoinClient.getBlock(hash, 2);
-    console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlock(${hash}, 2) - SUCCESS - Block height: ${block.height}, TX count: ${block.tx?.length || 0}`);
     const summary = this.summarizeBlock(block);
 
     // Index the response if needed
@@ -950,9 +944,7 @@ class Blocks {
       if (Common.blocksSummariesIndexingEnabled() && cleanBlock.fee_amt_percentiles === null) {
         cleanBlock.fee_amt_percentiles = await BlocksSummariesRepository.$getFeePercentilesByBlockId(cleanBlock.hash);
         if (cleanBlock.fee_amt_percentiles === null) {
-          console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlock(${cleanBlock.hash}, 2) - Getting block for reindexing`);
           const block = await bitcoinClient.getBlock(cleanBlock.hash, 2);
-          console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlock(${cleanBlock.hash}, 2) - SUCCESS - Block height: ${block.height}, TX count: ${block.tx?.length || 0}`);
           const summary = this.summarizeBlock(block);
           await BlocksSummariesRepository.$saveTransactions(cleanBlock.height, cleanBlock.hash, summary.transactions);
           cleanBlock.fee_amt_percentiles = await BlocksSummariesRepository.$getFeePercentilesByBlockId(cleanBlock.hash);
@@ -1022,9 +1014,7 @@ class Blocks {
   }
 
   public async $indexCPFP(hash: string, height: number): Promise<void> {
-    console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlock(${hash}, 2) - Getting block for CPFP indexing`);
     const block = await bitcoinClient.getBlock(hash, 2);
-    console.log(`[BLOCK RPC] ${new Date().toISOString()} - getBlock(${hash}, 2) - SUCCESS - Block height: ${block.height}, TX count: ${block.tx?.length || 0}`);
     const transactions = block.tx.map(tx => {
       tx.fee *= 100_000_000;
       return tx;
