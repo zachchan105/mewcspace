@@ -144,7 +144,7 @@ function makeBlockTemplates(mempool: Map<number, CompactThreadTransaction>)
           }
           if (mempoolTx.cpfpRoot !== nextTx.uid) {
             mempoolTx.cpfpRoot = isCluster ? nextTx.uid : null;
-            mempoolTx.dirty;
+            mempoolTx.dirty = true;
           }
           mempoolTx.cpfpChecked = true;
           transactions.push(ancestor);
