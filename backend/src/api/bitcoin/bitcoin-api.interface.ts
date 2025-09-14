@@ -28,6 +28,7 @@ export namespace IBitcoinApi {
       ancestor: number;              //  (numeric) modified fees (see above) of in-mempool ancestors (including this one) in BTC
       descendant: number;            //  (numeric) modified fees (see above) of in-mempool descendants (including this one) in BTC
     };
+    fee?: number;                    //  (numeric) transaction fee in BTC (Meowcoin format)
     depends: string[];               //  (string) parent transaction id
     spentby: string[];               //  (array) unconfirmed transactions spending outputs from this transaction
     'bip125-replaceable': boolean;   //  (boolean) Whether this transaction could be replaced due to BIP125 (replace-by-fee)
