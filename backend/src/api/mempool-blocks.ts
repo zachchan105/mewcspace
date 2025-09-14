@@ -320,19 +320,29 @@ class MempoolBlocks {
   }
 
   private processBlockTemplates(mempool, blocks: string[][], rates: { [root: string]: number }, clusters: { [root: string]: string[] }, saveResults): MempoolBlockWithTransactions[] {
-    for (const txid of Object.keys(rates)) {
-      if (txid in mempool) {
-        mempool[txid].effectiveFeePerVsize = rates[txid];
+    // Handle case where rates is undefined or null
+    if (rates) {
+      for (const txid of Object.keys(rates)) {
+        if (txid in mempool) {
+          mempool[txid].effectiveFeePerVsize = rates[txid];
+        }
       }
+    }
+
+    // Handle case where blocks is undefined or null
+    if (!blocks) {
+      blocks = [];
     }
 
     let hasBlockStack = blocks.length >= 8;
     let stackWeight;
-    let feeStatsCalculator: OnlineFeeStatsCalculator | void;
+    let feeStatsCalculator: OnlineFeeStatsCalculator | undefined;
     if (hasBlockStack) {
       stackWeight = blocks[blocks.length - 1].reduce((total, tx) => total + (mempool[tx]?.weight || 0), 0);
       hasBlockStack = stackWeight > config.MEMPOOL.BLOCK_WEIGHT_UNITS;
-      feeStatsCalculator = new OnlineFeeStatsCalculator(stackWeight, 0.5);
+      if (hasBlockStack) {
+        feeStatsCalculator = new OnlineFeeStatsCalculator(stackWeight, 0.5);
+      }
     }
 
     const readyBlocks: { transactionIds, transactions, totalSize, totalWeight, totalFees, feeStats }[] = [];
