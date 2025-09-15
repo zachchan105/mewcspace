@@ -1,5 +1,21 @@
 {
     "coinbase_tags" : {
+        "pool.rplant.xyz": {
+            "name": "RPlant Pool",
+            "link": "https://pool.rplant.xyz"
+        },
+        "BlockMinerz.com/": {
+            "name": "BlockMinerz",
+            "link": "https://blockminerz.com"
+        },
+        "zpool.ca/": {
+            "name": "ZPool",
+            "link": "https://zpool.ca"
+        },
+        "meowcoin-stratum-proxy/": {
+            "name": "Meowcoin Stratum Proxy",
+            "link": "https://github.com/cdonnachie/meowcoin-stratum-proxy"
+        },
         "/LUXOR/": {
             "name": "Luxor",
             "link": "https://mining.luxor.tech"
@@ -558,6 +574,22 @@
         }
     },
     "payout_addresses" : {
+        "MPyNGZSSZ4rbjkVJRLn3v64pMcktpEYJnU": {
+            "name": "RPlant Pool",
+            "link": "https://pool.rplant.xyz"
+        },
+        "M8X7pUDsrxZ3n9aDKWxtN95wKKnv7KgmAY": {
+            "name": "RPlant Pool",
+            "link": "https://pool.rplant.xyz"
+        },
+        "MQ6ZMEQ8Fug7HNtSZcMaALhQDLHf12KkPW": {
+            "name": "BlockMinerz",
+            "link": "https://blockminerz.com"
+        },
+        "MNe3NZ3EUktfwLQNXUHjJ1Grj4bfyVNYVk": {
+            "name": "ZPool",
+            "link": "https://zpool.ca"
+        },
         "1MkCDCzHpBsYQivp8MxjY5AkTGG1f2baoe": {
             "name": "Luxor",
             "link": "https://mining.luxor.tech"
