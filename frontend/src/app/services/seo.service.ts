@@ -39,7 +39,7 @@ export class SeoService {
   getTitle(): string {
     if (this.network === 'testnet')
       return this.baseTitle + ' - Meowcoin Testnet';
-    return this.baseTitle + ' - ' + (this.network ? this.ucfirst(this.network) : 'Litecoin') + ' Explorer';
+    return this.baseTitle + ' - ' + (this.network ? this.ucfirst(this.network) : 'Meowcoin') + ' Explorer';
   }
 
   ucfirst(str: string) {
