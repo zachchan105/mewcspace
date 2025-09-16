@@ -35,7 +35,6 @@ class MiningRoutes {
       .get(config.MEMPOOL.API_URL_PREFIX + 'mining/blocks/timestamp/:timestamp', this.$getHeightFromTimestamp)
       .get(config.MEMPOOL.API_URL_PREFIX + 'historical-price', this.$getHistoricalPrice)
         .get(config.MEMPOOL.API_URL_PREFIX + 'mining/dual-pow-stats', this.$getDualPowStats)
-        .get(config.MEMPOOL.API_URL_PREFIX + 'mining/dual-difficulty-adjustment', this.$getDualDifficultyAdjustment)
     ;
   }
 
@@ -364,99 +363,7 @@ class MiningRoutes {
     }
   }
 
-  private $getDualDifficultyAdjustment = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const currentHeight = blocks.getCurrentBlockHeight();
-      const nowSeconds = Math.floor(new Date().getTime() / 1000);
-      
-      // Get difficulty adjustment data for MeowPow (algorithm 0)
-      const meowpowDA = this.calculateDifficultyAdjustment(0, currentHeight, nowSeconds);
-      
-      // Get difficulty adjustment data for Scrypt (algorithm 1) 
-      const scryptDA = this.calculateDifficultyAdjustment(1, currentHeight, nowSeconds);
 
-      // Check if Scrypt is active by getting hashrate
-      let scryptHashrate = 0;
-      try {
-        scryptHashrate = await bitcoinClient.getNetworkHashPs(0, -1, 1);
-      } catch (e) {
-        // If we can't get hashrate, assume it's not active
-      }
-
-      res.header('Pragma', 'public');
-      res.header('Cache-control', 'public');
-      res.setHeader('Expires', new Date(Date.now() + 1000 * 30).toUTCString()); // 30 second cache
-      res.json({
-        meowpow: { ...meowpowDA, auxpowActive: true },
-        scrypt: { ...scryptDA, auxpowActive: scryptHashrate > 0 }
-      });
-    } catch (e) {
-      res.status(500).send(e instanceof Error ? e.message : e);
-    }
-  }
-
-  private calculateDifficultyAdjustment = (algorithm: number, blockHeight: number, nowSeconds: number): any => {
-    const BLOCK_SECONDS_TARGET = 60; // Meowcoin block time
-    const LWMA_WINDOW = 45;
-    const TREND_SAMPLES = 12; // Last 12 blocks for trend calculation
-    
-    try {
-      // Get current difficulty - ensure it's a number
-      const currentDifficulty = Number(bitcoinClient.getDifficulty(algorithm)) || 1.0;
-      
-      // For LWMA-style display, we need recent block timing data
-      // This is a simplified version - in production you'd get this from your block index
-      const recentBlockTimes = this.getRecentBlockTimes(algorithm, TREND_SAMPLES);
-      const avgBlockTime = recentBlockTimes.length > 0 
-        ? recentBlockTimes.reduce((a, b) => a + b, 0) / recentBlockTimes.length 
-        : BLOCK_SECONDS_TARGET;
-      
-      // Calculate timing ratio vs target
-      const timingRatio = avgBlockTime / BLOCK_SECONDS_TARGET;
-      const slope = Math.max(-0.1, Math.min(0.1, timingRatio - 1));
-      
-      // Calculate difficulty change vs previous block (simplified)
-      const difficultyChange = this.calculateDifficultyChange(algorithm, blockHeight);
-      
-      // Next block impact estimation - ensure it's a valid number
-      const nextBlockImpact = Number(((1 / LWMA_WINDOW) * (timingRatio - 1) * 100).toFixed(2)) || 0;
-      
-      return {
-        currentDifficulty: Number(currentDifficulty),
-        difficultyChange: Number(difficultyChange),
-        nextBlockImpact: Number(nextBlockImpact),
-        slope: Number(slope),
-        timingRatio: Number(timingRatio),
-        avgBlockTime: Number(avgBlockTime),
-        algorithm: algorithm === 0 ? 'MeowPow' : 'AuxPoW',
-        lastUpdate: Number(nowSeconds)
-      };
-    } catch (e) {
-      // Fallback data if RPC calls fail
-      return {
-        currentDifficulty: 1.0,
-        difficultyChange: 0,
-        nextBlockImpact: 0,
-        slope: 0,
-        timingRatio: 1.0,
-        avgBlockTime: BLOCK_SECONDS_TARGET,
-        algorithm: algorithm === 0 ? 'MeowPow' : 'AuxPoW',
-        lastUpdate: nowSeconds
-      };
-    }
-  }
-
-  private getRecentBlockTimes = (algorithm: number, samples: number): number[] => {
-    // Simplified - in production, get from your block index
-    // For now, return mock data
-    return Array(samples).fill(0).map(() => 60 + (Math.random() - 0.5) * 20);
-  }
-
-  private calculateDifficultyChange = (algorithm: number, blockHeight: number): number => {
-    // Simplified - in production, get from your difficulty history
-    // For now, return mock data
-    return (Math.random() - 0.5) * 4; // -2% to +2%
-  }
 }
 
 export default new MiningRoutes();

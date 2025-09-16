@@ -323,9 +323,4 @@ export class ApiService {
     );
   }
 
-  getDualDifficultyAdjustment$(): Observable<any> {
-    return this.httpClient.get<any>(
-      this.apiBaseUrl + this.apiBasePath + '/api/v1/mining/dual-difficulty-adjustment'
-    );
-  }
 }
