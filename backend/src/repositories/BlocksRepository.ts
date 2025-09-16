@@ -548,6 +548,97 @@ class BlocksRepository {
   }
 
   /**
+   * Get recent blocks by algorithm (MeowPoW or AuxPoW)
+   */
+  public async $getRecentBlocksByAlgorithm(algorithm: 'meowpow' | 'auxpow', limit: number = 12): Promise<any[]> {
+    try {
+      const version = algorithm === 'meowpow' ? 0x30090000 : 0x30090100;
+      
+      const [rows]: any[] = await DB.query(`
+        SELECT height, difficulty, UNIX_TIMESTAMP(blockTimestamp) as timestamp, version
+        FROM blocks
+        WHERE version = ?
+        ORDER BY height DESC
+        LIMIT ?
+      `, [version, limit]);
+
+      return rows;
+    } catch (e) {
+      logger.err(`Cannot get recent ${algorithm} blocks. Reason: ` + (e instanceof Error ? e.message : e));
+      throw e;
+    }
+  }
+
+  /**
+   * Get algorithm-specific difficulty adjustment data
+   */
+  public async $getAlgorithmDifficultyData(algorithm: 'meowpow' | 'auxpow'): Promise<any> {
+    try {
+      const version = algorithm === 'meowpow' ? 0x30090000 : 0x30090100;
+      const targetTime = 120; // 120 seconds target for both algorithms
+      
+      // Get recent blocks for timing analysis
+      const [recentBlocks]: any[] = await DB.query(`
+        SELECT height, difficulty, UNIX_TIMESTAMP(blockTimestamp) as timestamp
+        FROM blocks
+        WHERE version = ?
+        ORDER BY height DESC
+        LIMIT 12
+      `, [version]);
+
+      if (recentBlocks.length < 2) {
+        return {
+          currentDifficulty: 0,
+          difficultyChange: 0,
+          slope: 0,
+          timingRatio: 1.0,
+          avgBlockTime: targetTime,
+          algorithm: algorithm === 'meowpow' ? 'MeowPow' : 'AuxPoW',
+          lastUpdate: Math.floor(Date.now() / 1000)
+        };
+      }
+
+      // Calculate difficulty change vs previous block
+      const currentDifficulty = recentBlocks[0].difficulty;
+      const previousDifficulty = recentBlocks[1].difficulty;
+      const difficultyChange = previousDifficulty > 0 ? 
+        ((currentDifficulty / previousDifficulty) - 1) * 100 : 0;
+
+      // Calculate average block time from recent blocks
+      let avgBlockTime = targetTime;
+      if (recentBlocks.length >= 2) {
+        const timeDiffs: number[] = [];
+        for (let i = 0; i < recentBlocks.length - 1; i++) {
+          const timeDiff = recentBlocks[i].timestamp - recentBlocks[i + 1].timestamp;
+          if (timeDiff > 0) {
+            timeDiffs.push(timeDiff);
+          }
+        }
+        if (timeDiffs.length > 0) {
+          avgBlockTime = timeDiffs.reduce((a, b) => a + b, 0) / timeDiffs.length;
+        }
+      }
+
+      // Calculate timing ratio and slope
+      const timingRatio = avgBlockTime / targetTime;
+      const slope = Math.max(-0.1, Math.min(0.1, timingRatio - 1));
+
+      return {
+        currentDifficulty: Number(currentDifficulty),
+        difficultyChange: Number(difficultyChange),
+        slope: Number(slope),
+        timingRatio: Number(timingRatio),
+        avgBlockTime: Number(avgBlockTime),
+        algorithm: algorithm === 'meowpow' ? 'MeowPow' : 'AuxPoW',
+        lastUpdate: Math.floor(Date.now() / 1000)
+      };
+    } catch (e) {
+      logger.err(`Cannot get ${algorithm} difficulty data. Reason: ` + (e instanceof Error ? e.message : e));
+      throw e;
+    }
+  }
+
+  /**
    * Get the first block at or directly after a given timestamp
    * @param timestamp number unix time in seconds
    * @returns The height and timestamp of a block (timestamp might vary from given timestamp)

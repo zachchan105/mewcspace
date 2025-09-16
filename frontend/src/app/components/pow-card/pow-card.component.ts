@@ -4,7 +4,6 @@ export interface LwmaCardData {
   // from your fixed backend
   currentDifficulty: number;      // e.g. 123456
   difficultyChange: number;       // % vs previous block (can be +/-)
-  nextBlockImpact: number;        // % estimate (sign = direction)
   slope: number;                  // normalized momentum, e.g. -0.1..+0.1
   timingRatio: number;            // avgSolve / targetSecs, e.g. 0.95..1.05
   avgBlockTime: number;           // seconds
@@ -47,12 +46,6 @@ export class PowCardComponent {
     if (x >= 1e6)  return (x / 1e6 ).toFixed(2) + 'M';
     if (x >= 1e3)  return (x / 1e3 ).toFixed(2) + 'K';
     return x.toFixed(2);
-  }
-  fmtAgo(ts = 0): string {
-    const s = Math.max(0, Math.floor(Date.now()/1000) - ts);
-    if (s < 60) return `${s}s ago`;
-    if (s < 3600) return `${Math.floor(s/60)}m ago`;
-    return `${Math.floor(s/3600)}h ago`;
   }
   upClass(v = 0)   { return v >  0 ? 'up'   : v < 0 ? 'down' : 'flat'; }
   muted(d: LwmaCardData) { return !!d.stale || d.auxpowActive === false; }

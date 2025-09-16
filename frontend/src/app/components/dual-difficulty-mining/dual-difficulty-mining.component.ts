@@ -125,47 +125,25 @@ export class DualDifficultyMiningComponent implements OnInit {
   }
 
   private addDifficultyAdjustmentData(stats: any): DualPowStats {
-    const now = Math.floor(Date.now() / 1000);
-    
     return {
       meowpow: {
-        currentDifficulty: stats.meowpow.difficulty,
-        difficultyChange: this.calculateDifficultyChange(stats.meowpow.difficulty),
-        nextBlockImpact: this.calculateNextBlockImpact(stats.meowpow.difficulty),
-        slope: this.calculateSlope(stats.meowpow.difficulty),
-        timingRatio: 1.0,
-        avgBlockTime: 60,
-        lastUpdate: now,
+        currentDifficulty: stats.meowpow.currentDifficulty || stats.meowpow.difficulty,
+        difficultyChange: stats.meowpow.difficultyChange || 0,
+        slope: stats.meowpow.slope || 0,
+        timingRatio: stats.meowpow.timingRatio || 1.0,
+        avgBlockTime: stats.meowpow.avgBlockTime || 120,
+        lastUpdate: stats.meowpow.lastUpdate || Math.floor(Date.now() / 1000),
         auxpowActive: true
       },
       scrypt: {
-        currentDifficulty: stats.scrypt.difficulty,
-        difficultyChange: this.calculateDifficultyChange(stats.scrypt.difficulty),
-        nextBlockImpact: this.calculateNextBlockImpact(stats.scrypt.difficulty),
-        slope: this.calculateSlope(stats.scrypt.difficulty),
-        timingRatio: 1.0,
-        avgBlockTime: 60,
-        lastUpdate: now,
+        currentDifficulty: stats.scrypt.currentDifficulty || stats.scrypt.difficulty,
+        difficultyChange: stats.scrypt.difficultyChange || 0,
+        slope: stats.scrypt.slope || 0,
+        timingRatio: stats.scrypt.timingRatio || 1.0,
+        avgBlockTime: stats.scrypt.avgBlockTime || 120,
+        lastUpdate: stats.scrypt.lastUpdate || Math.floor(Date.now() / 1000),
         auxpowActive: stats.scrypt.auxpowActive
       }
     };
-  }
-
-  private calculateDifficultyChange(difficulty: number): number {
-    // Simplified calculation - in production, you'd compare with previous difficulty
-    // For now, return a small random change to show the UI working
-    return (Math.random() - 0.5) * 2; // -1% to +1%
-  }
-
-  private calculateNextBlockImpact(difficulty: number): number {
-    // Simplified LWMA-45 style calculation
-    const LWMA_WINDOW = 45;
-    const timingSkew = (Math.random() - 0.5) * 0.2; // Small timing variation
-    return (1 / LWMA_WINDOW) * timingSkew * 100;
-  }
-
-  private calculateSlope(difficulty: number): number {
-    // Simplified slope calculation
-    return (Math.random() - 0.5) * 0.2; // -0.1 to +0.1
   }
 }

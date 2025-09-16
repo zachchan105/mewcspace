@@ -341,21 +341,26 @@ class MiningRoutes {
         logger.debug('Bitcoin Core is not available, using zeroed values for dual PoW stats');
       }
 
+      // Get real algorithm-specific difficulty data from database
+      const meowpowData = await BlocksRepository.$getAlgorithmDifficultyData('meowpow');
+      const auxpowData = await BlocksRepository.$getAlgorithmDifficultyData('auxpow');
+
       res.header('Pragma', 'public');
       res.header('Cache-control', 'public');
-      res.setHeader('Expires', new Date(Date.now() + 1000 * 60).toUTCString()); // 1 minute cache
+      res.setHeader('Expires', new Date(Date.now() + 1000 * 30).toUTCString()); // 30 second cache
       res.json({
         meowpow: { 
           difficulty: meowpowDifficulty, 
           hashrate: meowpowHashrate,
-          algorithm: 'MeowPow'
+          algorithm: 'MeowPow',
+          ...meowpowData
         },
         scrypt: { 
           difficulty: scryptDifficulty, 
           hashrate: scryptHashrate,
           algorithm: 'Scrypt',
-          // If scrypt hashrate is 0, auxpow hasn't started yet
-          auxpowActive: scryptHashrate > 0
+          auxpowActive: scryptHashrate > 0,
+          ...auxpowData
         }
       });
     } catch (e) {
