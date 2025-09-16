@@ -1,4 +1,4 @@
-<div class="pow-card" [class.muted]="muted(data)" [attr.aria-label]="label + ' difficulty card'">
+<div class="pow-card" [class.muted]="muted(data)" [class.meowpow]="label === 'MeowPow'" [class.scrypt]="label === 'Scrypt'" [attr.aria-label]="label + ' difficulty card'">
   <div class="head">
     <div class="left">
       <span class="ico">{{ icon }}</span>
@@ -15,12 +15,9 @@
          [title]="'Δ vs prev: ' + (data.difficultyChange | number:'1.1-2') + '%'">
       {{ data.difficultyChange | number:'1.1-1' }}%
     </div>
-  </div>
-
-  <div class="sub">
-    <span class="pace" [title]="'Avg ' + (data.avgBlockTime|number:'1.0-0') + 's vs ' + targetSecs + 's target'">
+    <div class="pace" [title]="'Avg ' + (data.avgBlockTime|number:'1.0-0') + 's vs ' + targetSecs + 's target'">
       {{ data.avgBlockTime | number:'1.0-0' }}s
-    </span>
+    </div>
   </div>
 
   <!-- Centered momentum progress: left fill for down, right fill for up -->

@@ -1,19 +1,19 @@
 <div class="dual-grid" *ngIf="(isLoading$ | async) === false && (dualPowStats$ | async) as s; else loading">
-  <app-pow-card
-    label="MeowPoW"
-    icon="🐱"
-    [data]="s.meowpow"
-    [targetSecs]="60"
-    [windowSize]="45">
-  </app-pow-card>
+            <app-pow-card
+              label="MeowPow"
+              icon=""
+              [data]="s.meowpow"
+              [targetSecs]="120"
+              [windowSize]="45">
+            </app-pow-card>
 
-  <app-pow-card
-    label="AuxPoW"
-    icon="⛏️"
-    [data]="s.scrypt"
-    [targetSecs]="60"
-    [windowSize]="45">
-  </app-pow-card>
+            <app-pow-card
+              label="Scrypt"
+              icon=""
+              [data]="s.scrypt"
+              [targetSecs]="120"
+              [windowSize]="45">
+            </app-pow-card>
 </div>
 
 <ng-template #loading>

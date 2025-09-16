@@ -593,7 +593,7 @@ class BlocksRepository {
           slope: 0,
           timingRatio: 1.0,
           avgBlockTime: targetTime,
-          algorithm: algorithm === 'meowpow' ? 'MeowPow' : 'AuxPoW',
+          algorithm: algorithm === 'meowpow' ? 'MeowPow' : 'Scrypt',
           lastUpdate: Math.floor(Date.now() / 1000)
         };
       }
@@ -629,7 +629,7 @@ class BlocksRepository {
         slope: Number(slope),
         timingRatio: Number(timingRatio),
         avgBlockTime: Number(avgBlockTime),
-        algorithm: algorithm === 'meowpow' ? 'MeowPow' : 'AuxPoW',
+        algorithm: algorithm === 'meowpow' ? 'MeowPow' : 'Scrypt',
         lastUpdate: Math.floor(Date.now() / 1000)
       };
     } catch (e) {
