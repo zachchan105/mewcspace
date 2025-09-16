@@ -1,4 +1,4 @@
-<div *ngIf="showTitle" class="main-title" i18n="dashboard.difficulty-adjustment">Difficulty Adjustment (LWMA-45)</div>
+<div *ngIf="showTitle" class="main-title" i18n="dashboard.difficulty-adjustment">Difficulty Adjustment</div>
 <div class="card-wrapper">
   <div class="card">
     <div class="card-body more-padding">
@@ -9,7 +9,7 @@
           <div class="card-header">
             <div class="algo-name">
               <span class="algo-icon">🐱</span>
-              <span>MeowPoW (LWMA-45)</span>
+              <span>MeowPoW</span>
             </div>
             <div class="last-update">{{ formatLastUpdate(stats.meowpow.lastUpdate) }}</div>
           </div>
@@ -25,7 +25,6 @@
           </div>
           
           <div class="next-impact">
-            <span class="impact-label">Next block:</span>
             <span class="impact-value" [style.color]="getNextBlockImpactColor(stats.meowpow.nextBlockImpact)">
               ≈{{ stats.meowpow.nextBlockImpact | number:'1.1-1' }}%
             </span>
@@ -46,7 +45,7 @@
           <div class="card-header">
             <div class="algo-name">
               <span class="algo-icon">⛏️</span>
-              <span>AuxPoW (LWMA-45)</span>
+              <span>AuxPoW</span>
             </div>
             <div class="last-update">{{ formatLastUpdate(stats.scrypt.lastUpdate) }}</div>
           </div>
@@ -62,7 +61,6 @@
           </div>
           
           <div class="next-impact">
-            <span class="impact-label">Next block:</span>
             <span class="impact-value" [style.color]="getNextBlockImpactColor(stats.scrypt.nextBlockImpact)">
               ≈{{ stats.scrypt.nextBlockImpact | number:'1.1-1' }}%
             </span>

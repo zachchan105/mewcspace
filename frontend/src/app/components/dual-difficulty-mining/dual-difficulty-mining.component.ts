@@ -102,6 +102,10 @@ export class DualDifficultyMiningComponent implements OnInit {
   }
 
   formatDifficulty(difficulty: number): string {
+    if (!difficulty || typeof difficulty !== 'number' || isNaN(difficulty)) {
+      return '0';
+    }
+    
     if (difficulty >= 1e12) {
       return (difficulty / 1e12).toFixed(2) + 'T';
     } else if (difficulty >= 1e9) {

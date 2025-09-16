@@ -401,8 +401,8 @@ class MiningRoutes {
     const TREND_SAMPLES = 12; // Last 12 blocks for trend calculation
     
     try {
-      // Get current difficulty
-      const currentDifficulty = bitcoinClient.getDifficulty(algorithm);
+      // Get current difficulty - ensure it's a number
+      const currentDifficulty = Number(bitcoinClient.getDifficulty(algorithm)) || 1.0;
       
       // For LWMA-style display, we need recent block timing data
       // This is a simplified version - in production you'd get this from your block index
@@ -418,18 +418,18 @@ class MiningRoutes {
       // Calculate difficulty change vs previous block (simplified)
       const difficultyChange = this.calculateDifficultyChange(algorithm, blockHeight);
       
-      // Next block impact estimation
-      const nextBlockImpact = (1 / LWMA_WINDOW) * (timingRatio - 1) * 100;
+      // Next block impact estimation - ensure it's a valid number
+      const nextBlockImpact = Number(((1 / LWMA_WINDOW) * (timingRatio - 1) * 100).toFixed(2)) || 0;
       
       return {
-        currentDifficulty: currentDifficulty,
-        difficultyChange: difficultyChange,
-        nextBlockImpact: nextBlockImpact,
-        slope: slope,
-        timingRatio: timingRatio,
-        avgBlockTime: avgBlockTime,
+        currentDifficulty: Number(currentDifficulty),
+        difficultyChange: Number(difficultyChange),
+        nextBlockImpact: Number(nextBlockImpact),
+        slope: Number(slope),
+        timingRatio: Number(timingRatio),
+        avgBlockTime: Number(avgBlockTime),
         algorithm: algorithm === 0 ? 'MeowPow' : 'AuxPoW',
-        lastUpdate: nowSeconds
+        lastUpdate: Number(nowSeconds)
       };
     } catch (e) {
       // Fallback data if RPC calls fail
