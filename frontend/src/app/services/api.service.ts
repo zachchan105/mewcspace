@@ -316,4 +316,10 @@ export class ApiService {
         (timestamp ? `?timestamp=${timestamp}` : '')
     );
   }
+
+  getDualPowStats$(): Observable<any> {
+    return this.httpClient.get<any>(
+      this.apiBaseUrl + this.apiBasePath + '/api/v1/mining/dual-pow-stats'
+    );
+  }
 }

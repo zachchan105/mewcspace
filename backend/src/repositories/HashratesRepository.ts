@@ -9,16 +9,16 @@ class HashratesRepository {
   /**
    * Save indexed block data in the database
    */
-  public async $saveHashrates(hashrates: any) {
+  public async $saveHashrates(hashrates: any, algorithm: number = 0) {
     if (hashrates.length === 0) {
       return;
     }
 
     let query = `INSERT INTO
-      hashrates(hashrate_timestamp, avg_hashrate, pool_id, share, type) VALUES`;
+      hashrates(hashrate_timestamp, avg_hashrate, pool_id, share, type, algorithm) VALUES`;
 
     for (const hashrate of hashrates) {
-      query += ` (FROM_UNIXTIME(${hashrate.hashrateTimestamp}), ${hashrate.avgHashrate}, ${hashrate.poolId}, ${hashrate.share}, "${hashrate.type}"),`;
+      query += ` (FROM_UNIXTIME(${hashrate.hashrateTimestamp}), ${hashrate.avgHashrate}, ${hashrate.poolId}, ${hashrate.share}, "${hashrate.type}", ${algorithm}),`;
     }
     query = query.slice(0, -1);
 
@@ -56,7 +56,7 @@ class HashratesRepository {
     }
   }
 
-  public async $getNetworkDailyHashrate(interval: string | null): Promise<any[]> {
+  public async $getNetworkDailyHashrate(interval: string | null, algorithm: number = 0): Promise<any[]> {
     interval = Common.getSqlInterval(interval);
 
     let query = `SELECT
@@ -64,13 +64,12 @@ class HashratesRepository {
       CAST(AVG(avg_hashrate) as DOUBLE) as avgHashrate
       FROM hashrates`;
 
+    const conditions = [`algorithm = ${algorithm}`, `type = 'daily'`];
     if (interval) {
-      query += ` WHERE hashrate_timestamp BETWEEN DATE_SUB(NOW(), INTERVAL ${interval}) AND NOW()
-        AND hashrates.type = 'daily'`;
-    } else {
-      query += ` WHERE hashrates.type = 'daily'`;
+      conditions.push(`hashrate_timestamp BETWEEN DATE_SUB(NOW(), INTERVAL ${interval}) AND NOW()`);
     }
 
+    query += ` WHERE ${conditions.join(' AND ')}`;
     query += ` GROUP BY UNIX_TIMESTAMP(hashrate_timestamp) DIV ${86400}`;
     query += ` ORDER by hashrate_timestamp`;
 

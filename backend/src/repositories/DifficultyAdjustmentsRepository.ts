@@ -4,18 +4,19 @@ import logger from '../logger';
 import { IndexedDifficultyAdjustment } from '../mempool.interfaces';
 
 class DifficultyAdjustmentsRepository {
-  public async $saveAdjustments(adjustment: IndexedDifficultyAdjustment): Promise<void> {
+  public async $saveAdjustments(adjustment: IndexedDifficultyAdjustment, algorithm: number = 0): Promise<void> {
     if (adjustment.height === 1) {
       return;
     }
 
     try {
-      const query = `INSERT INTO difficulty_adjustments(time, height, difficulty, adjustment) VALUE (FROM_UNIXTIME(?), ?, ?, ?)`;
+      const query = `INSERT INTO difficulty_adjustments(time, height, difficulty, adjustment, algorithm) VALUE (FROM_UNIXTIME(?), ?, ?, ?, ?)`;
       const params: any[] = [
         adjustment.time,
         adjustment.height,
         adjustment.difficulty,
         adjustment.adjustment,
+        algorithm,
       ];
       await DB.query(query, params);
     } catch (e: any) {
@@ -28,7 +29,7 @@ class DifficultyAdjustmentsRepository {
     }
   }
 
-  public async $getAdjustments(interval: string | null, descOrder: boolean = false): Promise<IndexedDifficultyAdjustment[]> {
+  public async $getAdjustments(interval: string | null, descOrder: boolean = false, algorithm: number = 0): Promise<IndexedDifficultyAdjustment[]> {
     interval = Common.getSqlInterval(interval);
 
     let query = `SELECT 
@@ -38,8 +39,13 @@ class DifficultyAdjustmentsRepository {
       CAST(AVG(adjustment) as DOUBLE) as adjustment
       FROM difficulty_adjustments`;
 
+    const conditions = [`algorithm = ${algorithm}`];
     if (interval) {
-      query += ` WHERE time BETWEEN DATE_SUB(NOW(), INTERVAL ${interval}) AND NOW()`;
+      conditions.push(`time BETWEEN DATE_SUB(NOW(), INTERVAL ${interval}) AND NOW()`);
+    }
+
+    if (conditions.length > 0) {
+      query += ` WHERE ${conditions.join(' AND ')}`;
     }
 
     query += ` GROUP BY UNIX_TIMESTAMP(time) DIV ${86400}`;

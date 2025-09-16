@@ -33,6 +33,7 @@ class MiningRoutes {
       .get(config.MEMPOOL.API_URL_PREFIX + 'mining/blocks/audit/:hash', this.$getBlockAudit)
       .get(config.MEMPOOL.API_URL_PREFIX + 'mining/blocks/timestamp/:timestamp', this.$getHeightFromTimestamp)
       .get(config.MEMPOOL.API_URL_PREFIX + 'historical-price', this.$getHistoricalPrice)
+      .get(config.MEMPOOL.API_URL_PREFIX + 'mining/dual-pow-stats', this.$getDualPowStats)
     ;
   }
 
@@ -320,6 +321,42 @@ class MiningRoutes {
       res.header('Cache-control', 'public');
       res.setHeader('Expires', new Date(Date.now() + 1000 * 3600 * 24).toUTCString());
       res.json(audit || 'null');
+    } catch (e) {
+      res.status(500).send(e instanceof Error ? e.message : e);
+    }
+  }
+
+  private async $getDualPowStats(req: Request, res: Response): Promise<void> {
+    try {
+      let meowpowDifficulty = 0, scryptDifficulty = 0;
+      let meowpowHashrate = 0, scryptHashrate = 0;
+
+      try {
+        meowpowDifficulty = await bitcoinClient.getDifficulty(0);
+        scryptDifficulty = await bitcoinClient.getDifficulty(1);
+        meowpowHashrate = await bitcoinClient.getNetworkHashPs(0, -1, 0);
+        scryptHashrate = await bitcoinClient.getNetworkHashPs(0, -1, 1);
+      } catch (e) {
+        logger.debug('Bitcoin Core is not available, using zeroed values for dual PoW stats');
+      }
+
+      res.header('Pragma', 'public');
+      res.header('Cache-control', 'public');
+      res.setHeader('Expires', new Date(Date.now() + 1000 * 60).toUTCString()); // 1 minute cache
+      res.json({
+        meowpow: { 
+          difficulty: meowpowDifficulty, 
+          hashrate: meowpowHashrate,
+          algorithm: 'MeowPow'
+        },
+        scrypt: { 
+          difficulty: scryptDifficulty, 
+          hashrate: scryptHashrate,
+          algorithm: 'Scrypt',
+          // If scrypt hashrate is 0, auxpow hasn't started yet
+          auxpowActive: scryptHashrate > 0
+        }
+      });
     } catch (e) {
       res.status(500).send(e instanceof Error ? e.message : e);
     }

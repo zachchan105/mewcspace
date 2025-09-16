@@ -1,0 +1,336 @@
+// Home page styling (vertical layout with progress bars)
+:host-context(.dashboard-container) .dual-pow-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  .pow-section {
+    margin-bottom: 12px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .pow-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #fff;
+      margin-bottom: 8px;
+      
+      .pow-icon {
+        font-size: 1rem;
+      }
+      
+      .auxpow-status {
+        font-size: 0.7rem;
+        color: #ff6b35;
+        font-weight: 400;
+        margin-left: 0.5rem;
+      }
+    }
+    
+    .difficulty-stats {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      height: 50.5px;
+      
+      .stat-item {
+        padding: 0 5px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
+        .stat-label {
+          font-size: 12px;
+          color: #ffffff66;
+          margin-bottom: 0.2rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+          font-size: 18px;
+          font-weight: 600;
+          color: #fff;
+          margin: auto;
+          position: relative;
+          margin-bottom: 0.2rem;
+          
+          &.bigger {
+            font-size: 20px;
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Mining dashboard styling (horizontal layout)
+:host-context(.mining-dashboard) .dual-pow-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  height: 76px;
+  
+  .pow-section {
+    padding: 0 5px;
+    width: 100%;
+    max-width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    .pow-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #fff;
+      margin-bottom: 4px;
+      
+      .pow-icon {
+        font-size: 0.9rem;
+      }
+      
+      .auxpow-status {
+        font-size: 0.6rem;
+        color: #ff6b35;
+        font-weight: 400;
+        margin-left: 0.3rem;
+      }
+    }
+    
+    .difficulty-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        .stat-label {
+          font-size: 10px;
+          color: #ffffff66;
+          margin-bottom: 0.1rem;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+        }
+        
+        .stat-value {
+          font-size: 14px;
+          font-weight: 600;
+          color: #fff;
+          margin-top: -2px;
+          position: relative;
+        }
+      }
+    }
+  }
+}
+
+// Default styling (fallback)
+.dual-pow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  
+  .pow-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &.meowpow {
+      border-left: 3px solid #3bcc49;
+    }
+    
+    &.scrypt {
+      border-left: 3px solid #ff6b35;
+    }
+    
+    .pow-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #fff;
+      
+      .pow-icon {
+        font-size: 1rem;
+      }
+      
+      .auxpow-status {
+        font-size: 0.7rem;
+        color: #ff6b35;
+        font-weight: 400;
+        margin-left: auto;
+      }
+    }
+    
+    .difficulty-stats {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        
+        .stat-label {
+          font-size: 0.7rem;
+          color: #888;
+          margin-bottom: 0.2rem;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+        }
+        
+        .stat-value {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #fff;
+          word-break: break-all;
+        }
+      }
+    }
+  }
+}
+
+// Card styling to match original components
+.card {
+  background-color: #1f2937;
+  height: 100%;
+}
+
+.card-title {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.more-padding {
+  padding: 18px;
+}
+
+.card-wrapper {
+  .card {
+    height: auto !important;
+  }
+  .card-body {
+    display: flex;
+    flex: inherit;
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 20px;
+  }
+}
+
+.main-title {
+  position: relative;
+  color: #fff;
+  margin-top: -13px;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 500;
+  text-align: center;
+  padding-bottom: 3px;
+}
+
+.symbol {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.loading-difficulty {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  
+  .skeleton-loader {
+    height: 80px;
+    background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 8px;
+  }
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  :host-context(.dashboard-container) .dual-pow-container {
+    .pow-section {
+      .pow-label {
+        font-size: 0.8rem;
+        
+        .auxpow-status {
+          font-size: 0.65rem;
+        }
+      }
+      
+      .difficulty-stats {
+        .stat-item {
+          .stat-label {
+            font-size: 10px;
+          }
+          
+          .stat-value {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+  
+  :host-context(.mining-dashboard) .dual-pow-container {
+    height: 60px;
+    
+    .pow-section {
+      .pow-label {
+        font-size: 0.7rem;
+        margin-bottom: 2px;
+        
+        .auxpow-status {
+          font-size: 0.55rem;
+        }
+      }
+      
+      .difficulty-stats {
+        .stat-item {
+          .stat-label {
+            font-size: 9px;
+          }
+          
+          .stat-value {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}

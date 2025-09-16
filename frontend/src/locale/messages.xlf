@@ -6626,6 +6626,13 @@
           <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="mining.auxpow-pending" datatype="html">
+        <source>(AuxPoW Pending)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/dual-difficulty-mining/dual-difficulty-mining.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

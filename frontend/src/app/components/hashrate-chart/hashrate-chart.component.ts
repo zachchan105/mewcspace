@@ -44,6 +44,7 @@ export class HashrateChartComponent implements OnInit {
   @HostBinding('attr.dir') dir = 'ltr';
 
   hashrateObservable$: Observable<any>;
+  dualPowStats$: Observable<any>;
   isLoading = true;
   formatNumber = formatNumber;
   timespan = '';
@@ -69,6 +70,8 @@ export class HashrateChartComponent implements OnInit {
 
     if (this.widget) {
       this.miningWindowPreference = '1y';
+      // Initialize dual PoW stats for widget mode
+      this.dualPowStats$ = this.apiService.getDualPowStats$();
     } else {
       this.seoService.setTitle($localize`:@@3510fc6daa1d975f331e3a717bdf1a34efa06dff:Hashrate & Difficulty`);
       this.miningWindowPreference = this.miningService.getDefaultTimespan('3m');

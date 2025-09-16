@@ -517,6 +517,20 @@ class DatabaseMigration {
 
     if (databaseSchemaVersion < 60 && isBitcoin === true) {
       await this.$executeQuery('ALTER TABLE `blocks_audits` ADD sigop_txs JSON DEFAULT "[]"');
+      
+      // Add algorithm column to difficulty_adjustments and hashrates tables for dual PoW support
+      // 0 = MeowPow, 1 = Scrypt
+      await this.$executeQuery('ALTER TABLE `difficulty_adjustments` ADD COLUMN `algorithm` TINYINT UNSIGNED DEFAULT 0');
+      await this.$executeQuery('ALTER TABLE `hashrates` ADD COLUMN `algorithm` TINYINT UNSIGNED DEFAULT 0');
+      
+      // Update existing records to MeowPow (0) - this is the default for existing data
+      await this.$executeQuery('UPDATE `difficulty_adjustments` SET `algorithm` = 0 WHERE `algorithm` IS NULL');
+      await this.$executeQuery('UPDATE `hashrates` SET `algorithm` = 0 WHERE `algorithm` IS NULL');
+      
+      // Add indexes for better performance on algorithm queries
+      await this.$executeQuery('CREATE INDEX `idx_difficulty_algorithm` ON `difficulty_adjustments` (`algorithm`)');
+      await this.$executeQuery('CREATE INDEX `idx_hashrates_algorithm` ON `hashrates` (`algorithm`)');
+      
       await this.updateToSchemaVersion(60);
     }
   }
@@ -824,8 +838,12 @@ class DatabaseMigration {
       hashrate_timestamp timestamp NOT NULL,
       avg_hashrate double unsigned DEFAULT '0',
       pool_id smallint unsigned NULL,
+      share double unsigned DEFAULT '0',
+      type varchar(20) DEFAULT 'daily',
+      algorithm TINYINT UNSIGNED DEFAULT 0,
       PRIMARY KEY (hashrate_timestamp),
       INDEX (pool_id),
+      INDEX (algorithm),
       FOREIGN KEY (pool_id) REFERENCES pools (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
   }

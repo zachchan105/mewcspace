@@ -179,6 +179,14 @@ class BitcoinApi implements AbstractBitcoinApi {
     return this.bitcoindClient.getNetworkHashPs(120, blockHeight);
   }
 
+  $getDifficultyByAlgorithm(algorithm: number): Promise<number> {
+    return this.bitcoindClient.getDifficulty(algorithm);
+  }
+
+  $getNetworkHashPsByAlgorithm(algorithm: number): Promise<number> {
+    return this.bitcoindClient.getNetworkHashPs(0, -1, algorithm);
+  }
+
   protected async $convertTransaction(transaction: IBitcoinApi.Transaction, addPrevout: boolean, lazyPrevouts = false): Promise<IEsploraApi.Transaction> {
     let esploraTransaction: IEsploraApi.Transaction = {
       txid: transaction.txid,

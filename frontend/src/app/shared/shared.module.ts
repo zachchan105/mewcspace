@@ -58,6 +58,7 @@ import { FeesBoxComponent } from '../components/fees-box/fees-box.component';
 import { DifficultyComponent } from '../components/difficulty/difficulty.component';
 import { DifficultyTooltipComponent } from '../components/difficulty/difficulty-tooltip.component';
 import { DifficultyMiningComponent } from '../components/difficulty-mining/difficulty-mining.component';
+import { DualDifficultyMiningComponent } from '../components/dual-difficulty-mining/dual-difficulty-mining.component';
 import { TermsOfServiceComponent } from '../components/terms-of-service/terms-of-service.component';
 import { RbfTimelineComponent } from '../components/rbf-timeline/rbf-timeline.component';
 import { RbfTimelineTooltipComponent } from '../components/rbf-timeline/rbf-timeline-tooltip.component';
@@ -144,6 +145,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     FeesBoxComponent,
     DifficultyComponent,
     DifficultyMiningComponent,
+    DualDifficultyMiningComponent,
     DifficultyTooltipComponent,
     RbfTimelineComponent,
     RbfTimelineTooltipComponent,
@@ -259,6 +261,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     FeesBoxComponent,
     DifficultyComponent,
     DifficultyMiningComponent,
+    DualDifficultyMiningComponent,
     DifficultyTooltipComponent,
     RbfTimelineComponent,
     RbfTimelineTooltipComponent,

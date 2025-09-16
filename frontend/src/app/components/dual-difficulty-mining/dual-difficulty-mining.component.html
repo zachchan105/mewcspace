@@ -1,0 +1,54 @@
+<div *ngIf="showTitle" class="main-title" i18n="dashboard.difficulty-adjustment">Difficulty Adjustment</div>
+<div class="card-wrapper">
+  <div class="card">
+    <div class="card-body more-padding">
+      <div class="dual-pow-container" *ngIf="(isLoading$ | async) === false && (dualPowStats$ | async) as stats; else loadingDifficulty">
+        
+        <!-- MeowPow Section -->
+        <div class="pow-section meowpow">
+          <div class="pow-label">
+            <span class="pow-icon">🐱</span>
+            <span class="pow-name">MeowPow</span>
+          </div>
+          <div class="difficulty-stats">
+            <div class="stat-item">
+              <span class="stat-label" i18n="block.difficulty">Difficulty</span>
+              <span class="stat-value">{{ formatDifficulty(stats.meowpow.difficulty) }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label" i18n="mining.hashrate">Hashrate</span>
+              <span class="stat-value">{{ formatHashrate(stats.meowpow.hashrate) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrypt Section -->
+        <div class="pow-section scrypt">
+          <div class="pow-label">
+            <span class="pow-icon">⛏️</span>
+            <span class="pow-name">Scrypt</span>
+            <span class="auxpow-status" *ngIf="!stats.scrypt.auxpowActive" i18n="mining.auxpow-pending">(AuxPoW Pending)</span>
+          </div>
+          <div class="difficulty-stats">
+            <div class="stat-item">
+              <span class="stat-label" i18n="block.difficulty">Difficulty</span>
+              <span class="stat-value">{{ formatDifficulty(stats.scrypt.difficulty) }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label" i18n="mining.hashrate">Hashrate</span>
+              <span class="stat-value">{{ formatHashrate(stats.scrypt.hashrate) }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      
+      <ng-template #loadingDifficulty>
+        <div class="loading-difficulty">
+          <div class="skeleton-loader"></div>
+          <div class="skeleton-loader"></div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
