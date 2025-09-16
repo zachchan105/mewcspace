@@ -1,10 +1,8 @@
 import config from '../config';
 import logger from '../logger';
 import PricesRepository, { ApiPrice, MAX_PRICES } from '../repositories/PricesRepository';
-import BitfinexApi from './price-feeds/bitfinex-api';
-import CoinbaseApi from './price-feeds/coinbase-api';
-import GeminiApi from './price-feeds/gemini-api';
-import KrakenApi from './price-feeds/kraken-api';
+import CoinGeckoApi from './price-feeds/coingecko-api';
+import NonKYCApi from './price-feeds/nonkyc-api';
 
 export interface PriceFeed {
   name: string;
@@ -33,10 +31,9 @@ class PriceUpdater {
   constructor() {
     this.latestPrices = this.getEmptyPricesObj();
 
-    this.feeds.push(new KrakenApi());
-    this.feeds.push(new CoinbaseApi());
-    this.feeds.push(new BitfinexApi());
-    this.feeds.push(new GeminiApi());
+    // Meowcoin price feeds
+    this.feeds.push(new CoinGeckoApi());
+    this.feeds.push(new NonKYCApi());
   }
 
   public getLatestPrices(): ApiPrice {
