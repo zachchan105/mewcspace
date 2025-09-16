@@ -162,8 +162,7 @@ class DatabaseMigration {
       await this.$executeQuery('TRUNCATE hashrates;'); // Need to re-index
       await this.$executeQuery('ALTER TABLE `hashrates` DROP INDEX `PRIMARY`');
       await this.$executeQuery('ALTER TABLE `hashrates` ADD `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
-      await this.$executeQuery('ALTER TABLE `hashrates` ADD `share` float NOT NULL DEFAULT "0"');
-      await this.$executeQuery('ALTER TABLE `hashrates` ADD `type` enum("daily", "weekly") DEFAULT "daily"');
+      // Note: share and type columns are already included in the table created by migration 7
       await this.updateToSchemaVersion(8);
     }
 
