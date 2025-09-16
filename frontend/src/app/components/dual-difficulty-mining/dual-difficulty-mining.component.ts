@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import { StateService } from '../../services/state.service';
@@ -16,10 +16,9 @@ interface DualPowStats {
   styleUrls: ['./dual-difficulty-mining.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DualDifficultyMiningComponent implements OnInit, OnDestroy {
+export class DualDifficultyMiningComponent implements OnInit {
   dualPowStats$: Observable<DualPowStats>;
   isLoading$: Observable<boolean>;
-  private blocksSubscription: Subscription;
 
   @Input() showProgress = true;
   @Input() showHalving = false;
@@ -33,24 +32,12 @@ export class DualDifficultyMiningComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isLoading$ = this.stateService.isLoadingWebSocket$;
     
-    // Subscribe to block updates to refresh data on new blocks
-    this.blocksSubscription = this.stateService.blocks$.subscribe(() => {
-      // Trigger a refresh of the dual PoW stats
-      this.dualPowStats$ = this.apiService.getDualPowStats$().pipe(
-        map((stats) => this.addDifficultyAdjustmentData(stats))
-      );
-    });
-
-    // Initial load
-    this.dualPowStats$ = this.apiService.getDualPowStats$().pipe(
+    // Create a single observable that refreshes on block updates without showing loading state
+    this.dualPowStats$ = this.stateService.blocks$.pipe(
+      startWith(null), // Initial load
+      switchMap(() => this.apiService.getDualPowStats$()),
       map((stats) => this.addDifficultyAdjustmentData(stats))
     );
-  }
-
-  ngOnDestroy(): void {
-    if (this.blocksSubscription) {
-      this.blocksSubscription.unsubscribe();
-    }
   }
 
   formatHashrate(hashrate: number): string {
