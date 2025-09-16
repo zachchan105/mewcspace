@@ -1,152 +1,11 @@
-// Home page styling (vertical layout with progress bars)
+// Home page styling (compact side-by-side layout)
 :host-context(.dashboard-container) .dual-pow-container {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  
-  .pow-section {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    
-    &.meowpow {
-      border-left: 3px solid #3bcc49;
-    }
-    
-    &.scrypt {
-      border-left: 3px solid #ff6b35;
-    }
-    
-    .pow-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      
-      .pow-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: #fff;
-        
-        .pow-icon {
-          font-size: 1rem;
-        }
-      }
-      
-      .pow-status {
-        font-size: 0.75rem;
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-weight: 500;
-        
-        &.active {
-          background: rgba(59, 204, 73, 0.2);
-          color: #3bcc49;
-        }
-        
-        &.pending {
-          background: rgba(255, 107, 53, 0.2);
-          color: #ff6b35;
-        }
-      }
-    }
-    
-    .epoch-progress {
-      margin-bottom: 12px;
-      
-      .progress-bar-container {
-        height: 8px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-        overflow: hidden;
-        margin-bottom: 6px;
-        position: relative;
-        
-        .progress-bar {
-          height: 100%;
-          border-radius: 4px;
-          transition: width 0.5s ease;
-          position: relative;
-          
-          &.meowpow-bar {
-            background: linear-gradient(90deg, #3bcc49, #2aa83a);
-            box-shadow: 0 0 8px rgba(59, 204, 73, 0.3);
-          }
-          
-          &.scrypt-bar {
-            background: linear-gradient(90deg, #ff6b35, #e55a2b);
-            box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
-          }
-          
-          &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 2px;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            animation: pulse 2s infinite;
-          }
-        }
-      }
-      
-      .progress-label {
-        font-size: 0.75rem;
-        color: #ffffff66;
-        text-align: center;
-        font-weight: 500;
-      }
-    }
-    
-    .difficulty-stats {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      gap: 8px;
-      
-      .stat-item {
-        flex: 1;
-        text-align: center;
-        
-        .stat-label {
-          font-size: 11px;
-          color: #ffffff66;
-          margin-bottom: 4px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          font-weight: 500;
-        }
-        
-        .stat-value {
-          font-size: 16px;
-          font-weight: 600;
-          color: #fff;
-          margin-bottom: 2px;
-        }
-        
-        .stat-subtext {
-          font-size: 10px;
-          color: #ffffff66;
-          font-weight: 400;
-        }
-      }
-    }
-  }
-}
-
-// Mining dashboard styling (horizontal layout)
-:host-context(.mining-dashboard) .dual-pow-container {
-  display: flex;
   flex-direction: row;
-  gap: 12px;
-  height: 76px;
+  gap: 8px;
+  height: 80px; // Fixed height for density
   
-  .pow-section {
+  .pow-card {
     flex: 1;
     background: rgba(255, 255, 255, 0.02);
     border-radius: 6px;
@@ -160,114 +19,241 @@
       border-left: 2px solid #3bcc49;
     }
     
-    &.scrypt {
+    &.auxpow {
       border-left: 2px solid #ff6b35;
     }
     
-    .pow-header {
+    .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       
-      .pow-label {
+      .algo-name {
         display: flex;
         align-items: center;
         gap: 0.3rem;
         font-weight: 600;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: #fff;
         
-        .pow-icon {
-          font-size: 0.9rem;
+        .algo-icon {
+          font-size: 0.8rem;
         }
       }
       
-      .pow-status {
-        font-size: 0.65rem;
+      .last-update {
+        font-size: 0.6rem;
+        color: #ffffff66;
+        font-weight: 400;
+      }
+    }
+    
+    .difficulty-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      
+      .difficulty-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1;
+      }
+      
+      .delta-chip {
+        font-size: 0.7rem;
+        font-weight: 600;
         padding: 2px 6px;
         border-radius: 8px;
-        font-weight: 500;
-        
-        &.active {
-          background: rgba(59, 204, 73, 0.15);
-          color: #3bcc49;
-        }
-        
-        &.pending {
-          background: rgba(255, 107, 53, 0.15);
-          color: #ff6b35;
-        }
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 2px;
       }
     }
     
-    .epoch-progress {
-      margin-bottom: 6px;
+    .next-impact {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
       
-      .progress-bar-container {
-        height: 4px;
-        background: rgba(255, 255, 255, 0.08);
+      .impact-label {
+        font-size: 0.6rem;
+        color: #ffffff66;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      
+      .impact-value {
+        font-size: 0.65rem;
+        font-weight: 600;
+      }
+    }
+    
+    .trend-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+      
+      .trend-fill {
+        height: 100%;
         border-radius: 2px;
-        overflow: hidden;
-        margin-bottom: 2px;
+        transition: width 0.3s ease;
         position: relative;
         
-        .progress-bar {
+        &.trend-right {
+          margin-left: 0;
+        }
+        
+        &.trend-left {
+          margin-left: auto;
+        }
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 1px;
           height: 100%;
-          border-radius: 2px;
-          transition: width 0.3s ease;
-          position: relative;
-          
-          &.meowpow-bar {
-            background: linear-gradient(90deg, #3bcc49, #2aa83a);
-          }
-          
-          &.scrypt-bar {
-            background: linear-gradient(90deg, #ff6b35, #e55a2b);
-          }
-          
-          &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 1px;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.6);
-            animation: pulse 2s infinite;
-          }
+          background: rgba(255, 255, 255, 0.6);
+          animation: pulse 2s infinite;
+        }
+      }
+    }
+  }
+}
+
+// Mining dashboard styling (ultra-compact horizontal layout)
+:host-context(.mining-dashboard) .dual-pow-container {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  height: 60px; // Even more compact for mining page
+  
+  .pow-card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    &.meowpow {
+      border-left: 2px solid #3bcc49;
+    }
+    
+    &.auxpow {
+      border-left: 2px solid #ff6b35;
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+      
+      .algo-name {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+        font-weight: 600;
+        font-size: 0.65rem;
+        color: #fff;
+        
+        .algo-icon {
+          font-size: 0.7rem;
         }
       }
       
-      .progress-label {
-        font-size: 0.6rem;
-        color: #ffffff44;
-        text-align: center;
+      .last-update {
+        font-size: 0.5rem;
+        color: #ffffff66;
+        font-weight: 400;
       }
     }
     
-    .difficulty-stats {
+    .difficulty-display {
       display: flex;
-      flex-direction: column;
-      gap: 2px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
       
-      .stat-item {
+      .difficulty-value {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1;
+      }
+      
+      .delta-chip {
+        font-size: 0.6rem;
+        font-weight: 600;
+        padding: 1px 4px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.1);
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        gap: 1px;
+      }
+    }
+    
+    .next-impact {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+      
+      .impact-label {
+        font-size: 0.5rem;
+        color: #ffffff66;
+        text-transform: uppercase;
+        letter-spacing: 0.2px;
+      }
+      
+      .impact-value {
+        font-size: 0.55rem;
+        font-weight: 600;
+      }
+    }
+    
+    .trend-bar {
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 1.5px;
+      overflow: hidden;
+      position: relative;
+      
+      .trend-fill {
+        height: 100%;
+        border-radius: 1.5px;
+        transition: width 0.3s ease;
+        position: relative;
         
-        .stat-label {
-          font-size: 9px;
-          color: #ffffff66;
-          text-transform: uppercase;
-          letter-spacing: 0.3px;
-          font-weight: 500;
+        &.trend-right {
+          margin-left: 0;
         }
         
-        .stat-value {
-          font-size: 12px;
-          font-weight: 600;
-          color: #fff;
+        &.trend-left {
+          margin-left: auto;
+        }
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 1px;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.6);
+          animation: pulse 2s infinite;
         }
       }
     }
@@ -394,15 +380,17 @@
 
 .loading-difficulty {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  flex-direction: row;
+  gap: 8px;
+  height: 80px;
   
-  .skeleton-loader {
-    height: 80px;
+  .skeleton-card {
+    flex: 1;
+    height: 100%;
     background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
-    border-radius: 8px;
+    border-radius: 6px;
   }
 }
 
@@ -430,52 +418,89 @@
 // Mobile responsiveness
 @media (max-width: 768px) {
   :host-context(.dashboard-container) .dual-pow-container {
-    .pow-section {
-      .pow-label {
-        font-size: 0.8rem;
-        
-        .auxpow-status {
+    height: 70px;
+    gap: 6px;
+    
+    .pow-card {
+      padding: 6px;
+      
+      .card-header {
+        .algo-name {
           font-size: 0.65rem;
+          .algo-icon {
+            font-size: 0.7rem;
+          }
+        }
+        .last-update {
+          font-size: 0.5rem;
         }
       }
       
-      .difficulty-stats {
-        .stat-item {
-          .stat-label {
-            font-size: 10px;
-          }
-          
-          .stat-value {
-            font-size: 16px;
-          }
+      .difficulty-display {
+        .difficulty-value {
+          font-size: 1rem;
         }
+        .delta-chip {
+          font-size: 0.6rem;
+          padding: 1px 4px;
+        }
+      }
+      
+      .next-impact {
+        .impact-label {
+          font-size: 0.5rem;
+        }
+        .impact-value {
+          font-size: 0.6rem;
+        }
+      }
+      
+      .trend-bar {
+        height: 3px;
       }
     }
   }
   
   :host-context(.mining-dashboard) .dual-pow-container {
-    height: 60px;
+    height: 50px;
+    gap: 4px;
     
-    .pow-section {
-      .pow-label {
-        font-size: 0.7rem;
-        margin-bottom: 2px;
-        
-        .auxpow-status {
-          font-size: 0.55rem;
+    .pow-card {
+      padding: 4px;
+      
+      .card-header {
+        .algo-name {
+          font-size: 0.6rem;
+          .algo-icon {
+            font-size: 0.65rem;
+          }
+        }
+        .last-update {
+          font-size: 0.45rem;
         }
       }
       
-      .difficulty-stats {
-        .stat-item {
-          .stat-label {
-            font-size: 9px;
-          }
-          
-          .stat-value {
-            font-size: 12px;
-          }
+      .difficulty-display {
+        .difficulty-value {
+          font-size: 0.8rem;
         }
+        .delta-chip {
+          font-size: 0.55rem;
+          padding: 1px 3px;
+        }
+      }
+      
+      .next-impact {
+        .impact-label {
+          font-size: 0.45rem;
+        }
+        .impact-value {
+          font-size: 0.5rem;
+        }
+      }
+      
+      .trend-bar {
+        height: 2px;
       }
     }
   }

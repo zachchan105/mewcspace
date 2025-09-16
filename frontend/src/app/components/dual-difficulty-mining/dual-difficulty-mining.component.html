@@ -1,91 +1,79 @@
-<div *ngIf="showTitle" class="main-title" i18n="dashboard.difficulty-adjustment">Difficulty Adjustment</div>
+<div *ngIf="showTitle" class="main-title" i18n="dashboard.difficulty-adjustment">Difficulty Adjustment (LWMA-45)</div>
 <div class="card-wrapper">
   <div class="card">
     <div class="card-body more-padding">
       <div class="dual-pow-container" *ngIf="(isLoading$ | async) === false && (dualPowStats$ | async) as stats; else loadingDifficulty">
         
         <!-- MeowPow Section -->
-        <div class="pow-section meowpow">
-          <div class="pow-header">
-            <div class="pow-label">
-              <span class="pow-icon">🐱</span>
-              <span class="pow-name">MeowPow</span>
+        <div class="pow-card meowpow">
+          <div class="card-header">
+            <div class="algo-name">
+              <span class="algo-icon">🐱</span>
+              <span>MeowPoW (LWMA-45)</span>
             </div>
-            <div class="pow-status active">Active</div>
+            <div class="last-update">{{ formatLastUpdate(stats.meowpow.lastUpdate) }}</div>
           </div>
           
-          <!-- Epoch Progress Bar -->
-          <div class="epoch-progress">
-            <div class="progress-bar-container">
-              <div class="progress-bar meowpow-bar" [style.width]="getProgressBarWidth(stats.meowpow.progressPercent)"></div>
+          <div class="difficulty-display">
+            <div class="difficulty-value">{{ formatDifficulty(stats.meowpow.currentDifficulty) }}</div>
+            <div class="delta-chip" [style.color]="getDifficultyChangeColor(stats.meowpow.difficultyChange)">
+              <span *ngIf="stats.meowpow.difficultyChange > 0">↗</span>
+              <span *ngIf="stats.meowpow.difficultyChange < 0">↘</span>
+              <span *ngIf="stats.meowpow.difficultyChange === 0">→</span>
+              {{ stats.meowpow.difficultyChange | number:'1.1-1' }}%
             </div>
-            <div class="progress-label">{{ stats.meowpow.progressPercent | number:'1.1-1' }}% Complete</div>
           </div>
           
-          <div class="difficulty-stats">
-            <div class="stat-item">
-              <div class="stat-label" i18n="difficulty-box.estimate">Estimate</div>
-              <div class="stat-value" [style.color]="getDifficultyChangeColor(stats.meowpow.difficultyChange)">
-                <span *ngIf="stats.meowpow.difficultyChange > 0">↗</span>
-                <span *ngIf="stats.meowpow.difficultyChange < 0">↘</span>
-                <span *ngIf="stats.meowpow.difficultyChange === 0">→</span>
-                {{ stats.meowpow.difficultyChange | number:'1.1-1' }}%
-              </div>
-              <div class="stat-subtext">
-                <span i18n="difficulty-box.previous">Previous</span>:
-                <span [style.color]="getPreviousRetargetColor(stats.meowpow.previousRetarget)">
-                  {{ stats.meowpow.previousRetarget | number:'1.1-1' }}%
-                </span>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-label" i18n="difficulty-box.remaining">Remaining</div>
-              <div class="stat-value">{{ stats.meowpow.remainingBlocks }} blocks</div>
-              <div class="stat-subtext">{{ formatTimeUntilRetarget(stats.meowpow.estimatedRetargetDate) }}</div>
+          <div class="next-impact">
+            <span class="impact-label">Next block:</span>
+            <span class="impact-value" [style.color]="getNextBlockImpactColor(stats.meowpow.nextBlockImpact)">
+              ≈{{ stats.meowpow.nextBlockImpact | number:'1.1-1' }}%
+            </span>
+          </div>
+          
+          <div class="trend-bar">
+            <div class="trend-fill" 
+                 [style.width]="getTrendBarWidth(stats.meowpow.slope)"
+                 [style.background-color]="getTrendBarColor(stats.meowpow.slope)"
+                 [class.trend-right]="getTrendBarDirection(stats.meowpow.slope) === 'right'"
+                 [class.trend-left]="getTrendBarDirection(stats.meowpow.slope) === 'left'">
             </div>
           </div>
         </div>
 
-        <!-- Scrypt Section -->
-        <div class="pow-section scrypt">
-          <div class="pow-header">
-            <div class="pow-label">
-              <span class="pow-icon">⛏️</span>
-              <span class="pow-name">Scrypt</span>
+        <!-- AuxPoW Section -->
+        <div class="pow-card auxpow">
+          <div class="card-header">
+            <div class="algo-name">
+              <span class="algo-icon">⛏️</span>
+              <span>AuxPoW (LWMA-45)</span>
             </div>
-            <div class="pow-status" [class.pending]="!stats.scrypt.auxpowActive" [class.active]="stats.scrypt.auxpowActive">
-              {{ stats.scrypt.auxpowActive ? 'Active' : 'AuxPoW Pending' }}
+            <div class="last-update">{{ formatLastUpdate(stats.scrypt.lastUpdate) }}</div>
+          </div>
+          
+          <div class="difficulty-display">
+            <div class="difficulty-value">{{ formatDifficulty(stats.scrypt.currentDifficulty) }}</div>
+            <div class="delta-chip" [style.color]="getDifficultyChangeColor(stats.scrypt.difficultyChange)">
+              <span *ngIf="stats.scrypt.difficultyChange > 0">↗</span>
+              <span *ngIf="stats.scrypt.difficultyChange < 0">↘</span>
+              <span *ngIf="stats.scrypt.difficultyChange === 0">→</span>
+              {{ stats.scrypt.difficultyChange | number:'1.1-1' }}%
             </div>
           </div>
           
-          <!-- Epoch Progress Bar -->
-          <div class="epoch-progress">
-            <div class="progress-bar-container">
-              <div class="progress-bar scrypt-bar" [style.width]="getProgressBarWidth(stats.scrypt.progressPercent)"></div>
-            </div>
-            <div class="progress-label">{{ stats.scrypt.progressPercent | number:'1.1-1' }}% Complete</div>
+          <div class="next-impact">
+            <span class="impact-label">Next block:</span>
+            <span class="impact-value" [style.color]="getNextBlockImpactColor(stats.scrypt.nextBlockImpact)">
+              ≈{{ stats.scrypt.nextBlockImpact | number:'1.1-1' }}%
+            </span>
           </div>
           
-          <div class="difficulty-stats">
-            <div class="stat-item">
-              <div class="stat-label" i18n="difficulty-box.estimate">Estimate</div>
-              <div class="stat-value" [style.color]="getDifficultyChangeColor(stats.scrypt.difficultyChange)">
-                <span *ngIf="stats.scrypt.difficultyChange > 0">↗</span>
-                <span *ngIf="stats.scrypt.difficultyChange < 0">↘</span>
-                <span *ngIf="stats.scrypt.difficultyChange === 0">→</span>
-                {{ stats.scrypt.difficultyChange | number:'1.1-1' }}%
-              </div>
-              <div class="stat-subtext">
-                <span i18n="difficulty-box.previous">Previous</span>:
-                <span [style.color]="getPreviousRetargetColor(stats.scrypt.previousRetarget)">
-                  {{ stats.scrypt.previousRetarget | number:'1.1-1' }}%
-                </span>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-label" i18n="difficulty-box.remaining">Remaining</div>
-              <div class="stat-value">{{ stats.scrypt.remainingBlocks }} blocks</div>
-              <div class="stat-subtext">{{ formatTimeUntilRetarget(stats.scrypt.estimatedRetargetDate) }}</div>
+          <div class="trend-bar">
+            <div class="trend-fill" 
+                 [style.width]="getTrendBarWidth(stats.scrypt.slope)"
+                 [style.background-color]="getTrendBarColor(stats.scrypt.slope)"
+                 [class.trend-right]="getTrendBarDirection(stats.scrypt.slope) === 'right'"
+                 [class.trend-left]="getTrendBarDirection(stats.scrypt.slope) === 'left'">
             </div>
           </div>
         </div>
@@ -94,8 +82,8 @@
       
       <ng-template #loadingDifficulty>
         <div class="loading-difficulty">
-          <div class="skeleton-loader"></div>
-          <div class="skeleton-loader"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
         </div>
       </ng-template>
     </div>

@@ -5,18 +5,14 @@ import { ApiService } from '../../services/api.service';
 import { StateService } from '../../services/state.service';
 
 interface DualPowData {
-  progressPercent: number;
+  currentDifficulty: number;
   difficultyChange: number;
-  estimatedRetargetDate: number;
-  remainingBlocks: number;
-  remainingTime: number;
-  previousRetarget: number;
-  previousTime: number;
-  nextRetargetHeight: number;
-  timeAvg: number;
-  timeOffset: number;
-  expectedBlocks: number;
+  nextBlockImpact: number;
+  slope: number;
+  timingRatio: number;
+  avgBlockTime: number;
   algorithm: string;
+  lastUpdate: number;
   auxpowActive?: boolean;
 }
 
@@ -64,61 +60,71 @@ export class DualDifficultyMiningComponent implements OnInit {
     return `${value.toFixed(1)} ${units[unitIndex]}`;
   }
 
-  formatDifficulty(difficulty: number): string {
-    if (difficulty === 0) return '0';
-    
-    const units = ['', 'K', 'M', 'B', 'T'];
-    let unitIndex = 0;
-    let value = difficulty;
-    
-    while (value >= 1000 && unitIndex < units.length - 1) {
-      value /= 1000;
-      unitIndex++;
-    }
-    
-    return `${value.toFixed(2)}${units[unitIndex]}`;
-  }
 
   getDifficultyChangeColor(difficultyChange: number): string {
-    if (difficultyChange > 0) {
+    if (difficultyChange > 0.3) {
       return '#3bcc49'; // Green for increase
-    } else if (difficultyChange < 0) {
+    } else if (difficultyChange < -0.3) {
       return '#dc3545'; // Red for decrease
     } else {
       return '#ffffff66'; // Gray for no change
     }
   }
 
-  getPreviousRetargetColor(previousRetarget: number): string {
-    if (previousRetarget > 0) {
+  getNextBlockImpactColor(nextBlockImpact: number): string {
+    if (nextBlockImpact > 0.3) {
       return '#3bcc49'; // Green for increase
-    } else if (previousRetarget < 0) {
+    } else if (nextBlockImpact < -0.3) {
       return '#dc3545'; // Red for decrease
     } else {
       return '#ffffff66'; // Gray for no change
     }
   }
 
-  getProgressBarWidth(progressPercent: number): string {
-    return `${Math.min(100, Math.max(0, progressPercent))}%`;
+  getTrendBarWidth(slope: number): string {
+    // Convert slope (-0.1 to +0.1) to percentage (0 to 100)
+    const percentage = ((slope + 0.1) / 0.2) * 100;
+    return `${Math.min(100, Math.max(0, percentage))}%`;
   }
 
-  formatTimeUntilRetarget(estimatedRetargetDate: number): string {
-    const now = new Date().getTime();
-    const timeUntil = estimatedRetargetDate - now;
-    
-    if (timeUntil <= 0) return 'Now';
-    
-    const days = Math.floor(timeUntil / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeUntil % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeUntil % (1000 * 60 * 60)) / (1000 * 60));
-    
-    if (days > 0) {
-      return `${days}d ${hours}h`;
-    } else if (hours > 0) {
-      return `${hours}h ${minutes}m`;
+  getTrendBarDirection(slope: number): string {
+    return slope > 0 ? 'right' : 'left';
+  }
+
+  getTrendBarColor(slope: number): string {
+    if (slope > 0.05) {
+      return '#3bcc49'; // Green for upward trend
+    } else if (slope < -0.05) {
+      return '#dc3545'; // Red for downward trend
     } else {
-      return `${minutes}m`;
+      return '#ffffff66'; // Gray for neutral
+    }
+  }
+
+  formatDifficulty(difficulty: number): string {
+    if (difficulty >= 1e12) {
+      return (difficulty / 1e12).toFixed(2) + 'T';
+    } else if (difficulty >= 1e9) {
+      return (difficulty / 1e9).toFixed(2) + 'B';
+    } else if (difficulty >= 1e6) {
+      return (difficulty / 1e6).toFixed(2) + 'M';
+    } else if (difficulty >= 1e3) {
+      return (difficulty / 1e3).toFixed(2) + 'K';
+    } else {
+      return difficulty.toFixed(2);
+    }
+  }
+
+  formatLastUpdate(timestamp: number): string {
+    const now = Math.floor(Date.now() / 1000);
+    const diff = now - timestamp;
+    
+    if (diff < 60) {
+      return `${diff}s ago`;
+    } else if (diff < 3600) {
+      return `${Math.floor(diff / 60)}m ago`;
+    } else {
+      return `${Math.floor(diff / 3600)}h ago`;
     }
   }
 }
