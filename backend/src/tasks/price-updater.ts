@@ -88,6 +88,12 @@ class PriceUpdater {
       // if (this.historyInserted === false && config.DATABASE.ENABLED === true) {
       //   await this.$insertHistoricalPrices();
       // }
+      
+      // Set historyInserted to true since we're skipping historical data for now
+      if (this.historyInserted === false) {
+        this.historyInserted = true;
+        this.lastHistoricalRun = new Date().getTime();
+      }
     } catch (e: any) {
       logger.err(`Cannot save MEWC prices in db. Reason: ${e instanceof Error ? e.message : e}`, logger.tags.mining);
     }
