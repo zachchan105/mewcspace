@@ -22,7 +22,7 @@ export class DualDifficultyMiningComponent implements OnInit {
 
   @Input() showProgress = true;
   @Input() showHalving = false;
-  @Input() showTitle = true;
+  @Input() showTitle = false;
 
   constructor(
     public stateService: StateService,

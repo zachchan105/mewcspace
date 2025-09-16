@@ -3,8 +3,9 @@
   --up:#3bcc49; --down:#dc3545; --flat:#ffffff66;
   background:var(--bg); color:var(--txt); border-radius:14px; padding:12px 14px; display:grid; gap:8px;
   transition:opacity .25s ease, filter .25s ease;
+  isolation:isolate; overflow:hidden;
 
-  &.muted{ opacity:.6; filter:grayscale(.2); }
+  &.muted{ opacity:.5; filter:grayscale(.35); }
 
   .head{ display:flex; justify-content:space-between; align-items:center;
     .left{ display:flex; align-items:center; gap:8px; }
@@ -28,10 +29,10 @@
     .pace{ color:var(--muted); margin-left:auto; }
   }
 
-  .momentum{ position:relative; height:10px;
-    .rail{ position:absolute; inset:0; background:var(--rail); border-radius:999px; opacity:.9; }
+  .momentum{ position:relative; height:10px; overflow:hidden;
+    .rail{ position:absolute; inset:0; background:var(--rail); border-radius:999px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); }
     .fill{
-      position:absolute; top:0; bottom:0; border-radius:999px; width:50%;
+      position:absolute; top:0; bottom:0; border-radius:999px; width:0;
       transition: width .35s cubic-bezier(.22,1,.36,1), background-color .25s ease;
     }
     .right{ left:50%; background:linear-gradient(90deg, transparent, var(--up)); }

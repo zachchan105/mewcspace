@@ -1,7 +1,3 @@
-<div *ngIf="showTitle" class="main-title" i18n="dashboard.difficulty-adjustment">
-  Difficulty (LWMA-45)
-</div>
-
 <div class="dual-grid" *ngIf="(isLoading$ | async) === false && (dualPowStats$ | async) as s; else loading">
   <app-pow-card
     label="MeowPoW"

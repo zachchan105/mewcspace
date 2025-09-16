@@ -26,10 +26,11 @@ export class PowCardComponent {
   @Input() windowSize = 45;
   @Input() data!: LwmaCardData;
 
-  // center-out momentum bar: slope ∈ [-0.1, +0.1] → 0..100%
-  momentumPercent(d: LwmaCardData): number {
+  // center-out momentum bar: slope ∈ [-0.1, +0.1]
+  // intensity is how far from center we fill, 0..50% (not 0..100%)
+  intensityPercent(d: LwmaCardData): number {
     const s = Math.max(-0.1, Math.min(0.1, d.slope ?? 0));
-    return ((s + 0.1) / 0.2) * 100; // 0..100
+    return Math.min(50, (Math.abs(s) / 0.1) * 50); // 0..50
   }
   momentumSide(d: LwmaCardData) { return (d.slope ?? 0) >= 0 ? 'right' : 'left'; }
 

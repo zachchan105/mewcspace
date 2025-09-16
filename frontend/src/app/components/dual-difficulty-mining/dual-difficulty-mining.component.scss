@@ -1,5 +1,5 @@
 .dual-grid{
-  display:grid; grid-template-columns:1fr 1fr; gap:12px;
+  display:grid; grid-template-columns:1fr 1fr; gap:16px;
 }
 @media (max-width: 840px){
   .dual-grid{ grid-template-columns:1fr; }
