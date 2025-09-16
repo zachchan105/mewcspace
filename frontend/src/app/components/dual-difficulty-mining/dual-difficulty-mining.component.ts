@@ -33,18 +33,11 @@ export class DualDifficultyMiningComponent implements OnInit {
   constructor(
     public stateService: StateService,
     private apiService: ApiService,
-  ) { 
-    console.log('DualDifficultyMiningComponent constructor called');
-  }
+  ) { }
 
   ngOnInit(): void {
     this.isLoading$ = this.stateService.isLoadingWebSocket$;
-    this.dualPowStats$ = this.apiService.getDualPowStats$().pipe(
-      map((data: any) => {
-        console.log('Dual PoW data received:', data);
-        return data;
-      })
-    );
+    this.dualPowStats$ = this.apiService.getDualPowStats$();
   }
 
   formatHashrate(hashrate: number): string {

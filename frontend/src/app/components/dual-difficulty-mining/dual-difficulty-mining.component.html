@@ -2,12 +2,6 @@
 <div class="card-wrapper">
   <div class="card">
     <div class="card-body more-padding">
-      <!-- Debug info -->
-      <div style="color: white; font-size: 12px; margin-bottom: 10px;">
-        Loading: {{ isLoading$ | async }}<br>
-        Has stats: {{ (dualPowStats$ | async) ? 'Yes' : 'No' }}
-      </div>
-      
       <div class="dual-pow-container" *ngIf="(isLoading$ | async) === false && (dualPowStats$ | async) as stats; else loadingDifficulty">
         
         <!-- MeowPow Section -->
