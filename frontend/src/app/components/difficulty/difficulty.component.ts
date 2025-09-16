@@ -32,7 +32,7 @@ interface DiffShape {
   expected: boolean;
 }
 
-const EPOCH_BLOCK_LENGTH = 2016; // Bitcoin mainnet
+const EPOCH_BLOCK_LENGTH = 2016; // Meowcoin mainnet
 
 @Component({
   selector: 'app-difficulty',
@@ -92,8 +92,10 @@ export class DifficultyComponent implements OnInit {
           colorPreviousAdjustments = '#ffffff66';
         }
 
-        const blocksUntilHalving = 840000 - (block.height % 840000);
-        const timeUntilHalving = new Date().getTime() + (blocksUntilHalving * 150000);
+        // Meowcoin halving every 2,100,000 blocks
+        const blocksUntilHalving = 2100000 - (block.height % 2100000);
+        // Meowcoin block time: 60 seconds (1 minute)
+        const timeUntilHalving = new Date().getTime() + (blocksUntilHalving * 60000);
         const newEpochStart = Math.floor(this.stateService.latestBlockHeight / EPOCH_BLOCK_LENGTH) * EPOCH_BLOCK_LENGTH;
         const newExpectedHeight = Math.floor(newEpochStart + da.expectedBlocks);
 

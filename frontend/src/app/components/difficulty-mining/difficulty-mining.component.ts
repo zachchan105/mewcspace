@@ -63,8 +63,10 @@ export class DifficultyMiningComponent implements OnInit {
           colorPreviousAdjustments = '#ffffff66';
         }
 
-        const blocksUntilHalving = 840000 - (block.height % 840000);
-        const timeUntilHalving = new Date().getTime() + (blocksUntilHalving * 150000);
+        // Meowcoin halving every 2,100,000 blocks
+        const blocksUntilHalving = 2100000 - (block.height % 2100000);
+        // Meowcoin block time: 60 seconds (1 minute)
+        const timeUntilHalving = new Date().getTime() + (blocksUntilHalving * 60000);
 
         const data = {
           base: `${da.progressPercent.toFixed(2)}%`,

@@ -147,82 +147,82 @@ export const languages: Language[] = [
 export const specialBlocks = {
   '0': {
     labelEvent: 'Genesis',
-    labelEventCompleted: 'The Genesis of Litecoin',
+    labelEventCompleted: 'The Genesis of Meowcoin',
     networks: ['mainnet', 'testnet'],
   },
-  '840000': {
+  '2100000': {
     labelEvent: 'Meowcoin\'s 1st Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 25 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 2500 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '1680000': {
+  '2940000': {
     labelEvent: 'Meowcoin\'s 2nd Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 12.5 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 1250 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '2520000': {
+  '3780000': {
     labelEvent: 'Meowcoin\'s 3rd Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 6.25 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 625 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '3360000': {
+  '4620000': {
     labelEvent: 'Meowcoin\'s 4th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 3.125 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 312.5 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '4200000': {
+  '5460000': {
     labelEvent: 'Meowcoin\'s 5th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 1.5625 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 156.25 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '5040000': {
+  '6300000': {
     labelEvent: 'Meowcoin\'s 6th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.78125 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 78.125 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '5880000': {
+  '7140000': {
     labelEvent: 'Meowcoin\'s 7th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.390625 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 39.0625 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '6720000': {
+  '7980000': {
     labelEvent: 'Meowcoin\'s 8th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.1953125 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 19.53125 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '7560000': {
+  '8820000': {
     labelEvent: 'Meowcoin\'s 9th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.09765625 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 9.765625 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '8400000': {
+  '9660000': {
     labelEvent: 'Meowcoin\'s 10th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.04882812 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 4.8828125 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '9240000': {
+  '10500000': {
     labelEvent: 'Meowcoin\'s 11th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.02441406 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 2.44140625 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '10080000': {
+  '11340000': {
     labelEvent: 'Meowcoin\'s 12th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.01220703 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 1.220703125 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '10920000': {
+  '12180000': {
     labelEvent: 'Meowcoin\'s 13th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.00610351 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 0.6103515625 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '11760000': {
+  '13020000': {
     labelEvent: 'Meowcoin\'s 14th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.00305175 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 0.30517578125 MEWC per block',
     networks: ['mainnet', 'testnet'],
   },
-  '12600000': {
+  '13860000': {
     labelEvent: 'Meowcoin\'s 15th Halving',
-    labelEventCompleted: 'Block Subsidy has halved to 0.00152587 MEWC per block',
+    labelEventCompleted: 'Block Subsidy has halved to 0.152587890625 MEWC per block',
     networks: ['mainnet', 'testnet'],
   }
 };
