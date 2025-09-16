@@ -3,6 +3,7 @@ import logger from '../logger';
 import PricesRepository, { ApiPrice, MAX_PRICES } from '../repositories/PricesRepository';
 import CoinGeckoApi from './price-feeds/coingecko-api';
 import NonKYCApi from './price-feeds/nonkyc-api';
+import CoinPaprikaApi from './price-feeds/coinpaprika-api';
 
 export interface PriceFeed {
   name: string;
@@ -34,6 +35,7 @@ class PriceUpdater {
     // Meowcoin price feeds
     this.feeds.push(new CoinGeckoApi());
     this.feeds.push(new NonKYCApi());
+    this.feeds.push(new CoinPaprikaApi());
   }
 
   public getLatestPrices(): ApiPrice {
@@ -74,16 +76,18 @@ class PriceUpdater {
     }
     this.running = true;
 
-    if ((Math.round(new Date().getTime() / 1000) - this.lastHistoricalRun) > 3600 * 24) {
-      // Once a day, look for missing prices (could happen due to network connectivity issues)
-      this.historyInserted = false;
-    }
+    // Historical price fetching disabled to avoid CoinGecko rate limits
+    // if ((Math.round(new Date().getTime() / 1000) - this.lastHistoricalRun) > 3600 * 24) {
+    //   // Once a day, look for missing prices (could happen due to network connectivity issues)
+    //   this.historyInserted = false;
+    // }
 
     try {
       await this.$updatePrice();
-      if (this.historyInserted === false && config.DATABASE.ENABLED === true) {
-        await this.$insertHistoricalPrices();
-      }
+      // Historical price fetching disabled to avoid CoinGecko rate limits
+      // if (this.historyInserted === false && config.DATABASE.ENABLED === true) {
+      //   await this.$insertHistoricalPrices();
+      // }
     } catch (e: any) {
       logger.err(`Cannot save MEWC prices in db. Reason: ${e instanceof Error ? e.message : e}`, logger.tags.mining);
     }

@@ -6,19 +6,15 @@ class NonKYCApi implements PriceFeed {
   public currencies = ['USD']; // via USDT
 
   private base = 'https://api.nonkyc.io/api/v2';
-  private symbol = 'MEWC_USDT';
+  private symbol = 'MEWC/USDT'; // Use slash format for NonKYC API
 
-  // For parity with your other feeds:
-  public url    = `${this.base}/market/ticker?symbol=${this.symbol}`;
-  public urlHist = `${this.base}/market/kline?symbol=${this.symbol}&interval={GRANULARITY}`;
+  // For parity with other feeds:
+  public url    = `${this.base}/ticker/${encodeURIComponent(this.symbol)}`;
+  public urlHist = `${this.base}/kline/${encodeURIComponent(this.symbol)}?interval={GRANULARITY}`;
 
   private parseLast(json: any): number | null {
-    // Common shapes seen on similar CEX APIs
-    const cand =
-      json?.ticker?.last ??
-      json?.lastPrice ??
-      json?.last ??
-      json?.price;
+    // NonKYC API response format: { "last_price": "0.00006416", ... }
+    const cand = json?.last_price;
     const n = typeof cand === 'string' ? parseFloat(cand) : cand;
     return Number.isFinite(n) ? n : null;
   }
@@ -47,13 +43,19 @@ class NonKYCApi implements PriceFeed {
     const priceHistory: PriceHistory = {};
     if (!currencies.includes('USD')) return priceHistory;
 
-    const gran = type === 'hour' ? '1h' : '1d';
-    const res = await query(this.urlHist.replace('{GRANULARITY}', gran));
-    const kl = this.parseKlines(res);
+    try {
+      const gran = type === 'hour' ? '1h' : '1d';
+      const res = await query(this.urlHist.replace('{GRANULARITY}', gran));
+      const kl = this.parseKlines(res);
 
-    for (const { t, close } of kl) {
-      if (!priceHistory[t]) priceHistory[t] = priceUpdater.getEmptyPricesObj();
-      priceHistory[t]['USD'] = close; // USDT≈USD
+      for (const { t, close } of kl) {
+        if (!priceHistory[t]) priceHistory[t] = priceUpdater.getEmptyPricesObj();
+        priceHistory[t]['USD'] = close; // USDT≈USD
+      }
+    } catch (error) {
+      // NonKYC historical data endpoints may not be available
+      // Return empty history - the current price will still work
+      console.log('NonKYC historical data not available:', error);
     }
     return priceHistory;
   }
