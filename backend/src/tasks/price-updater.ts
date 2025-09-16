@@ -164,12 +164,12 @@ class PriceUpdater {
 
   /**
    * Called once by the database migration to initialize historical prices data (weekly)
-   * We use Kraken weekly price from October 3, 2013 up to last month
-   * We use Kraken hourly price for the past month
+   * We use CoinGecko historical price data for Meowcoin
+   * We use CoinGecko hourly price for recent data
    */
   private async $insertHistoricalPrices(): Promise<void> {
-    // Insert Kraken weekly prices
-    await new KrakenApi().$insertHistoricalPrice();
+    // Insert CoinGecko historical prices
+    await new CoinGeckoApi().$insertHistoricalPrice();
 
     // Insert missing recent hourly prices
     await this.$insertMissingRecentPrices('day');
@@ -193,11 +193,7 @@ class PriceUpdater {
     // Fetch all historical hourly prices
     for (const feed of this.feeds) {
       try {
-        if (feed.name === 'Coinbase') {
-          historicalPrices.push(await feed.$fetchRecentPrice(['USD', 'EUR', 'GBP'], type));
-        } else {
-          historicalPrices.push(await feed.$fetchRecentPrice(this.currencies, type));
-        }
+        historicalPrices.push(await feed.$fetchRecentPrice(this.currencies, type));
       } catch (e) {
         logger.err(`Cannot fetch hourly historical price from ${feed.name}. Ignoring this feed. Reason: ${e instanceof Error ? e.message : e}`, logger.tags.mining);
       }
