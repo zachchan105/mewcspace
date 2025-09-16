@@ -364,7 +364,7 @@ class MiningRoutes {
     }
   }
 
-  private async $getDualDifficultyAdjustment(req: Request, res: Response): Promise<void> {
+  private $getDualDifficultyAdjustment = async (req: Request, res: Response): Promise<void> => {
     try {
       const currentHeight = blocks.getCurrentBlockHeight();
       const nowSeconds = Math.floor(new Date().getTime() / 1000);
@@ -395,7 +395,7 @@ class MiningRoutes {
     }
   }
 
-  private calculateDifficultyAdjustment(algorithm: number, blockHeight: number, nowSeconds: number): any {
+  private calculateDifficultyAdjustment = (algorithm: number, blockHeight: number, nowSeconds: number): any => {
     const EPOCH_BLOCK_LENGTH = 2016;
     const BLOCK_SECONDS_TARGET = 60; // Meowcoin block time
     
