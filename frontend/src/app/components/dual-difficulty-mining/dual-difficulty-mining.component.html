@@ -1,89 +1,28 @@
-<div *ngIf="showTitle" class="main-title" i18n="dashboard.difficulty-adjustment">Difficulty Adjustment</div>
-<div class="card-wrapper">
-  <div class="card">
-    <div class="card-body more-padding">
-      <div class="dual-pow-container" *ngIf="(isLoading$ | async) === false && (dualPowStats$ | async) as stats; else loadingDifficulty">
-        
-        <!-- MeowPow Section -->
-        <div class="pow-card meowpow">
-          <div class="card-header">
-            <div class="algo-name">
-              <span class="algo-icon">🐱</span>
-              <span>MeowPoW</span>
-            </div>
-            <div class="last-update">{{ formatLastUpdate(stats.meowpow.lastUpdate) }}</div>
-          </div>
-          
-          <div class="difficulty-display">
-            <div class="difficulty-value">{{ formatDifficulty(stats.meowpow.currentDifficulty) }}</div>
-            <div class="delta-chip" [style.color]="getDifficultyChangeColor(stats.meowpow.difficultyChange)">
-              <span *ngIf="stats.meowpow.difficultyChange > 0">↗</span>
-              <span *ngIf="stats.meowpow.difficultyChange < 0">↘</span>
-              <span *ngIf="stats.meowpow.difficultyChange === 0">→</span>
-              {{ stats.meowpow.difficultyChange | number:'1.1-1' }}%
-            </div>
-          </div>
-          
-          <div class="next-impact">
-            <span class="impact-value" [style.color]="getNextBlockImpactColor(stats.meowpow.nextBlockImpact)">
-              ≈{{ stats.meowpow.nextBlockImpact | number:'1.1-1' }}%
-            </span>
-          </div>
-          
-          <div class="trend-bar">
-            <div class="trend-fill" 
-                 [style.width]="getTrendBarWidth(stats.meowpow.slope)"
-                 [style.background-color]="getTrendBarColor(stats.meowpow.slope)"
-                 [class.trend-right]="getTrendBarDirection(stats.meowpow.slope) === 'right'"
-                 [class.trend-left]="getTrendBarDirection(stats.meowpow.slope) === 'left'">
-            </div>
-          </div>
-        </div>
-
-        <!-- AuxPoW Section -->
-        <div class="pow-card auxpow">
-          <div class="card-header">
-            <div class="algo-name">
-              <span class="algo-icon">⛏️</span>
-              <span>AuxPoW</span>
-            </div>
-            <div class="last-update">{{ formatLastUpdate(stats.scrypt.lastUpdate) }}</div>
-          </div>
-          
-          <div class="difficulty-display">
-            <div class="difficulty-value">{{ formatDifficulty(stats.scrypt.currentDifficulty) }}</div>
-            <div class="delta-chip" [style.color]="getDifficultyChangeColor(stats.scrypt.difficultyChange)">
-              <span *ngIf="stats.scrypt.difficultyChange > 0">↗</span>
-              <span *ngIf="stats.scrypt.difficultyChange < 0">↘</span>
-              <span *ngIf="stats.scrypt.difficultyChange === 0">→</span>
-              {{ stats.scrypt.difficultyChange | number:'1.1-1' }}%
-            </div>
-          </div>
-          
-          <div class="next-impact">
-            <span class="impact-value" [style.color]="getNextBlockImpactColor(stats.scrypt.nextBlockImpact)">
-              ≈{{ stats.scrypt.nextBlockImpact | number:'1.1-1' }}%
-            </span>
-          </div>
-          
-          <div class="trend-bar">
-            <div class="trend-fill" 
-                 [style.width]="getTrendBarWidth(stats.scrypt.slope)"
-                 [style.background-color]="getTrendBarColor(stats.scrypt.slope)"
-                 [class.trend-right]="getTrendBarDirection(stats.scrypt.slope) === 'right'"
-                 [class.trend-left]="getTrendBarDirection(stats.scrypt.slope) === 'left'">
-            </div>
-          </div>
-        </div>
-
-      </div>
-      
-      <ng-template #loadingDifficulty>
-        <div class="loading-difficulty">
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-        </div>
-      </ng-template>
-    </div>
-  </div>
+<div *ngIf="showTitle" class="main-title" i18n="dashboard.difficulty-adjustment">
+  Difficulty (LWMA-45)
 </div>
+
+<div class="dual-grid" *ngIf="(isLoading$ | async) === false && (dualPowStats$ | async) as s; else loading">
+  <app-pow-card
+    label="MeowPoW"
+    icon="🐱"
+    [data]="s.meowpow"
+    [targetSecs]="60"
+    [windowSize]="45">
+  </app-pow-card>
+
+  <app-pow-card
+    label="AuxPoW"
+    icon="⛏️"
+    [data]="s.scrypt"
+    [targetSecs]="60"
+    [windowSize]="45">
+  </app-pow-card>
+</div>
+
+<ng-template #loading>
+  <div class="dual-grid">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+</ng-template>

@@ -59,6 +59,7 @@ import { DifficultyComponent } from '../components/difficulty/difficulty.compone
 import { DifficultyTooltipComponent } from '../components/difficulty/difficulty-tooltip.component';
 import { DifficultyMiningComponent } from '../components/difficulty-mining/difficulty-mining.component';
 import { DualDifficultyMiningComponent } from '../components/dual-difficulty-mining/dual-difficulty-mining.component';
+import { PowCardComponent } from '../components/pow-card/pow-card.component';
 import { TermsOfServiceComponent } from '../components/terms-of-service/terms-of-service.component';
 import { RbfTimelineComponent } from '../components/rbf-timeline/rbf-timeline.component';
 import { RbfTimelineTooltipComponent } from '../components/rbf-timeline/rbf-timeline-tooltip.component';
@@ -146,6 +147,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     DifficultyComponent,
     DifficultyMiningComponent,
     DualDifficultyMiningComponent,
+    PowCardComponent,
     DifficultyTooltipComponent,
     RbfTimelineComponent,
     RbfTimelineTooltipComponent,
@@ -262,6 +264,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     DifficultyComponent,
     DifficultyMiningComponent,
     DualDifficultyMiningComponent,
+    PowCardComponent,
     DifficultyTooltipComponent,
     RbfTimelineComponent,
     RbfTimelineTooltipComponent,

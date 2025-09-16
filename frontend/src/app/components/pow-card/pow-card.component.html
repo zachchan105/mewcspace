@@ -1,0 +1,50 @@
+<div class="pow-card" [class.muted]="muted(data)" [attr.aria-label]="label + ' difficulty card'">
+  <div class="head">
+    <div class="left">
+      <span class="ico">{{ icon }}</span>
+      <span class="label">{{ label }}</span>
+      <span *ngIf="data.auxpowActive === false" class="badge">inactive</span>
+    </div>
+    <div class="ago">{{ fmtAgo(data.lastUpdate) }}</div>
+  </div>
+
+  <div class="metric">
+    <div class="value" [title]="data.currentDifficulty | number:'1.0-8'">
+      {{ fmtDiff(data.currentDifficulty) }}
+    </div>
+    <div class="delta" [class]="upClass(data.difficultyChange)"
+         [title]="'Δ vs prev: ' + (data.difficultyChange | number:'1.1-2') + '%'">
+      {{ data.difficultyChange | number:'1.1-1' }}%
+    </div>
+  </div>
+
+  <div class="sub">
+    <span class="hint">next block</span>
+    <span class="impact" [class]="upClass(data.nextBlockImpact)"
+          [title]="'LWMA-' + windowSize + ' sensitivity'">
+      ≈ {{ data.nextBlockImpact | number:'1.1-1' }}%
+    </span>
+    <span class="pace" [title]="'Avg ' + (data.avgBlockTime|number:'1.0-0') + 's vs ' + targetSecs + 's target'">
+      {{ data.avgBlockTime | number:'1.0-0' }}s
+    </span>
+  </div>
+
+  <!-- Centered momentum progress: left fill for down, right fill for up -->
+  <div class="momentum">
+    <div class="rail"></div>
+    <div class="fill"
+         [style.width.%]="momentumPercent(data)"
+         [class.right]="momentumSide(data) === 'right'"
+         [class.left]="momentumSide(data) === 'left'">
+    </div>
+  </div>
+
+  <!-- subtle pace axis with a small needle -->
+  <div class="pace-axis" role="img" aria-label="pace axis">
+    <div class="axis"></div>
+    <div class="needle" [style.left.%]="pacePercent(data)"></div>
+    <div class="ticks" aria-hidden="true">
+      <span>fast</span><span>on-target</span><span>slow</span>
+    </div>
+  </div>
+</div>

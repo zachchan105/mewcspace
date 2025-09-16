@@ -1,0 +1,51 @@
+.pow-card{
+  --bg:#1b1c1e; --rail:#2a2a2a; --muted:#a0a0a0; --txt:#fff;
+  --up:#3bcc49; --down:#dc3545; --flat:#ffffff66;
+  background:var(--bg); color:var(--txt); border-radius:14px; padding:12px 14px; display:grid; gap:8px;
+  transition:opacity .25s ease, filter .25s ease;
+
+  &.muted{ opacity:.6; filter:grayscale(.2); }
+
+  .head{ display:flex; justify-content:space-between; align-items:center;
+    .left{ display:flex; align-items:center; gap:8px; }
+    .ico{ font-size:18px; }
+    .label{ font-weight:600; letter-spacing:.2px; }
+    .badge{ background:#333; color:#bbb; font-size:10px; padding:2px 6px; border-radius:999px; text-transform:uppercase; }
+    .ago{ font-size:12px; color:var(--muted); }
+  }
+
+  .metric{ display:flex; align-items:baseline; gap:10px;
+    .value{ font-size:24px; font-weight:700; letter-spacing:.2px; }
+    .delta{ font-weight:600; font-size:13px; transition:color .25s ease; }
+    .delta.up{ color:var(--up); }
+    .delta.down{ color:var(--down); }
+    .delta.flat{ color:var(--flat); }
+  }
+
+  .sub{ display:flex; gap:10px; align-items:center; font-size:12px;
+    .hint{ color:var(--muted); }
+    .impact.up{ color:var(--up); } .impact.down{ color:var(--down); } .impact.flat{ color:var(--flat); }
+    .pace{ color:var(--muted); margin-left:auto; }
+  }
+
+  .momentum{ position:relative; height:10px;
+    .rail{ position:absolute; inset:0; background:var(--rail); border-radius:999px; opacity:.9; }
+    .fill{
+      position:absolute; top:0; bottom:0; border-radius:999px; width:50%;
+      transition: width .35s cubic-bezier(.22,1,.36,1), background-color .25s ease;
+    }
+    .right{ left:50%; background:linear-gradient(90deg, transparent, var(--up)); }
+    .left{ right:50%; background:linear-gradient(270deg, transparent, var(--down)); }
+  }
+
+  .pace-axis{ position:relative; height:16px; margin-top:2px;
+    .axis{ position:absolute; inset:6px 0 0 0; height:4px; background:
+      linear-gradient(90deg, var(--down), #9aa0a6 50%, var(--up));
+      border-radius:999px; opacity:.28;
+    }
+    .needle{ position:absolute; top:0; width:2px; height:16px; background:#fff; border-radius:2px; box-shadow:0 0 8px #0007;
+      transition:left .35s cubic-bezier(.22,1,.36,1);
+    }
+    .ticks{ display:flex; justify-content:space-between; font-size:10px; color:var(--muted); margin-top:2px; }
+  }
+}

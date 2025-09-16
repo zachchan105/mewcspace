@@ -3,22 +3,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import { StateService } from '../../services/state.service';
-
-interface DualPowData {
-  currentDifficulty: number;
-  difficultyChange: number;
-  nextBlockImpact: number;
-  slope: number;
-  timingRatio: number;
-  avgBlockTime: number;
-  algorithm: string;
-  lastUpdate: number;
-  auxpowActive?: boolean;
-}
+import { LwmaCardData } from '../pow-card/pow-card.component';
 
 interface DualPowStats {
-  meowpow: DualPowData;
-  scrypt: DualPowData;
+  meowpow: LwmaCardData;
+  scrypt: LwmaCardData;
 }
 
 @Component({
@@ -146,7 +135,6 @@ export class DualDifficultyMiningComponent implements OnInit {
         slope: this.calculateSlope(stats.meowpow.difficulty),
         timingRatio: 1.0,
         avgBlockTime: 60,
-        algorithm: 'MeowPow',
         lastUpdate: now,
         auxpowActive: true
       },
@@ -157,7 +145,6 @@ export class DualDifficultyMiningComponent implements OnInit {
         slope: this.calculateSlope(stats.scrypt.difficulty),
         timingRatio: 1.0,
         avgBlockTime: 60,
-        algorithm: 'AuxPoW',
         lastUpdate: now,
         auxpowActive: stats.scrypt.auxpowActive
       }
