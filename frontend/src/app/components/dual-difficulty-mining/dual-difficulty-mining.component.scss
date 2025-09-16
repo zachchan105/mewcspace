@@ -2,34 +2,104 @@
 :host-context(.dashboard-container) .dual-pow-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 16px;
   
   .pow-section {
-    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     
-    &:last-child {
-      margin-bottom: 0;
+    &.meowpow {
+      border-left: 3px solid #3bcc49;
     }
     
-    .pow-label {
+    &.scrypt {
+      border-left: 3px solid #ff6b35;
+    }
+    
+    .pow-header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #fff;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       
-      .pow-icon {
-        font-size: 1rem;
+      .pow-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #fff;
+        
+        .pow-icon {
+          font-size: 1rem;
+        }
       }
       
-      .auxpow-status {
-        font-size: 0.7rem;
-        color: #ff6b35;
-        font-weight: 400;
-        margin-left: 0.5rem;
+      .pow-status {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: 500;
+        
+        &.active {
+          background: rgba(59, 204, 73, 0.2);
+          color: #3bcc49;
+        }
+        
+        &.pending {
+          background: rgba(255, 107, 53, 0.2);
+          color: #ff6b35;
+        }
+      }
+    }
+    
+    .epoch-progress {
+      margin-bottom: 12px;
+      
+      .progress-bar-container {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 6px;
+        position: relative;
+        
+        .progress-bar {
+          height: 100%;
+          border-radius: 4px;
+          transition: width 0.5s ease;
+          position: relative;
+          
+          &.meowpow-bar {
+            background: linear-gradient(90deg, #3bcc49, #2aa83a);
+            box-shadow: 0 0 8px rgba(59, 204, 73, 0.3);
+          }
+          
+          &.scrypt-bar {
+            background: linear-gradient(90deg, #ff6b35, #e55a2b);
+            box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
+          }
+          
+          &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            animation: pulse 2s infinite;
+          }
+        }
+      }
+      
+      .progress-label {
+        font-size: 0.75rem;
+        color: #ffffff66;
+        text-align: center;
+        font-weight: 500;
       }
     }
     
@@ -37,36 +107,32 @@
       display: flex;
       flex-direction: row;
       justify-content: space-around;
-      height: 50.5px;
+      gap: 8px;
       
       .stat-item {
-        padding: 0 5px;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        flex: 1;
+        text-align: center;
         
         .stat-label {
-          font-size: 12px;
+          font-size: 11px;
           color: #ffffff66;
-          margin-bottom: 0.2rem;
+          margin-bottom: 4px;
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          font-weight: 500;
         }
         
         .stat-value {
-          font-size: 18px;
+          font-size: 16px;
           font-weight: 600;
           color: #fff;
-          margin: auto;
-          position: relative;
-          margin-bottom: 0.2rem;
-          
-          &.bigger {
-            font-size: 20px;
-            margin-bottom: 0;
-          }
+          margin-bottom: 2px;
+        }
+        
+        .stat-subtext {
+          font-size: 10px;
+          color: #ffffff66;
+          font-weight: 400;
         }
       }
     }
@@ -77,36 +143,106 @@
 :host-context(.mining-dashboard) .dual-pow-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  gap: 12px;
   height: 76px;
   
   .pow-section {
-    padding: 0 5px;
-    width: 100%;
-    max-width: 150px;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     
-    .pow-label {
+    &.meowpow {
+      border-left: 2px solid #3bcc49;
+    }
+    
+    &.scrypt {
+      border-left: 2px solid #ff6b35;
+    }
+    
+    .pow-header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      gap: 0.3rem;
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: #fff;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       
-      .pow-icon {
-        font-size: 0.9rem;
+      .pow-label {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: #fff;
+        
+        .pow-icon {
+          font-size: 0.9rem;
+        }
       }
       
-      .auxpow-status {
+      .pow-status {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        border-radius: 8px;
+        font-weight: 500;
+        
+        &.active {
+          background: rgba(59, 204, 73, 0.15);
+          color: #3bcc49;
+        }
+        
+        &.pending {
+          background: rgba(255, 107, 53, 0.15);
+          color: #ff6b35;
+        }
+      }
+    }
+    
+    .epoch-progress {
+      margin-bottom: 6px;
+      
+      .progress-bar-container {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 2px;
+        position: relative;
+        
+        .progress-bar {
+          height: 100%;
+          border-radius: 2px;
+          transition: width 0.3s ease;
+          position: relative;
+          
+          &.meowpow-bar {
+            background: linear-gradient(90deg, #3bcc49, #2aa83a);
+          }
+          
+          &.scrypt-bar {
+            background: linear-gradient(90deg, #ff6b35, #e55a2b);
+          }
+          
+          &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 1px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            animation: pulse 2s infinite;
+          }
+        }
+      }
+      
+      .progress-label {
         font-size: 0.6rem;
-        color: #ff6b35;
-        font-weight: 400;
-        margin-left: 0.3rem;
+        color: #ffffff44;
+        text-align: center;
       }
     }
     
@@ -117,23 +253,21 @@
       
       .stat-item {
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
         align-items: center;
         
         .stat-label {
-          font-size: 10px;
+          font-size: 9px;
           color: #ffffff66;
-          margin-bottom: 0.1rem;
           text-transform: uppercase;
           letter-spacing: 0.3px;
+          font-weight: 500;
         }
         
         .stat-value {
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 600;
           color: #fff;
-          margin-top: -2px;
-          position: relative;
         }
       }
     }
@@ -278,6 +412,18 @@
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
   }
 }
 

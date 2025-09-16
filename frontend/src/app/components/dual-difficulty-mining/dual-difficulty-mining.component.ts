@@ -5,8 +5,17 @@ import { ApiService } from '../../services/api.service';
 import { StateService } from '../../services/state.service';
 
 interface DualPowData {
-  difficulty: number;
-  hashrate: number;
+  progressPercent: number;
+  difficultyChange: number;
+  estimatedRetargetDate: number;
+  remainingBlocks: number;
+  remainingTime: number;
+  previousRetarget: number;
+  previousTime: number;
+  nextRetargetHeight: number;
+  timeAvg: number;
+  timeOffset: number;
+  expectedBlocks: number;
   algorithm: string;
   auxpowActive?: boolean;
 }
@@ -37,7 +46,7 @@ export class DualDifficultyMiningComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading$ = this.stateService.isLoadingWebSocket$;
-    this.dualPowStats$ = this.apiService.getDualPowStats$();
+    this.dualPowStats$ = this.apiService.getDualDifficultyAdjustment$();
   }
 
   formatHashrate(hashrate: number): string {
@@ -68,5 +77,48 @@ export class DualDifficultyMiningComponent implements OnInit {
     }
     
     return `${value.toFixed(2)}${units[unitIndex]}`;
+  }
+
+  getDifficultyChangeColor(difficultyChange: number): string {
+    if (difficultyChange > 0) {
+      return '#3bcc49'; // Green for increase
+    } else if (difficultyChange < 0) {
+      return '#dc3545'; // Red for decrease
+    } else {
+      return '#ffffff66'; // Gray for no change
+    }
+  }
+
+  getPreviousRetargetColor(previousRetarget: number): string {
+    if (previousRetarget > 0) {
+      return '#3bcc49'; // Green for increase
+    } else if (previousRetarget < 0) {
+      return '#dc3545'; // Red for decrease
+    } else {
+      return '#ffffff66'; // Gray for no change
+    }
+  }
+
+  getProgressBarWidth(progressPercent: number): string {
+    return `${Math.min(100, Math.max(0, progressPercent))}%`;
+  }
+
+  formatTimeUntilRetarget(estimatedRetargetDate: number): string {
+    const now = new Date().getTime();
+    const timeUntil = estimatedRetargetDate - now;
+    
+    if (timeUntil <= 0) return 'Now';
+    
+    const days = Math.floor(timeUntil / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeUntil % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeUntil % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (days > 0) {
+      return `${days}d ${hours}h`;
+    } else if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else {
+      return `${minutes}m`;
+    }
   }
 }

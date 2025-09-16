@@ -8,6 +8,7 @@ import HashratesRepository from '../../repositories/HashratesRepository';
 import bitcoinClient from '../bitcoin/bitcoin-client';
 import mining from "./mining";
 import PricesRepository from '../../repositories/PricesRepository';
+import blocks from '../blocks';
 
 class MiningRoutes {
   public initRoutes(app: Application) {
@@ -33,7 +34,8 @@ class MiningRoutes {
       .get(config.MEMPOOL.API_URL_PREFIX + 'mining/blocks/audit/:hash', this.$getBlockAudit)
       .get(config.MEMPOOL.API_URL_PREFIX + 'mining/blocks/timestamp/:timestamp', this.$getHeightFromTimestamp)
       .get(config.MEMPOOL.API_URL_PREFIX + 'historical-price', this.$getHistoricalPrice)
-      .get(config.MEMPOOL.API_URL_PREFIX + 'mining/dual-pow-stats', this.$getDualPowStats)
+        .get(config.MEMPOOL.API_URL_PREFIX + 'mining/dual-pow-stats', this.$getDualPowStats)
+        .get(config.MEMPOOL.API_URL_PREFIX + 'mining/dual-difficulty-adjustment', this.$getDualDifficultyAdjustment)
     ;
   }
 
@@ -360,6 +362,107 @@ class MiningRoutes {
     } catch (e) {
       res.status(500).send(e instanceof Error ? e.message : e);
     }
+  }
+
+  private async $getDualDifficultyAdjustment(req: Request, res: Response): Promise<void> {
+    try {
+      const currentHeight = blocks.getCurrentBlockHeight();
+      const nowSeconds = Math.floor(new Date().getTime() / 1000);
+      
+      // Get difficulty adjustment data for MeowPow (algorithm 0)
+      const meowpowDA = this.calculateDifficultyAdjustment(0, currentHeight, nowSeconds);
+      
+      // Get difficulty adjustment data for Scrypt (algorithm 1) 
+      const scryptDA = this.calculateDifficultyAdjustment(1, currentHeight, nowSeconds);
+
+      // Check if Scrypt is active by getting hashrate
+      let scryptHashrate = 0;
+      try {
+        scryptHashrate = await bitcoinClient.getNetworkHashPs(0, -1, 1);
+      } catch (e) {
+        // If we can't get hashrate, assume it's not active
+      }
+
+      res.header('Pragma', 'public');
+      res.header('Cache-control', 'public');
+      res.setHeader('Expires', new Date(Date.now() + 1000 * 30).toUTCString()); // 30 second cache
+      res.json({
+        meowpow: { ...meowpowDA, auxpowActive: true },
+        scrypt: { ...scryptDA, auxpowActive: scryptHashrate > 0 }
+      });
+    } catch (e) {
+      res.status(500).send(e instanceof Error ? e.message : e);
+    }
+  }
+
+  private calculateDifficultyAdjustment(algorithm: number, blockHeight: number, nowSeconds: number): any {
+    const EPOCH_BLOCK_LENGTH = 2016;
+    const BLOCK_SECONDS_TARGET = 60; // Meowcoin block time
+    
+    // For now, we'll use the same difficulty adjustment logic for both algorithms
+    // In the future, this should be algorithm-specific
+    const DATime = blocks.getLastDifficultyAdjustmentTime();
+    const previousRetarget = blocks.getPreviousDifficultyRetarget();
+    const blocksCache = blocks.getBlocks();
+    const latestBlock = blocksCache[blocksCache.length - 1];
+    
+    if (!latestBlock) {
+      return {
+        progressPercent: 0,
+        difficultyChange: 0,
+        estimatedRetargetDate: 0,
+        remainingBlocks: 0,
+        remainingTime: 0,
+        previousRetarget: 0,
+        previousTime: 0,
+        nextRetargetHeight: 0,
+        timeAvg: 0,
+        timeOffset: 0,
+        expectedBlocks: 0,
+        algorithm: algorithm === 0 ? 'MeowPow' : 'Scrypt'
+      };
+    }
+
+    const diffSeconds = Math.max(0, nowSeconds - DATime);
+    const blocksInEpoch = (blockHeight >= 0) ? blockHeight % EPOCH_BLOCK_LENGTH : 0;
+    const progressPercent = (blockHeight >= 0) ? blocksInEpoch / EPOCH_BLOCK_LENGTH * 100 : 100;
+    const remainingBlocks = EPOCH_BLOCK_LENGTH - blocksInEpoch;
+    const nextRetargetHeight = (blockHeight >= 0) ? blockHeight + remainingBlocks : 0;
+    const expectedBlocks = diffSeconds / BLOCK_SECONDS_TARGET;
+    const actualTimespan = (blocksInEpoch === 2015 ? latestBlock.timestamp : nowSeconds) - DATime;
+
+    let difficultyChange = 0;
+    let timeAvgSecs = blocksInEpoch ? diffSeconds / blocksInEpoch : BLOCK_SECONDS_TARGET;
+
+    difficultyChange = (BLOCK_SECONDS_TARGET / (actualTimespan / (blocksInEpoch + 1)) - 1) * 100;
+    
+    // Max increase is x4 (+300%)
+    if (difficultyChange > 300) {
+      difficultyChange = 300;
+    }
+    // Max decrease is /4 (-75%)
+    if (difficultyChange < -75) {
+      difficultyChange = -75;
+    }
+
+    const timeAvg = Math.floor(timeAvgSecs * 1000);
+    const remainingTime = remainingBlocks * timeAvg;
+    const estimatedRetargetDate = remainingTime + nowSeconds * 1000;
+
+    return {
+      progressPercent,
+      difficultyChange,
+      estimatedRetargetDate,
+      remainingBlocks,
+      remainingTime,
+      previousRetarget,
+      previousTime: 0, // Not used in current implementation
+      nextRetargetHeight,
+      timeAvg,
+      timeOffset: 0, // Not used in current implementation
+      expectedBlocks,
+      algorithm: algorithm === 0 ? 'MeowPow' : 'Scrypt'
+    };
   }
 }
 

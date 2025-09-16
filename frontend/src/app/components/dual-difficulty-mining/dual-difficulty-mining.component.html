@@ -6,37 +6,86 @@
         
         <!-- MeowPow Section -->
         <div class="pow-section meowpow">
-          <div class="pow-label">
-            <span class="pow-icon">🐱</span>
-            <span class="pow-name">MeowPow</span>
+          <div class="pow-header">
+            <div class="pow-label">
+              <span class="pow-icon">🐱</span>
+              <span class="pow-name">MeowPow</span>
+            </div>
+            <div class="pow-status active">Active</div>
           </div>
+          
+          <!-- Epoch Progress Bar -->
+          <div class="epoch-progress">
+            <div class="progress-bar-container">
+              <div class="progress-bar meowpow-bar" [style.width]="getProgressBarWidth(stats.meowpow.progressPercent)"></div>
+            </div>
+            <div class="progress-label">{{ stats.meowpow.progressPercent | number:'1.1-1' }}% Complete</div>
+          </div>
+          
           <div class="difficulty-stats">
             <div class="stat-item">
-              <span class="stat-label" i18n="block.difficulty">Difficulty</span>
-              <span class="stat-value">{{ formatDifficulty(stats.meowpow.difficulty) }}</span>
+              <div class="stat-label" i18n="difficulty-box.estimate">Estimate</div>
+              <div class="stat-value" [style.color]="getDifficultyChangeColor(stats.meowpow.difficultyChange)">
+                <span *ngIf="stats.meowpow.difficultyChange > 0">↗</span>
+                <span *ngIf="stats.meowpow.difficultyChange < 0">↘</span>
+                <span *ngIf="stats.meowpow.difficultyChange === 0">→</span>
+                {{ stats.meowpow.difficultyChange | number:'1.1-1' }}%
+              </div>
+              <div class="stat-subtext">
+                <span i18n="difficulty-box.previous">Previous</span>:
+                <span [style.color]="getPreviousRetargetColor(stats.meowpow.previousRetarget)">
+                  {{ stats.meowpow.previousRetarget | number:'1.1-1' }}%
+                </span>
+              </div>
             </div>
             <div class="stat-item">
-              <span class="stat-label" i18n="mining.hashrate">Hashrate</span>
-              <span class="stat-value">{{ formatHashrate(stats.meowpow.hashrate) }}</span>
+              <div class="stat-label" i18n="difficulty-box.remaining">Remaining</div>
+              <div class="stat-value">{{ stats.meowpow.remainingBlocks }} blocks</div>
+              <div class="stat-subtext">{{ formatTimeUntilRetarget(stats.meowpow.estimatedRetargetDate) }}</div>
             </div>
           </div>
         </div>
 
         <!-- Scrypt Section -->
         <div class="pow-section scrypt">
-          <div class="pow-label">
-            <span class="pow-icon">⛏️</span>
-            <span class="pow-name">Scrypt</span>
-            <span class="auxpow-status" *ngIf="!stats.scrypt.auxpowActive" i18n="mining.auxpow-pending">(AuxPoW Pending)</span>
+          <div class="pow-header">
+            <div class="pow-label">
+              <span class="pow-icon">⛏️</span>
+              <span class="pow-name">Scrypt</span>
+            </div>
+            <div class="pow-status" [class.pending]="!stats.scrypt.auxpowActive" [class.active]="stats.scrypt.auxpowActive">
+              {{ stats.scrypt.auxpowActive ? 'Active' : 'AuxPoW Pending' }}
+            </div>
           </div>
+          
+          <!-- Epoch Progress Bar -->
+          <div class="epoch-progress">
+            <div class="progress-bar-container">
+              <div class="progress-bar scrypt-bar" [style.width]="getProgressBarWidth(stats.scrypt.progressPercent)"></div>
+            </div>
+            <div class="progress-label">{{ stats.scrypt.progressPercent | number:'1.1-1' }}% Complete</div>
+          </div>
+          
           <div class="difficulty-stats">
             <div class="stat-item">
-              <span class="stat-label" i18n="block.difficulty">Difficulty</span>
-              <span class="stat-value">{{ formatDifficulty(stats.scrypt.difficulty) }}</span>
+              <div class="stat-label" i18n="difficulty-box.estimate">Estimate</div>
+              <div class="stat-value" [style.color]="getDifficultyChangeColor(stats.scrypt.difficultyChange)">
+                <span *ngIf="stats.scrypt.difficultyChange > 0">↗</span>
+                <span *ngIf="stats.scrypt.difficultyChange < 0">↘</span>
+                <span *ngIf="stats.scrypt.difficultyChange === 0">→</span>
+                {{ stats.scrypt.difficultyChange | number:'1.1-1' }}%
+              </div>
+              <div class="stat-subtext">
+                <span i18n="difficulty-box.previous">Previous</span>:
+                <span [style.color]="getPreviousRetargetColor(stats.scrypt.previousRetarget)">
+                  {{ stats.scrypt.previousRetarget | number:'1.1-1' }}%
+                </span>
+              </div>
             </div>
             <div class="stat-item">
-              <span class="stat-label" i18n="mining.hashrate">Hashrate</span>
-              <span class="stat-value">{{ formatHashrate(stats.scrypt.hashrate) }}</span>
+              <div class="stat-label" i18n="difficulty-box.remaining">Remaining</div>
+              <div class="stat-value">{{ stats.scrypt.remainingBlocks }} blocks</div>
+              <div class="stat-subtext">{{ formatTimeUntilRetarget(stats.scrypt.estimatedRetargetDate) }}</div>
             </div>
           </div>
         </div>
