@@ -13,7 +13,7 @@
     </div>
     <div class="delta" [class]="upClass(data.difficultyChange)"
          [title]="'Δ vs prev: ' + (data.difficultyChange | number:'1.1-2') + '%'">
-      {{ data.difficultyChange | number:'1.1-1' }}
+      {{ data.difficultyChange | number:'1.1-1' }}%
     </div>
     <div class="pace" [title]="'Avg ' + (data.avgBlockTime|number:'1.0-0') + 's vs ' + targetSecs + 's target'">
       {{ data.avgBlockTime | number:'1.0-0' }}s
