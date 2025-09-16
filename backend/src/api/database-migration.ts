@@ -866,8 +866,10 @@ class DatabaseMigration {
       height int(10) unsigned NOT NULL,
       difficulty double unsigned NOT NULL,
       adjustment float NOT NULL,
+      algorithm TINYINT UNSIGNED DEFAULT 0,
       PRIMARY KEY (height),
-      INDEX (time)
+      INDEX (time),
+      INDEX (algorithm)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
   }
 
