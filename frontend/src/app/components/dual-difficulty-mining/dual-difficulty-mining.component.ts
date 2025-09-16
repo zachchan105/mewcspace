@@ -33,7 +33,9 @@ export class DualDifficultyMiningComponent implements OnInit {
   constructor(
     public stateService: StateService,
     private apiService: ApiService,
-  ) { }
+  ) { 
+    console.log('DualDifficultyMiningComponent constructor called');
+  }
 
   ngOnInit(): void {
     this.isLoading$ = this.stateService.isLoadingWebSocket$;
