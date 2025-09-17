@@ -4337,7 +4337,7 @@
         <note priority="1" from="description">search-form.search-title</note>
       </trans-unit>
       <trans-unit id="0673b255ba8db0bc5e2cccd5962d31dc88c24578" datatype="html">
-        <source>Litecoin Block Height</source>
+        <source>Meowcoin Block Height</source>
         <target>Altura del bloque de Litecoin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/search-form/search-results/search-results.component.html</context>
@@ -4364,7 +4364,7 @@
         <note priority="1" from="description">search.bitcoin-address</note>
       </trans-unit>
       <trans-unit id="97089c008af92d87389ff1ec5fb2cc96a6ecef0e" datatype="html">
-        <source>Litecoin Block</source>
+        <source>Meowcoin Block</source>
         <target>Bloque de Litecoin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/search-form/search-results/search-results.component.html</context>

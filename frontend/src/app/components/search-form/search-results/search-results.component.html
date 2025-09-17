@@ -1,6 +1,6 @@
 <div class="dropdown-menu show" *ngIf="results" [hidden]="!results.hashQuickMatch && !results.addresses.length && !results.nodes.length && !results.channels.length">
   <ng-template [ngIf]="results.blockHeight">
-    <div class="card-title" i18n="search.bitcoin-block-height">Litecoin Block Height</div>
+    <div class="card-title" i18n="search.bitcoin-block-height">Meowcoin Block Height</div>
     <button (click)="clickItem(0)" [class.active]="0 === activeIdx" type="button" role="option" class="dropdown-item">
       <ng-container *ngTemplateOutlet="goTo; context: { $implicit: results.searchText }"></ng-container>
     </button>
@@ -18,7 +18,7 @@
     </button>
   </ng-template>
   <ng-template [ngIf]="results.blockHash">
-    <div class="card-title" i18n="search.bitcoin-block">Litecoin Block</div>
+    <div class="card-title" i18n="search.bitcoin-block">Meowcoin Block</div>
     <button (click)="clickItem(0)" [class.active]="0 === activeIdx" type="button" role="option" class="dropdown-item">
       <ng-container *ngTemplateOutlet="goTo; context: { $implicit: results.searchText | shortenString : 13 }"></ng-container>
     </button>

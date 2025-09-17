@@ -2190,21 +2190,21 @@
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e7e7c97535181ba299bc0ad02904f851088a0dd5">
-        <source>Returns all Bisq transactions that exist in a Litecoin Block.</source>
+        <source>Returns all Bisq transactions that exist in a Meowcoin Block.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/api-docs/api-docs.component.html</context>
           <context context-type="linenumber">260</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="6fdafaace68cb298c6281e89eedc704f3d8f3f6a">
-        <source>Returns :length Litecoin Blocks that contain Bisq transactions, starting from :index.</source>
+        <source>Returns :length Meowcoin Blocks that contain Bisq transactions, starting from :index.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/api-docs/api-docs.component.html</context>
           <context context-type="linenumber">264</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="ac234ff46c8f499399a20fb5d74005094de7cdcd">
-        <source>Returns the most recently processed Litecoin Block Height processed by Bisq.</source>
+        <source>Returns the most recently processed Meowcoin Block Height processed by Bisq.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/api-docs/api-docs.component.html</context>
           <context context-type="linenumber">268</context>
