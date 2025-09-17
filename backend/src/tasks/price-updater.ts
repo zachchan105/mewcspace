@@ -143,7 +143,8 @@ class PriceUpdater {
       if (prices.length === 0) {
         this.latestPrices[currency] = -1;
       } else {
-        this.latestPrices[currency] = Math.round((prices.reduce((partialSum, a) => partialSum + a, 0)) / prices.length);
+        // Keep decimal precision for small prices like MEWC (0.000064)
+        this.latestPrices[currency] = (prices.reduce((partialSum, a) => partialSum + a, 0)) / prices.length;
       }
     }
 
