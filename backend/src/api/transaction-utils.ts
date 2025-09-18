@@ -43,7 +43,7 @@ class TransactionUtils {
       // @ts-ignore
       return transaction;
     }
-    const feePerVbytes = Math.max(Common.isLiquid() ? 0.1 : 0.00001,
+    const feePerVbytes = Math.max(Common.isLiquid() ? 0.1 : 1,
       (transaction.fee || 0) / (transaction.weight / 4));
     const transactionExtended: TransactionExtended = Object.assign({
       vsize: Math.round(transaction.weight / 4),

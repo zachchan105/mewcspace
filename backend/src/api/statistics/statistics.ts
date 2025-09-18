@@ -66,10 +66,8 @@ class Statistics {
     const totalWeight = memPoolArray.map((tx) => tx.vsize).reduce((acc, curr) => acc + curr) * 4;
     const totalFee = memPoolArray.map((tx) => tx.fee).reduce((acc, curr) => acc + curr);
 
-    // Meowcoin-appropriate fee thresholds (in MEWC/vB) - much lower than Bitcoin
-    const logFees = [0.00001, 0.00002, 0.00003, 0.00004, 0.00005, 0.00006, 0.00008, 0.0001, 0.0002, 0.0003, 0.0004, 0.0005, 0.0006, 0.0008, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.008, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1, 2, 5];
-    // Map to existing database field names (vsize_1, vsize_2, etc.)
-    const dbFieldNames = ['vsize_1', 'vsize_2', 'vsize_3', 'vsize_4', 'vsize_5', 'vsize_6', 'vsize_8', 'vsize_10', 'vsize_12', 'vsize_15', 'vsize_20', 'vsize_30', 'vsize_40', 'vsize_50', 'vsize_60', 'vsize_70', 'vsize_80', 'vsize_90', 'vsize_100', 'vsize_125', 'vsize_150', 'vsize_175', 'vsize_200', 'vsize_250', 'vsize_300', 'vsize_350', 'vsize_400', 'vsize_500', 'vsize_600', 'vsize_700', 'vsize_800', 'vsize_900', 'vsize_1000', 'vsize_1200', 'vsize_1400', 'vsize_1600', 'vsize_1800', 'vsize_2000'];
+    const logFees = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 125, 150, 175, 200,
+      250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000];
 
     const weightVsizeFees: { [feePerWU: number]: number } = {};
     const lastItem = logFees.length - 1;
@@ -81,12 +79,10 @@ class Statistics {
           ||
           (!Common.isLiquid() && (i === lastItem || transaction.effectiveFeePerVsize < logFees[i + 1]))
         ) {
-          // Use database field names for storage
-          const fieldName = dbFieldNames[i];
-          if (weightVsizeFees[fieldName]) {
-            weightVsizeFees[fieldName] += transaction.vsize;
+          if (weightVsizeFees[logFees[i]]) {
+            weightVsizeFees[logFees[i]] += transaction.vsize;
           } else {
-            weightVsizeFees[fieldName] = transaction.vsize;
+            weightVsizeFees[logFees[i]] = transaction.vsize;
           }
           break;
         }
