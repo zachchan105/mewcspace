@@ -380,6 +380,7 @@ class WebsocketHandler {
         if (da?.previousTime) {
           response['da'] = getCachedResponse('da', da);
         }
+        response['dualDa'] = getCachedResponse('dualDa', dualDifficultyAdjustment.getDualDifficultyAdjustment());
         response['fees'] = getCachedResponse('fees', recommendedFees);
       }
 
@@ -638,6 +639,7 @@ class WebsocketHandler {
       response['block'] = getCachedResponse('block', block);
       response['mempoolInfo'] = getCachedResponse('mempoolInfo', mempoolInfo);
       response['da'] = getCachedResponse('da', da?.previousTime ? da : undefined);
+      response['dualDa'] = getCachedResponse('dualDa', dualDifficultyAdjustment.getDualDifficultyAdjustment());
       response['fees'] = getCachedResponse('fees', fees);
 
       if (mBlocks && client['want-mempool-blocks']) {
