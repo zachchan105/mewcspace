@@ -30,7 +30,7 @@ class HashratesRepository {
     }
   }
 
-  public async $getRawNetworkDailyHashrate(interval: string | null): Promise<any[]> {
+  public async $getRawNetworkDailyHashrate(interval: string | null, algorithm: number = 0): Promise<any[]> {
     interval = Common.getSqlInterval(interval);
 
     let query = `SELECT
@@ -38,13 +38,12 @@ class HashratesRepository {
       avg_hashrate as avgHashrate
       FROM hashrates`;
 
+    const conditions = [`algorithm = ${algorithm}`, `type = 'daily'`];
     if (interval) {
-      query += ` WHERE hashrate_timestamp BETWEEN DATE_SUB(NOW(), INTERVAL ${interval}) AND NOW()
-        AND hashrates.type = 'daily'`;
-    } else {
-      query += ` WHERE hashrates.type = 'daily'`;
+      conditions.push(`hashrate_timestamp BETWEEN DATE_SUB(NOW(), INTERVAL ${interval}) AND NOW()`);
     }
 
+    query += ` WHERE ${conditions.join(' AND ')}`;
     query += ` ORDER by hashrate_timestamp`;
 
     try {
