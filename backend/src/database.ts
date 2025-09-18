@@ -17,7 +17,7 @@ import { FieldPacket, OkPacket, PoolOptions, ResultSetHeader, RowDataPacket } fr
     database: config.DATABASE.DATABASE,
     user: config.DATABASE.USERNAME,
     password: config.DATABASE.PASSWORD,
-    connectionLimit: 10,
+    connectionLimit: 25,
     supportBigNumbers: true,
     timezone: '+00:00',
   };
