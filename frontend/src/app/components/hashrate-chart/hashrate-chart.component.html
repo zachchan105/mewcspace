@@ -28,7 +28,9 @@
     <div class="pool-distribution" *ngIf="(dualPowStats$ | async) as dualStats; else loadingStats">
       <!-- MeowPow Section -->
       <div class="item meowpow-section">
-        <h5 class="card-title meowpow-title">
+        <h5 class="card-title meowpow-title clickable" 
+            [class.selected]="selectedAlgorithm === 'meowpow'"
+            (click)="selectAlgorithmFromStats('meowpow')">
           <i class="fas fa-paw meowpow-icon"></i>
           MeowPow
         </h5>
@@ -51,7 +53,9 @@
       
       <!-- Scrypt Section -->
       <div class="item scrypt-section">
-        <h5 class="card-title scrypt-title">
+        <h5 class="card-title scrypt-title clickable"
+            [class.selected]="selectedAlgorithm === 'scrypt'"
+            (click)="selectAlgorithmFromStats('scrypt')">
           <i class="fas fa-cube scrypt-icon"></i>
           Scrypt
           <span class="auxpow-status" *ngIf="!dualStats.scrypt.auxpowActive">(AuxPoW Pending)</span>

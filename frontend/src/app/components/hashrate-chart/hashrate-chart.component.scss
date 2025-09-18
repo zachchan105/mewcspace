@@ -222,3 +222,19 @@
   pointer-events: none;
   opacity: 0.5;
 }
+
+// Clickable algorithm titles
+.card-title.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  &.selected {
+    color: #3b82f6;
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+  }
+}

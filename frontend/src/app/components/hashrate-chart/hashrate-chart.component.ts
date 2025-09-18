@@ -46,6 +46,7 @@ export class HashrateChartComponent implements OnInit {
 
   hashrateObservable$: Observable<any>;
   dualPowStats$: Observable<any>;
+  selectedAlgorithm: 'meowpow' | 'scrypt' = 'meowpow';
   isLoading = true;
   formatNumber = formatNumber;
   timespan = '';
@@ -53,6 +54,14 @@ export class HashrateChartComponent implements OnInit {
   network = '';
 
   selectAlgorithm(algorithm: 'meowpow' | 'scrypt'): void {
+    this.algorithm = algorithm;
+    this.selectedAlgorithm = algorithm;
+    // Trigger data refresh
+    this.ngOnInit();
+  }
+
+  selectAlgorithmFromStats(algorithm: 'meowpow' | 'scrypt'): void {
+    this.selectedAlgorithm = algorithm;
     this.algorithm = algorithm;
     // Trigger data refresh
     this.ngOnInit();
@@ -118,8 +127,10 @@ export class HashrateChartComponent implements OnInit {
 
     if (this.widget) {
       this.miningWindowPreference = '1y';
-      // Initialize dual PoW stats for widget mode
-      this.dualPowStats$ = this.apiService.getDualPowStats$();
+      // Use WebSocket data for dual PoW stats (same as dual difficulty component)
+      this.dualPowStats$ = this.stateService.dualDifficultyAdjustment$.pipe(
+        map((stats) => this.addDifficultyAdjustmentData(stats))
+      );
     } else {
       this.seoService.setTitle($localize`:@@3510fc6daa1d975f331e3a717bdf1a34efa06dff:Hashrate & Difficulty`);
       this.miningWindowPreference = this.miningService.getDefaultTimespan('3m');
@@ -497,5 +508,53 @@ export class HashrateChartComponent implements OnInit {
     this.chartOptions.grid.bottom = prevBottom;
     this.chartOptions.backgroundColor = 'none';
     this.chartInstance.setOption(this.chartOptions);
+  }
+
+  private addDifficultyAdjustmentData(stats: any): any {
+    if (!stats) {
+      return {
+        meowpow: this.getDefaultAlgorithmData('MeowPow', true),
+        scrypt: this.getDefaultAlgorithmData('Scrypt', false)
+      };
+    }
+
+    return {
+      meowpow: {
+        currentDifficulty: stats.meowpow?.currentDifficulty || 0,
+        difficultyChange: stats.meowpow?.difficultyChange || 0,
+        slope: stats.meowpow?.slope || 0,
+        timingRatio: stats.meowpow?.timingRatio || 1.0,
+        avgBlockTime: stats.meowpow?.avgBlockTime || 120,
+        lastUpdate: stats.meowpow?.lastUpdate || Math.floor(Date.now() / 1000),
+        auxpowActive: true,
+        hashrate: stats.meowpow?.hashrate || 0,
+        difficulty: stats.meowpow?.currentDifficulty || 0
+      },
+      scrypt: {
+        currentDifficulty: stats.scrypt?.currentDifficulty || 0,
+        difficultyChange: stats.scrypt?.difficultyChange || 0,
+        slope: stats.scrypt?.slope || 0,
+        timingRatio: stats.scrypt?.timingRatio || 1.0,
+        avgBlockTime: stats.scrypt?.avgBlockTime || 120,
+        lastUpdate: stats.scrypt?.lastUpdate || Math.floor(Date.now() / 1000),
+        auxpowActive: stats.scrypt?.auxpowActive || false,
+        hashrate: stats.scrypt?.hashrate || 0,
+        difficulty: stats.scrypt?.currentDifficulty || 0
+      }
+    };
+  }
+
+  private getDefaultAlgorithmData(algorithm: string, auxpowActive: boolean): any {
+    return {
+      currentDifficulty: 0,
+      difficultyChange: 0,
+      slope: 0,
+      timingRatio: 1.0,
+      avgBlockTime: 120,
+      lastUpdate: Math.floor(Date.now() / 1000),
+      auxpowActive,
+      hashrate: 0,
+      difficulty: 0
+    };
   }
 }
