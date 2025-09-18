@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, Input, LOCALE_ID, OnInit, HostBinding } from '@angular/core';
 import { EChartsOption, graphic } from 'echarts';
-import { merge, Observable, of } from 'rxjs';
+import { combineLatest, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import { SeoService } from '../../services/seo.service';
@@ -127,9 +127,12 @@ export class HashrateChartComponent implements OnInit {
 
     if (this.widget) {
       this.miningWindowPreference = '1y';
-      // Use WebSocket data for dual PoW stats (same as dual difficulty component)
-      this.dualPowStats$ = this.stateService.dualDifficultyAdjustment$.pipe(
-        map((stats) => this.addDifficultyAdjustmentData(stats))
+      // Use hybrid approach: API for hashrate, WebSocket for difficulty
+      this.dualPowStats$ = combineLatest([
+        this.apiService.getDualPowStats$(),
+        this.stateService.dualDifficultyAdjustment$
+      ]).pipe(
+        map(([apiStats, wsStats]) => this.combineStatsData(apiStats, wsStats))
       );
     } else {
       this.seoService.setTitle($localize`:@@3510fc6daa1d975f331e3a717bdf1a34efa06dff:Hashrate & Difficulty`);
@@ -508,6 +511,34 @@ export class HashrateChartComponent implements OnInit {
     this.chartOptions.grid.bottom = prevBottom;
     this.chartOptions.backgroundColor = 'none';
     this.chartInstance.setOption(this.chartOptions);
+  }
+
+  private combineStatsData(apiStats: any, wsStats: any): any {
+    // Use API data for hashrate, WebSocket data for difficulty
+    return {
+      meowpow: {
+        currentDifficulty: wsStats?.meowpow?.currentDifficulty || 0,
+        difficultyChange: wsStats?.meowpow?.difficultyChange || 0,
+        slope: wsStats?.meowpow?.slope || 0,
+        timingRatio: wsStats?.meowpow?.timingRatio || 1.0,
+        avgBlockTime: wsStats?.meowpow?.avgBlockTime || 120,
+        lastUpdate: wsStats?.meowpow?.lastUpdate || Math.floor(Date.now() / 1000),
+        auxpowActive: true,
+        hashrate: apiStats?.meowpow?.hashrate || 0, // From API
+        difficulty: wsStats?.meowpow?.currentDifficulty || 0 // From WebSocket
+      },
+      scrypt: {
+        currentDifficulty: wsStats?.scrypt?.currentDifficulty || 0,
+        difficultyChange: wsStats?.scrypt?.difficultyChange || 0,
+        slope: wsStats?.scrypt?.slope || 0,
+        timingRatio: wsStats?.scrypt?.timingRatio || 1.0,
+        avgBlockTime: wsStats?.scrypt?.avgBlockTime || 120,
+        lastUpdate: wsStats?.scrypt?.lastUpdate || Math.floor(Date.now() / 1000),
+        auxpowActive: wsStats?.scrypt?.auxpowActive || false,
+        hashrate: apiStats?.scrypt?.hashrate || 0, // From API
+        difficulty: wsStats?.scrypt?.currentDifficulty || 0 // From WebSocket
+      }
+    };
   }
 
   private addDifficultyAdjustmentData(stats: any): any {
