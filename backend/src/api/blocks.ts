@@ -85,62 +85,46 @@ class Blocks {
     let transactionsFound = 0;
     let transactionsFetched = 0;
 
-    // Process transactions in parallel for better performance with fast block times
-    const transactionPromises = txIds.map(async (txId, i) => {
-      if (mempool[txId]) {
+    for (let i = 0; i < txIds.length; i++) {
+      if (mempool[txIds[i]]) {
         // We update blocks before the mempool (index.ts), therefore we can
         // optimize here by directly fetching txs in the "outdated" mempool
-        return { tx: mempool[txId], found: true, fetched: false };
+        transactions.push(mempool[txIds[i]]);
+        transactionsFound++;
       } else if (config.MEMPOOL.BACKEND === 'esplora' || !memPool.hasPriority() || i === 0) {
         // Otherwise we fetch the tx data through backend services (esplora, electrum, core rpc...)
         if (!quiet && (i % (Math.round((txIds.length) / 10)) === 0 || i + 1 === txIds.length)) { // Avoid log spam
           logger.debug(`Indexing tx ${i + 1} of ${txIds.length} in block #${blockHeight}`);
         }
         try {
-          const tx = await transactionUtils.$getTransactionExtended(txId);
-          return { tx, found: false, fetched: true };
+          const tx = await transactionUtils.$getTransactionExtended(txIds[i]);
+          transactions.push(tx);
+          transactionsFetched++;
         } catch (e) {
           try {
             if (config.MEMPOOL.BACKEND === 'esplora') {
               // Try again with core
-              const tx = await transactionUtils.$getTransactionExtended(txId, false, false, true);
-              return { tx, found: false, fetched: true };
+              const tx = await transactionUtils.$getTransactionExtended(txIds[i], false, false, true);
+              transactions.push(tx);
+              transactionsFetched++;
             } else {
               throw e;
             }
           } catch (e) {
             if (i === 0) {
-              const msg = `Cannot fetch coinbase tx ${txId}. Reason: ` + (e instanceof Error ? e.message : e); 
+              const msg = `Cannot fetch coinbase tx ${txIds[i]}. Reason: ` + (e instanceof Error ? e.message : e); 
               logger.err(msg);
               throw new Error(msg);
             } else {
-              logger.err(`Cannot fetch tx ${txId}. Reason: ` + (e instanceof Error ? e.message : e));
-              return null; // Skip failed transactions that aren't coinbase
+              logger.err(`Cannot fetch tx ${txIds[i]}. Reason: ` + (e instanceof Error ? e.message : e));
             }
           }
         }
       }
-      return null; // Skip transactions that don't need fetching
-    });
 
-    // Wait for all transactions to be fetched in parallel
-    const transactionResults = await Promise.all(transactionPromises);
-    
-    // Process results and count statistics
-    for (const result of transactionResults) {
-      if (result) {
-        transactions.push(result.tx);
-        if (result.found) {
-          transactionsFound++;
-        } else if (result.fetched) {
-          transactionsFetched++;
-        }
+      if (onlyCoinbase === true) {
+        break; // Fetch the first transaction and exit
       }
-    }
-
-    if (onlyCoinbase === true) {
-      // For coinbase-only mode, keep only the first transaction
-      transactions.splice(1);
     }
 
     transactions.forEach((tx) => {
