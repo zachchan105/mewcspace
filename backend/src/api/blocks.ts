@@ -25,6 +25,7 @@ import DifficultyAdjustmentsRepository from '../repositories/DifficultyAdjustmen
 import PricesRepository from '../repositories/PricesRepository';
 import priceUpdater from '../tasks/price-updater';
 import chainTips from './chain-tips';
+import dualDifficultyAdjustment from './dual-difficulty-adjustment';
 
 class Blocks {
   private blocks: BlockExtended[] = [];
@@ -705,6 +706,9 @@ class Blocks {
       if (this.blocks.length > config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 4) {
         this.blocks = this.blocks.slice(-config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 4);
       }
+      
+      // Invalidate dual difficulty cache when new blocks arrive
+      dualDifficultyAdjustment.invalidateCache();
       this.blockSummaries.push(blockSummary);
       if (this.blockSummaries.length > config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 4) {
         this.blockSummaries = this.blockSummaries.slice(-config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 4);

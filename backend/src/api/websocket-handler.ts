@@ -14,6 +14,7 @@ import config from '../config';
 import transactionUtils from './transaction-utils';
 import rbfCache from './rbf-cache';
 import difficultyAdjustment from './difficulty-adjustment';
+import dualDifficultyAdjustment from './dual-difficulty-adjustment';
 import feeApi from './fee-api';
 import BlocksAuditsRepository from '../repositories/BlocksAuditsRepository';
 import BlocksSummariesRepository from '../repositories/BlocksSummariesRepository';
@@ -60,6 +61,7 @@ class WebsocketHandler {
   private updateInitData(): void {
     const _blocks = blocks.getBlocks().slice(-config.MEMPOOL.INITIAL_BLOCKS_AMOUNT);
     const da = difficultyAdjustment.getDifficultyAdjustment();
+    const dualDa = dualDifficultyAdjustment.getDualDifficultyAdjustment();
     this.setInitDataFields({
       'mempoolInfo': memPool.getMempoolInfo(),
       'vBytesPerSecond': memPool.getVBytesPerSecond(),
@@ -70,6 +72,7 @@ class WebsocketHandler {
       'backendInfo': backendInfo.getBackendInfo(),
       'loadingIndicators': loadingIndicators.getLoadingIndicators(),
       'da': da?.previousTime ? da : undefined,
+      'dualDa': dualDa,
       'fees': feeApi.getRecommendedFee(),
     });
   }

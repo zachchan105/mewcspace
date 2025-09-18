@@ -2,6 +2,29 @@ import { ILoadingIndicators } from '../services/state.service';
 import { Transaction } from './electrs.interface';
 import { BlockExtended, DifficultyAdjustment, RbfTree } from './node-api.interface';
 
+export interface DualDifficultyAdjustment {
+  meowpow: {
+    currentDifficulty: number;
+    difficultyChange: number;
+    slope: number;
+    timingRatio: number;
+    avgBlockTime: number;
+    algorithm: string;
+    lastUpdate: number;
+    auxpowActive: boolean;
+  };
+  scrypt: {
+    currentDifficulty: number;
+    difficultyChange: number;
+    slope: number;
+    timingRatio: number;
+    avgBlockTime: number;
+    algorithm: string;
+    lastUpdate: number;
+    auxpowActive: boolean;
+  };
+}
+
 export interface WebsocketResponse {
   block?: BlockExtended;
   blocks?: BlockExtended[];
@@ -23,6 +46,7 @@ export interface WebsocketResponse {
   loadingIndicators?: ILoadingIndicators;
   backendInfo?: IBackendInfo;
   da?: DifficultyAdjustment;
+  dualDa?: DualDifficultyAdjustment;
   fees?: Recommendedfees;
   'track-tx'?: string;
   'track-address'?: string;

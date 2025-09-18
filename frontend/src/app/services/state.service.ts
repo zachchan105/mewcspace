@@ -91,6 +91,7 @@ export class StateService {
   rbfLatest$ = new Subject<RbfTree[]>();
   utxoSpent$ = new Subject<object>();
   difficultyAdjustment$ = new ReplaySubject<DifficultyAdjustment>(1);
+  dualDifficultyAdjustment$ = new ReplaySubject<any>(1);
   mempoolTransactions$ = new Subject<Transaction>();
   mempoolTxPosition$ = new Subject<{ txid: string, position: MempoolPosition}>();
   blockTransactions$ = new Subject<Transaction>();

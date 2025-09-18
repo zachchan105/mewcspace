@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, switchMap, startWith } from 'rxjs/operators';
-import { ApiService } from '../../services/api.service';
+import { map } from 'rxjs/operators';
 import { StateService } from '../../services/state.service';
 import { LwmaCardData } from '../pow-card/pow-card.component';
 
@@ -26,16 +25,13 @@ export class DualDifficultyMiningComponent implements OnInit {
 
   constructor(
     public stateService: StateService,
-    private apiService: ApiService,
   ) { }
 
   ngOnInit(): void {
     this.isLoading$ = this.stateService.isLoadingWebSocket$;
     
-    // Create a single observable that refreshes on block updates without showing loading state
-    this.dualPowStats$ = this.stateService.blocks$.pipe(
-      startWith(null), // Initial load
-      switchMap(() => this.apiService.getDualPowStats$()),
+    // Use WebSocket data directly (no HTTP requests, no loading states)
+    this.dualPowStats$ = this.stateService.dualDifficultyAdjustment$.pipe(
       map((stats) => this.addDifficultyAdjustmentData(stats))
     );
   }
@@ -128,25 +124,44 @@ export class DualDifficultyMiningComponent implements OnInit {
   }
 
   private addDifficultyAdjustmentData(stats: any): DualPowStats {
+    if (!stats) {
+      return {
+        meowpow: this.getDefaultAlgorithmData('MeowPow', true),
+        scrypt: this.getDefaultAlgorithmData('Scrypt', false)
+      };
+    }
+
     return {
       meowpow: {
-        currentDifficulty: stats.meowpow.currentDifficulty || stats.meowpow.difficulty,
-        difficultyChange: stats.meowpow.difficultyChange || 0,
-        slope: stats.meowpow.slope || 0,
-        timingRatio: stats.meowpow.timingRatio || 1.0,
-        avgBlockTime: stats.meowpow.avgBlockTime || 120,
-        lastUpdate: stats.meowpow.lastUpdate || Math.floor(Date.now() / 1000),
+        currentDifficulty: stats.meowpow?.currentDifficulty || 0,
+        difficultyChange: stats.meowpow?.difficultyChange || 0,
+        slope: stats.meowpow?.slope || 0,
+        timingRatio: stats.meowpow?.timingRatio || 1.0,
+        avgBlockTime: stats.meowpow?.avgBlockTime || 120,
+        lastUpdate: stats.meowpow?.lastUpdate || Math.floor(Date.now() / 1000),
         auxpowActive: true
       },
       scrypt: {
-        currentDifficulty: stats.scrypt.currentDifficulty || stats.scrypt.difficulty,
-        difficultyChange: stats.scrypt.difficultyChange || 0,
-        slope: stats.scrypt.slope || 0,
-        timingRatio: stats.scrypt.timingRatio || 1.0,
-        avgBlockTime: stats.scrypt.avgBlockTime || 120,
-        lastUpdate: stats.scrypt.lastUpdate || Math.floor(Date.now() / 1000),
-        auxpowActive: stats.scrypt.auxpowActive
+        currentDifficulty: stats.scrypt?.currentDifficulty || 0,
+        difficultyChange: stats.scrypt?.difficultyChange || 0,
+        slope: stats.scrypt?.slope || 0,
+        timingRatio: stats.scrypt?.timingRatio || 1.0,
+        avgBlockTime: stats.scrypt?.avgBlockTime || 120,
+        lastUpdate: stats.scrypt?.lastUpdate || Math.floor(Date.now() / 1000),
+        auxpowActive: stats.scrypt?.auxpowActive || false
       }
+    };
+  }
+
+  private getDefaultAlgorithmData(algorithm: string, auxpowActive: boolean): LwmaCardData {
+    return {
+      currentDifficulty: 0,
+      difficultyChange: 0,
+      slope: 0,
+      timingRatio: 1.0,
+      avgBlockTime: 120,
+      lastUpdate: Math.floor(Date.now() / 1000),
+      auxpowActive
     };
   }
 }

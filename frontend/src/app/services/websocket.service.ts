@@ -295,6 +295,10 @@ export class WebsocketService {
       this.stateService.difficultyAdjustment$.next(response.da);
     }
 
+    if (response.dualDa) {
+      this.stateService.dualDifficultyAdjustment$.next(response.dualDa);
+    }
+
     if (response.fees) {
      this.stateService.recommendedFees$.next(response.fees);
     }

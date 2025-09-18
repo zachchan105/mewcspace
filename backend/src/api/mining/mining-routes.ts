@@ -9,6 +9,7 @@ import bitcoinClient from '../bitcoin/bitcoin-client';
 import mining from "./mining";
 import PricesRepository from '../../repositories/PricesRepository';
 import blocks from '../blocks';
+import dualDifficultyAdjustment from '../dual-difficulty-adjustment';
 
 class MiningRoutes {
   public initRoutes(app: Application) {
@@ -329,38 +330,34 @@ class MiningRoutes {
 
   private async $getDualPowStats(req: Request, res: Response): Promise<void> {
     try {
-      let meowpowDifficulty = 0, scryptDifficulty = 0;
-      let meowpowHashrate = 0, scryptHashrate = 0;
+      // Get cached difficulty data (no database queries!)
+      const dualDifficultyData = dualDifficultyAdjustment.getDualDifficultyAdjustment();
+      
+      if (!dualDifficultyData) {
+        res.status(503).send('Service Temporarily Unavailable');
+        return;
+      }
 
+      // Get current hashrates from Bitcoin Core (these are fast RPC calls)
+      let meowpowHashrate = 0, scryptHashrate = 0;
       try {
-        meowpowDifficulty = await bitcoinClient.getDifficulty(0);
-        scryptDifficulty = await bitcoinClient.getDifficulty(1);
         meowpowHashrate = await bitcoinClient.getNetworkHashPs(0, -1, 0);
         scryptHashrate = await bitcoinClient.getNetworkHashPs(0, -1, 1);
       } catch (e) {
-        logger.debug('Bitcoin Core is not available, using zeroed values for dual PoW stats');
+        logger.debug('Bitcoin Core is not available, using zeroed values for hashrates');
       }
-
-      // Get real algorithm-specific difficulty data from database
-      const meowpowData = await BlocksRepository.$getAlgorithmDifficultyData('meowpow');
-      const auxpowData = await BlocksRepository.$getAlgorithmDifficultyData('auxpow');
 
       res.header('Pragma', 'public');
       res.header('Cache-control', 'public');
-      res.setHeader('Expires', new Date(Date.now() + 1000 * 30).toUTCString()); // 30 second cache
+      res.setHeader('Expires', new Date(Date.now() + 1000 * 60).toUTCString()); // 1 minute cache
       res.json({
         meowpow: { 
-          difficulty: meowpowDifficulty, 
-          hashrate: meowpowHashrate,
-          algorithm: 'MeowPow',
-          ...meowpowData
+          ...dualDifficultyData.meowpow,
+          hashrate: meowpowHashrate
         },
         scrypt: { 
-          difficulty: scryptDifficulty, 
-          hashrate: scryptHashrate,
-          algorithm: 'Scrypt',
-          auxpowActive: scryptHashrate > 0,
-          ...auxpowData
+          ...dualDifficultyData.scrypt,
+          hashrate: scryptHashrate
         }
       });
     } catch (e) {
