@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbCollapseModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faFilter, faAngleDown, faAngleUp, faAngleRight, faAngleLeft, faBolt, faChartArea, faCogs, faCubes, faHammer, faDatabase, faExchangeAlt, faInfoCircle,
   faLink, faList, faSearch, faCaretUp, faCaretDown, faTachometerAlt, faThList, faTint, faTv, faAngleDoubleDown, faSortUp, faAngleDoubleUp, faChevronDown,
@@ -59,6 +60,7 @@ import { DifficultyComponent } from '../components/difficulty/difficulty.compone
 import { DifficultyTooltipComponent } from '../components/difficulty/difficulty-tooltip.component';
 import { DifficultyMiningComponent } from '../components/difficulty-mining/difficulty-mining.component';
 import { DualDifficultyMiningComponent } from '../components/dual-difficulty-mining/dual-difficulty-mining.component';
+import { HashrateChartComponent } from '../components/hashrate-chart/hashrate-chart.component';
 import { PowCardComponent } from '../components/pow-card/pow-card.component';
 import { TermsOfServiceComponent } from '../components/terms-of-service/terms-of-service.component';
 import { RbfTimelineComponent } from '../components/rbf-timeline/rbf-timeline.component';
@@ -147,6 +149,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     DifficultyComponent,
     DifficultyMiningComponent,
     DualDifficultyMiningComponent,
+    HashrateChartComponent,
     PowCardComponent,
     DifficultyTooltipComponent,
     RbfTimelineComponent,
@@ -199,6 +202,9 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     NgbCollapseModule,
     InfiniteScrollModule,
     FontAwesomeModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts')
+    }),
   ],
   providers: [
     VbytesPipe,
@@ -219,6 +225,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     NgbCollapseModule,
     InfiniteScrollModule,
     FontAwesomeModule,
+    NgxEchartsModule,
     TimeComponent,
     ClipboardComponent,
     QrcodeComponent,
@@ -264,6 +271,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     DifficultyComponent,
     DifficultyMiningComponent,
     DualDifficultyMiningComponent,
+    HashrateChartComponent,
     PowCardComponent,
     DifficultyTooltipComponent,
     RbfTimelineComponent,
