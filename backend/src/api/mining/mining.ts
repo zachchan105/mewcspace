@@ -317,6 +317,19 @@ class Mining {
       // Generate data for both MeowPow (0) and Scrypt (1)
       for (const algorithm of [0, 1]) {
         const algorithmName = algorithm === 0 ? 'MeowPow' : 'Scrypt';
+        
+        // Skip Scrypt hashrate indexing for blocks before Scrypt activation (block 1614560)
+        const SCRYPT_ACTIVATION_BLOCK = 1614560;
+        if (algorithm === 1) {
+          const scryptActivationTimestamp = await this.getBlockTimestamp(SCRYPT_ACTIVATION_BLOCK);
+          if (!scryptActivationTimestamp) {
+            logger.debug(`Scrypt activation block ${SCRYPT_ACTIVATION_BLOCK} not found, skipping Scrypt hashrate indexing`, logger.tags.mining);
+            continue;
+          }
+          toTimestamp = Math.max(toTimestamp, scryptActivationTimestamp * 1000);
+          logger.debug(`Indexing Scrypt hashrate from block ${SCRYPT_ACTIVATION_BLOCK} (timestamp: ${scryptActivationTimestamp})`, logger.tags.mining);
+        }
+        
         const indexedTimestamp = (await HashratesRepository.$getRawNetworkDailyHashrate(null, algorithm)).map(hashrate => hashrate.timestamp);
         const hashrates: any[] = [];
         let toTimestampAlgo = toTimestamp;
@@ -415,6 +428,17 @@ class Mining {
         indexedHeights[height] = true;
       }
 
+      // Skip Scrypt indexing for blocks before Scrypt activation (block 1614560)
+      const SCRYPT_ACTIVATION_BLOCK = 1614560;
+      if (algorithm === 1) {
+        const scryptBlocks = blocks.filter(block => block.height >= SCRYPT_ACTIVATION_BLOCK);
+        if (scryptBlocks.length === 0) {
+          logger.debug(`No Scrypt blocks found after activation block ${SCRYPT_ACTIVATION_BLOCK}, skipping Scrypt difficulty indexing`, logger.tags.mining);
+          continue;
+        }
+        logger.debug(`Indexing Scrypt difficulty adjustments from block ${SCRYPT_ACTIVATION_BLOCK}`, logger.tags.mining);
+      }
+
       // Get algorithm-specific difficulty for genesis block
       let currentDifficulty = await bitcoinClient.getDifficulty(algorithm);
       let totalIndexed = 0;
@@ -437,7 +461,10 @@ class Mining {
 
       logger.debug(`Indexing ${algorithmName} difficulty adjustments`, logger.tags.mining);
 
-      for (const block of blocks) {
+      // Filter blocks for Scrypt to only include blocks after activation
+      const blocksToProcess = algorithm === 1 ? blocks.filter(block => block.height >= SCRYPT_ACTIVATION_BLOCK) : blocks;
+
+      for (const block of blocksToProcess) {
         // Get algorithm-specific difficulty for this block
         const blockDifficulty = await bitcoinClient.getDifficulty(algorithm);
         
@@ -605,6 +632,16 @@ class Mining {
       case '3d': return 1 * scale;
       case '24h': return 1 * scale;
       default: return 86400 * scale;
+    }
+  }
+
+  private async getBlockTimestamp(height: number): Promise<number | null> {
+    try {
+      const blockHash = await bitcoinClient.getBlockHash(height);
+      const block = await bitcoinCoreApi.$getBlock(blockHash);
+      return block.timestamp;
+    } catch (e) {
+      return null;
     }
   }
 }
