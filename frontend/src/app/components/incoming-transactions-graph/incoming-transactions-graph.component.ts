@@ -159,7 +159,7 @@ export class IncomingTransactionsGraphComponent implements OnInit, OnChanges {
       series: [
         {
           zlevel: 0,
-          data: this.data.series[0] || [],
+          data: this.data.series[0],
           type: 'line',
           smooth: false,
           showSymbol: false,
@@ -190,11 +190,6 @@ export class IncomingTransactionsGraphComponent implements OnInit, OnChanges {
         top: 50,
         right: 10,
         pieces: [{
-          gte: 0,
-          lte: 0,
-          color: '#666666'
-        },
-        {
           gt: 0,
           lte: 1667,
           color: '#7CB342'
