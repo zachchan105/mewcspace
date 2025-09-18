@@ -32,6 +32,7 @@ export class HashrateChartComponent implements OnInit {
   @Input() widget = false;
   @Input() right: number | string = 45;
   @Input() left: number | string = 75;
+  @Input() algorithm: 'meowpow' | 'scrypt' = 'meowpow';
 
   miningWindowPreference: string;
   radioGroupForm: UntypedFormGroup;
@@ -50,6 +51,47 @@ export class HashrateChartComponent implements OnInit {
   timespan = '';
   chartInstance: any = undefined;
   network = '';
+
+  getAlgorithmColors() {
+    if (this.algorithm === 'scrypt') {
+      return {
+        hashrate: new graphic.LinearGradient(0, 0, 0, 0.65, [
+          { offset: 0, color: '#1E3A8A99' },
+          { offset: 0.25, color: '#2563EB99' },
+          { offset: 0.5, color: '#3B82F699' },
+          { offset: 0.75, color: '#60A5FA99' },
+          { offset: 1, color: '#93C5FD99' }
+        ]),
+        difficulty: '#1E40AF',
+        hashrateMa: new graphic.LinearGradient(0, 0, 0, 0.65, [
+          { offset: 0, color: '#1E3A8A' },
+          { offset: 0.25, color: '#2563EB' },
+          { offset: 0.5, color: '#3B82F6' },
+          { offset: 0.75, color: '#60A5FA' },
+          { offset: 1, color: '#93C5FD' }
+        ])
+      };
+    } else {
+      // MeowPow colors (orange/gold)
+      return {
+        hashrate: new graphic.LinearGradient(0, 0, 0, 0.65, [
+          { offset: 0, color: '#F4511E99' },
+          { offset: 0.25, color: '#FB8C0099' },
+          { offset: 0.5, color: '#FFB30099' },
+          { offset: 0.75, color: '#FDD83599' },
+          { offset: 1, color: '#7CB34299' }
+        ]),
+        difficulty: '#D81B60',
+        hashrateMa: new graphic.LinearGradient(0, 0, 0, 0.65, [
+          { offset: 0, color: '#F4511E' },
+          { offset: 0.25, color: '#FB8C00' },
+          { offset: 0.5, color: '#FFB300' },
+          { offset: 0.75, color: '#FDD835' },
+          { offset: 1, color: '#7CB342' }
+        ])
+      };
+    }
+  }
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
@@ -99,13 +141,13 @@ export class HashrateChartComponent implements OnInit {
             firstRun = false;
             this.miningWindowPreference = timespan;
             this.isLoading = true;
-            return this.apiService.getHistoricalHashrate$(this.timespan);
+            return this.apiService.getHistoricalHashrate$(this.timespan, this.algorithm);
           })
         ),
         this.stateService.chainTip$
           .pipe(
             switchMap(() => {
-              return this.apiService.getHistoricalHashrate$(this.timespan);
+              return this.apiService.getHistoricalHashrate$(this.timespan, this.algorithm);
             })
           )
       ).pipe(
@@ -184,25 +226,15 @@ export class HashrateChartComponent implements OnInit {
       };
     }
 
+    const colors = this.getAlgorithmColors();
+    
     this.chartOptions = {
       title: title,
       animation: false,
       color: [
-        new graphic.LinearGradient(0, 0, 0, 0.65, [
-          { offset: 0, color: '#F4511E99' },
-          { offset: 0.25, color: '#FB8C0099' },
-          { offset: 0.5, color: '#FFB30099' },
-          { offset: 0.75, color: '#FDD83599' },
-          { offset: 1, color: '#7CB34299' }
-        ]),
-        '#D81B60',
-        new graphic.LinearGradient(0, 0, 0, 0.65, [
-          { offset: 0, color: '#F4511E' },
-          { offset: 0.25, color: '#FB8C00' },
-          { offset: 0.5, color: '#FFB300' },
-          { offset: 0.75, color: '#FDD835' },
-          { offset: 1, color: '#7CB342' }
-        ]),
+        colors.hashrate,
+        colors.difficulty,
+        colors.hashrateMa,
       ],
       grid: {
         top: this.widget ? 20 : 40,
@@ -280,33 +312,36 @@ export class HashrateChartComponent implements OnInit {
       legend: (this.widget || data.hashrates.length === 0) ? undefined : {
         data: [
           {
-            name: $localize`:@@79a9dc5b1caca3cbeb1733a19515edacc5fc7920:Hashrate`,
+            name: `${this.algorithm === 'scrypt' ? 'Scrypt' : 'MeowPow'} ${$localize`:@@79a9dc5b1caca3cbeb1733a19515edacc5fc7920:Hashrate`}`,
             inactiveColor: 'rgb(110, 112, 121)',
             textStyle: {
               color: 'white',
             },
             icon: 'roundRect',
             itemStyle: {
-              color: '#FFB300',
+              color: this.algorithm === 'scrypt' ? '#3B82F6' : '#FFB300',
             },
           },
           {
-            name: $localize`:@@25148835d92465353fc5fe8897c27d5369978e5a:Difficulty`,
-            inactiveColor: 'rgb(110, 112, 121)',
-            textStyle: {
-              color: 'white',
-            },
-            icon: 'roundRect',
-          },
-          {
-            name: $localize`Hashrate (MA)`,
+            name: `${this.algorithm === 'scrypt' ? 'Scrypt' : 'MeowPow'} ${$localize`:@@25148835d92465353fc5fe8897c27d5369978e5a:Difficulty`}`,
             inactiveColor: 'rgb(110, 112, 121)',
             textStyle: {
               color: 'white',
             },
             icon: 'roundRect',
             itemStyle: {
-              color: '#FFB300',
+              color: this.algorithm === 'scrypt' ? '#1E40AF' : '#D81B60',
+            },
+          },
+          {
+            name: `${this.algorithm === 'scrypt' ? 'Scrypt' : 'MeowPow'} ${$localize`Hashrate (MA)`}`,
+            inactiveColor: 'rgb(110, 112, 121)',
+            textStyle: {
+              color: 'white',
+            },
+            icon: 'roundRect',
+            itemStyle: {
+              color: this.algorithm === 'scrypt' ? '#3B82F6' : '#FFB300',
             },
           },
         ],

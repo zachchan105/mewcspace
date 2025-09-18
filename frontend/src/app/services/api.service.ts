@@ -193,10 +193,11 @@ export class ApiService {
       );
   }
 
-  getHistoricalHashrate$(interval: string | undefined): Observable<any> {
+  getHistoricalHashrate$(interval: string | undefined, algorithm: 'meowpow' | 'scrypt' = 'meowpow'): Observable<any> {
+    const algorithmParam = algorithm === 'scrypt' ? '1' : '0';
     return this.httpClient.get<any[]>(
         this.apiBaseUrl + this.apiBasePath + `/api/v1/mining/hashrate` +
-        (interval !== undefined ? `/${interval}` : ''), { observe: 'response' }
+        (interval !== undefined ? `/${interval}` : '') + `?algorithm=${algorithmParam}`, { observe: 'response' }
       );
   }
 

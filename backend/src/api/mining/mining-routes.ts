@@ -138,17 +138,21 @@ class MiningRoutes {
   }
 
   private async $getHistoricalHashrate(req: Request, res: Response) {
+    // Get algorithm parameter (0 = MeowPow, 1 = Scrypt)
+    const algorithm = parseInt(req.query.algorithm as string) || 0;
+    
     let currentHashrate = 0, currentDifficulty = 0;
     try {
-      currentHashrate = await bitcoinClient.getNetworkHashPs();
-      currentDifficulty = await bitcoinClient.getDifficulty();
+      // Use algorithm-specific values
+      currentHashrate = await bitcoinClient.getNetworkHashPs(0, -1, algorithm);
+      currentDifficulty = await bitcoinClient.getDifficulty(algorithm);
     } catch (e) {
       logger.debug('Bitcoin Core is not available, using zeroed value for current hashrate and difficulty');
     }
 
     try {
-      const hashrates = await HashratesRepository.$getNetworkDailyHashrate(req.params.interval);
-      const difficulty = await DifficultyAdjustmentsRepository.$getAdjustments(req.params.interval, false);
+      const hashrates = await HashratesRepository.$getNetworkDailyHashrate(req.params.interval, algorithm);
+      const difficulty = await DifficultyAdjustmentsRepository.$getAdjustments(req.params.interval, false, algorithm);
       const blockCount = await BlocksRepository.$blockCount(null, null);
       res.header('Pragma', 'public');
       res.header('Cache-control', 'public');

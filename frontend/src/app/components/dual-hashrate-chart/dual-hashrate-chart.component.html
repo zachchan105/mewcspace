@@ -1,0 +1,45 @@
+<div class="dual-hashrate-chart">
+  <!-- Algorithm Selector -->
+  <div class="algorithm-selector" *ngIf="(stateService.dualDifficultyAdjustment$ | async) as dualStats">
+    <div class="algorithm-buttons">
+      <button 
+        class="algorithm-btn meowpow" 
+        [class.active]="selectedAlgorithm === 'meowpow'"
+        (click)="selectAlgorithm('meowpow')"
+        [disabled]="!dualStats.meowpow.auxpowActive">
+        <i class="fas fa-paw meowpow-icon"></i>
+        {{ getAlgorithmDisplayName('meowpow') }}
+        <span class="hashrate-value" *ngIf="dualStats.meowpow.auxpowActive">
+          {{ dualStats.meowpow.hashrate | amountShortener: 1 : 'H/s' }}
+        </span>
+        <span class="difficulty-value" *ngIf="dualStats.meowpow.auxpowActive">
+          {{ dualStats.meowpow.difficulty | amountShortener: 2 }}
+        </span>
+      </button>
+      
+      <button 
+        class="algorithm-btn scrypt" 
+        [class.active]="selectedAlgorithm === 'scrypt'"
+        (click)="selectAlgorithm('scrypt')"
+        [disabled]="!dualStats.scrypt.auxpowActive">
+        <i class="fas fa-cube scrypt-icon"></i>
+        {{ getAlgorithmDisplayName('scrypt') }}
+        <span class="hashrate-value" *ngIf="dualStats.scrypt.auxpowActive">
+          {{ dualStats.scrypt.hashrate | amountShortener: 1 : 'H/s' }}
+        </span>
+        <span class="difficulty-value" *ngIf="dualStats.scrypt.auxpowActive">
+          {{ dualStats.scrypt.difficulty | amountShortener: 2 }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <app-hashrate-chart 
+    [tableOnly]="tableOnly"
+    [widget]="widget"
+    [right]="right"
+    [left]="left"
+    [algorithm]="selectedAlgorithm">
+  </app-hashrate-chart>
+</div>
