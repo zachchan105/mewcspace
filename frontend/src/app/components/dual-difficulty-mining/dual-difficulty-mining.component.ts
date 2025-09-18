@@ -18,13 +18,9 @@ interface DualPowStats {
 export class DualDifficultyMiningComponent implements OnInit {
   dualPowStats$: Observable<DualPowStats>;
   isLoading$: Observable<boolean>;
-  selectedAlgorithm: 'meowpow' | 'scrypt' = 'meowpow';
-  showChart = false;
-
   @Input() showProgress = true;
   @Input() showHalving = false;
   @Input() showTitle = false;
-  @Input() showChartToggle = false;
 
   constructor(
     public stateService: StateService,
@@ -39,17 +35,6 @@ export class DualDifficultyMiningComponent implements OnInit {
     );
   }
 
-  selectAlgorithm(algorithm: 'meowpow' | 'scrypt'): void {
-    this.selectedAlgorithm = algorithm;
-  }
-
-  toggleChart(): void {
-    this.showChart = !this.showChart;
-  }
-
-  getAlgorithmDisplayName(algorithm: 'meowpow' | 'scrypt'): string {
-    return algorithm === 'scrypt' ? 'Scrypt' : 'MeowPow';
-  }
 
   formatHashrate(hashrate: number): string {
     if (hashrate === 0) return '0 H/s';
