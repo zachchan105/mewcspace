@@ -54,10 +54,18 @@ class DualDifficultyAdjustmentApi {
       return this.getDefaultData();
     }
 
+    // Debug: Log some block versions to understand the pattern
+    if (blocksCache.length > 0) {
+      const recentVersions = blocksCache.slice(-5).map(b => ({ height: b.height, version: b.version.toString(16) }));
+      logger.debug(`Recent block versions: ${JSON.stringify(recentVersions)}`);
+    }
+
     // Get MeowPow blocks (version 0x30090000)
-    const meowpowBlocks = blocksCache.filter(block => (block.version & 0x30000000) === 0x30090000);
+    const meowpowBlocks = blocksCache.filter(block => block.version === 0x30090000);
     // Get Scrypt blocks (version 0x30090100) 
-    const scryptBlocks = blocksCache.filter(block => (block.version & 0x30000000) === 0x30090100);
+    const scryptBlocks = blocksCache.filter(block => block.version === 0x30090100);
+    
+    logger.debug(`Found ${meowpowBlocks.length} MeowPow blocks, ${scryptBlocks.length} Scrypt blocks out of ${blocksCache.length} total blocks`);
 
     return {
       meowpow: this.calculateAlgorithmData(meowpowBlocks, 'MeowPow', true),
@@ -67,6 +75,7 @@ class DualDifficultyAdjustmentApi {
 
   private calculateAlgorithmData(algorithmBlocks: any[], algorithmName: string, auxpowActive: boolean): any {
     if (algorithmBlocks.length < 2) {
+      logger.debug(`${algorithmName}: Not enough blocks (${algorithmBlocks.length}), returning default values`);
       return {
         currentDifficulty: 0,
         difficultyChange: 0,
