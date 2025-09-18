@@ -52,6 +52,12 @@ export class HashrateChartComponent implements OnInit {
   chartInstance: any = undefined;
   network = '';
 
+  selectAlgorithm(algorithm: 'meowpow' | 'scrypt'): void {
+    this.algorithm = algorithm;
+    // Trigger data refresh
+    this.ngOnInit();
+  }
+
   getAlgorithmColors() {
     if (this.algorithm === 'scrypt') {
       return {
@@ -309,7 +315,7 @@ export class HashrateChartComponent implements OnInit {
           hideOverlap: true,
         }
       },
-      legend: (this.widget || data.hashrates.length === 0) ? undefined : {
+      legend: this.widget ? undefined : {
         data: [
           {
             name: `${this.algorithm === 'scrypt' ? 'Scrypt' : 'MeowPow'} ${$localize`:@@79a9dc5b1caca3cbeb1733a19515edacc5fc7920:Hashrate`}`,

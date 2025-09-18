@@ -9,6 +9,37 @@
   }
 }
 
+.algorithm-selector {
+  .btn-group {
+    .btn {
+      border-radius: 0.5rem;
+      margin-right: 0.5rem;
+      
+      &:last-child {
+        margin-right: 0;
+      }
+      
+      &.active {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+        color: white;
+      }
+      
+      i {
+        margin-right: 0.5rem;
+      }
+      
+      .meowpow-icon {
+        color: #fbbf24;
+      }
+      
+      .scrypt-icon {
+        color: #3b82f6;
+      }
+    }
+  }
+}
+
 .main-title {
   position: relative;
   color: #ffffff91;

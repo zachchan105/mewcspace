@@ -4,7 +4,10 @@
               icon=""
               [data]="s.meowpow"
               [targetSecs]="120"
-              [windowSize]="45">
+              [windowSize]="45"
+              [class.selected]="selectedAlgorithm === 'meowpow'"
+              [class.clickable]="showChartToggle"
+              (click)="showChartToggle && selectAlgorithm('meowpow')">
             </app-pow-card>
 
             <app-pow-card
@@ -12,8 +15,27 @@
               icon=""
               [data]="s.scrypt"
               [targetSecs]="120"
-              [windowSize]="45">
+              [windowSize]="45"
+              [class.selected]="selectedAlgorithm === 'scrypt'"
+              [class.clickable]="showChartToggle"
+              (click)="showChartToggle && selectAlgorithm('scrypt')">
             </app-pow-card>
+</div>
+
+<!-- Chart Toggle Button -->
+<div class="chart-toggle" *ngIf="showChartToggle">
+  <button class="btn btn-sm btn-outline-primary" (click)="toggleChart()">
+    <i class="fas" [class.fa-chart-line]="!showChart" [class.fa-times]="showChart"></i>
+    {{ showChart ? 'Hide Chart' : 'Show Chart' }}
+  </button>
+</div>
+
+<!-- Chart Display -->
+<div class="chart-container" *ngIf="showChart && showChartToggle">
+  <app-hashrate-chart 
+    [algorithm]="selectedAlgorithm"
+    [widget]="true">
+  </app-hashrate-chart>
 </div>
 
 <ng-template #loading>

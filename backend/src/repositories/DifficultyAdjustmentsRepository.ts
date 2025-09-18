@@ -94,9 +94,9 @@ class DifficultyAdjustmentsRepository {
     }
   }
 
-  public async $getAdjustmentsHeights(): Promise<number[]> {
+  public async $getAdjustmentsHeights(algorithm: number = 0): Promise<number[]> {
     try {
-      const [rows]: any[] = await DB.query(`SELECT height FROM difficulty_adjustments`);
+      const [rows]: any[] = await DB.query(`SELECT height FROM difficulty_adjustments WHERE algorithm = ?`, [algorithm]);
       return rows.map(block => block.height);
     } catch (e: any) {
       logger.err(`Cannot get difficulty adjustment block heights. Reason: ${e instanceof Error ? e.message : e}`, logger.tags.mining);

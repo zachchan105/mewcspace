@@ -4,6 +4,50 @@
 @media (max-width: 840px){
   .dual-grid{ grid-template-columns:1fr; }
 }
+
+// Clickable card styles
+:host ::ng-deep {
+  .pow-card {
+    transition: all 0.2s ease;
+    
+    &.clickable {
+      cursor: pointer;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+    
+    &.selected {
+      border: 2px solid #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+  }
+}
+
+.chart-toggle {
+  margin-top: 1rem;
+  text-align: center;
+  
+  .btn {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.chart-container {
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #1f2937;
+}
+
 .skeleton{
   height:118px; border-radius:14px; background:linear-gradient(90deg,#222,#2a2a2a,#222);
   background-size:200% 100%; animation:sk 1.2s infinite;

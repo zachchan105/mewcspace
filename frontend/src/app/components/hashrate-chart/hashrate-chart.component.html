@@ -2,6 +2,28 @@
 
 <div [class]="widget === false ? 'full-container' : ''">
 
+  <!-- Algorithm Selector for Full Page -->
+  <div *ngIf="!widget" class="algorithm-selector mb-3">
+    <div class="btn-group" role="group">
+      <button 
+        type="button" 
+        class="btn btn-outline-primary"
+        [class.active]="algorithm === 'meowpow'"
+        (click)="selectAlgorithm('meowpow')">
+        <i class="fas fa-paw meowpow-icon"></i>
+        MeowPow
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-outline-primary"
+        [class.active]="algorithm === 'scrypt'"
+        (click)="selectAlgorithm('scrypt')">
+        <i class="fas fa-cube scrypt-icon"></i>
+        Scrypt
+      </button>
+    </div>
+  </div>
+
   <div *ngIf="widget">
     <div class="pool-distribution" *ngIf="(dualPowStats$ | async) as dualStats; else loadingStats">
       <!-- MeowPow Section -->

@@ -301,10 +301,8 @@ class Mining {
     try {
       const genesisBlock: IEsploraApi.Block = await bitcoinCoreApi.$getBlock(await bitcoinClient.getBlockHash(0));
       const genesisTimestamp = genesisBlock.timestamp * 1000;
-      const indexedTimestamp = (await HashratesRepository.$getRawNetworkDailyHashrate(null)).map(hashrate => hashrate.timestamp);
       const lastMidnight = this.getDateMidnight(new Date());
       let toTimestamp = Math.round(lastMidnight.getTime());
-      const hashrates: any[] = [];
 
       const totalDayIndexed = (await BlocksRepository.$blockCount(null, null)) / 144;
       let indexedThisRun = 0;
@@ -313,74 +311,84 @@ class Mining {
       const startedAt = new Date().getTime() / 1000;
       let timer = new Date().getTime() / 1000;
 
-      logger.debug(`Indexing daily network hashrate`, logger.tags.mining);
+      logger.debug(`Indexing daily network hashrate for both algorithms`, logger.tags.mining);
       loadingIndicators.setProgress('daily-hashrate-indexing', 0);
 
-      while (toTimestamp > genesisTimestamp && toTimestamp > oldestConsecutiveBlockTimestamp) {
-        const fromTimestamp = toTimestamp - 86400000;
+      // Generate data for both MeowPow (0) and Scrypt (1)
+      for (const algorithm of [0, 1]) {
+        const algorithmName = algorithm === 0 ? 'MeowPow' : 'Scrypt';
+        const indexedTimestamp = (await HashratesRepository.$getRawNetworkDailyHashrate(null, algorithm)).map(hashrate => hashrate.timestamp);
+        const hashrates: any[] = [];
+        let toTimestampAlgo = toTimestamp;
 
-        // Skip already indexed days
-        if (indexedTimestamp.includes(toTimestamp / 1000)) {
-          toTimestamp -= 86400000;
-          ++totalIndexed;
-          continue;
+        logger.debug(`Indexing daily ${algorithmName} hashrate`, logger.tags.mining);
+
+        while (toTimestampAlgo > genesisTimestamp && toTimestampAlgo > oldestConsecutiveBlockTimestamp) {
+          const fromTimestamp = toTimestampAlgo - 86400000;
+
+          // Skip already indexed days
+          if (indexedTimestamp.includes(toTimestampAlgo / 1000)) {
+            toTimestampAlgo -= 86400000;
+            continue;
+          }
+
+          const blockStats: any = await BlocksRepository.$blockCountBetweenTimestamp(
+            null, fromTimestamp / 1000, toTimestampAlgo / 1000);
+          
+          // Get algorithm-specific hashrate
+          const lastBlockHashrate = blockStats.blockCount === 0 ? 0 : await bitcoinClient.getNetworkHashPs(0, -1, algorithm);
+
+          hashrates.push({
+            hashrateTimestamp: toTimestampAlgo / 1000,
+            avgHashrate: lastBlockHashrate,
+            poolId: 0,
+            share: 1,
+            type: 'daily',
+          });
+
+          if (hashrates.length > 10) {
+            newlyIndexed += hashrates.length;
+            await HashratesRepository.$saveHashrates(hashrates, algorithm);
+            hashrates.length = 0;
+          }
+
+          toTimestampAlgo -= 86400000;
         }
 
-        const blockStats: any = await BlocksRepository.$blockCountBetweenTimestamp(
-          null, fromTimestamp / 1000, toTimestamp / 1000);
-        const lastBlockHashrate = blockStats.blockCount === 0 ? 0 : await bitcoinClient.getNetworkHashPs(blockStats.blockCount,
-          blockStats.lastBlockHeight);
-
-        hashrates.push({
-          hashrateTimestamp: toTimestamp / 1000,
-          avgHashrate: lastBlockHashrate,
-          poolId: 0,
-          share: 1,
-          type: 'daily',
-        });
-
-        if (hashrates.length > 10) {
-          newlyIndexed += hashrates.length;
-          await HashratesRepository.$saveHashrates(hashrates);
-          hashrates.length = 0;
+        // Add genesis block manually for this algorithm
+        if (config.MEMPOOL.INDEXING_BLOCKS_AMOUNT === -1 && !indexedTimestamp.includes(genesisTimestamp / 1000)) {
+          hashrates.push({
+            hashrateTimestamp: genesisTimestamp / 1000,
+            avgHashrate: await bitcoinClient.getNetworkHashPs(0, -1, algorithm),
+            poolId: 0,
+            share: 1,
+            type: 'daily',
+          });
         }
+
+        newlyIndexed += hashrates.length;
+        await HashratesRepository.$saveHashrates(hashrates, algorithm);
 
         const elapsedSeconds = Math.max(1, Math.round((new Date().getTime() / 1000) - timer));
         if (elapsedSeconds > 1) {
           const runningFor = Math.max(1, Math.round((new Date().getTime() / 1000) - startedAt));
           const daysPerSeconds = Math.max(1, Math.round(indexedThisRun / elapsedSeconds));
           const progress = Math.round(totalIndexed / totalDayIndexed * 10000) / 100;
-          const formattedDate = new Date(fromTimestamp).toUTCString();
-          logger.debug(`Getting network daily hashrate for ${formattedDate} | ~${daysPerSeconds.toFixed(2)} days/sec | total: ~${totalIndexed}/${Math.round(totalDayIndexed)} (${progress}%) | elapsed: ${runningFor} seconds`, logger.tags.mining);
+          logger.debug(`Getting network daily ${algorithmName} hashrate | ~${daysPerSeconds.toFixed(2)} days/sec | total: ~${totalIndexed}/${Math.round(totalDayIndexed)} (${progress}%) | elapsed: ${runningFor} seconds`, logger.tags.mining);
           timer = new Date().getTime() / 1000;
           indexedThisRun = 0;
           loadingIndicators.setProgress('daily-hashrate-indexing', progress);
         }
 
-        toTimestamp -= 86400000;
         ++indexedThisRun;
         ++totalIndexed;
       }
 
-      // Add genesis block manually
-      if (config.MEMPOOL.INDEXING_BLOCKS_AMOUNT === -1 && !indexedTimestamp.includes(genesisTimestamp / 1000)) {
-        hashrates.push({
-          hashrateTimestamp: genesisTimestamp / 1000,
-          avgHashrate: await bitcoinClient.getNetworkHashPs(1, 1),
-          poolId: 0,
-          share: 1,
-          type: 'daily',
-        });
-      }
-
-      newlyIndexed += hashrates.length;
-      await HashratesRepository.$saveHashrates(hashrates);
-
       this.lastHashrateIndexingDate = new Date().getUTCDate();
       if (newlyIndexed > 0) {
-        logger.info(`Daily network hashrate indexing completed: indexed ${newlyIndexed} days`, logger.tags.mining);
+        logger.info(`Daily network hashrate indexing completed: indexed ${newlyIndexed} days for both algorithms`, logger.tags.mining);
       } else {
-        logger.debug(`Daily network hashrate indexing completed: indexed ${newlyIndexed} days`, logger.tags.mining);
+        logger.debug(`Daily network hashrate indexing completed: indexed ${newlyIndexed} days for both algorithms`, logger.tags.mining);
       }
       loadingIndicators.setProgress('daily-hashrate-indexing', 100);
     } catch (e) {
@@ -394,72 +402,83 @@ class Mining {
    * Index difficulty adjustments
    */
   public async $indexDifficultyAdjustments(): Promise<void> {
-    const indexedHeightsArray = await DifficultyAdjustmentsRepository.$getAdjustmentsHeights();
-    const indexedHeights = {};
-    for (const height of indexedHeightsArray) {
-      indexedHeights[height] = true;
-    }
-
     const blocks: any = await BlocksRepository.$getBlocksDifficulty();
     const genesisBlock: IEsploraApi.Block = await bitcoinCoreApi.$getBlock(await bitcoinClient.getBlockHash(0));
-    let currentDifficulty = genesisBlock.difficulty;
-    let totalIndexed = 0;
-
-    if (config.MEMPOOL.INDEXING_BLOCKS_AMOUNT === -1 && indexedHeights[0] !== true) {
-      await DifficultyAdjustmentsRepository.$saveAdjustments({
-        time: genesisBlock.timestamp,
-        height: 0,
-        difficulty: currentDifficulty,
-        adjustment: 0.0,
-      });
-    }
-
     const oldestConsecutiveBlock = await BlocksRepository.$getOldestConsecutiveBlock();
-    if (config.MEMPOOL.INDEXING_BLOCKS_AMOUNT !== -1) {
-      currentDifficulty = oldestConsecutiveBlock.difficulty;
-    }
 
-    let totalBlockChecked = 0;
-    let timer = new Date().getTime() / 1000;
-
-    for (const block of blocks) {
-      if (block.difficulty !== currentDifficulty) {
-        if (indexedHeights[block.height] === true) { // Already indexed
-          if (block.height >= oldestConsecutiveBlock.height) {
-            currentDifficulty = block.difficulty;
-          }
-          continue;          
-        }
-
-        let adjustment = block.difficulty / currentDifficulty;
-        adjustment = Math.round(adjustment * 1000000) / 1000000; // Remove float point noise
-
-        await DifficultyAdjustmentsRepository.$saveAdjustments({
-          time: block.time,
-          height: block.height,
-          difficulty: block.difficulty,
-          adjustment: adjustment,
-        });
-
-        totalIndexed++;
-        if (block.height >= oldestConsecutiveBlock.height) {
-          currentDifficulty = block.difficulty;
-        }
-    }
-
-      totalBlockChecked++;
-      const elapsedSeconds = Math.max(1, Math.round((new Date().getTime() / 1000) - timer));
-      if (elapsedSeconds > 5) {
-        const progress = Math.round(totalBlockChecked / blocks.length * 100);
-        logger.debug(`Indexing difficulty adjustment at block #${block.height} | Progress: ${progress}%`, logger.tags.mining);
-        timer = new Date().getTime() / 1000;
+    // Process both algorithms
+    for (const algorithm of [0, 1]) {
+      const algorithmName = algorithm === 0 ? 'MeowPow' : 'Scrypt';
+      const indexedHeightsArray = await DifficultyAdjustmentsRepository.$getAdjustmentsHeights(algorithm);
+      const indexedHeights = {};
+      for (const height of indexedHeightsArray) {
+        indexedHeights[height] = true;
       }
-    }
 
-    if (totalIndexed > 0) {
-      logger.info(`Indexed ${totalIndexed} difficulty adjustments`, logger.tags.mining);
-    } else {
-      logger.debug(`Indexed ${totalIndexed} difficulty adjustments`, logger.tags.mining);
+      // Get algorithm-specific difficulty for genesis block
+      let currentDifficulty = await bitcoinClient.getDifficulty(algorithm);
+      let totalIndexed = 0;
+
+      if (config.MEMPOOL.INDEXING_BLOCKS_AMOUNT === -1 && indexedHeights[0] !== true) {
+        await DifficultyAdjustmentsRepository.$saveAdjustments({
+          time: genesisBlock.timestamp,
+          height: 0,
+          difficulty: currentDifficulty,
+          adjustment: 0.0,
+        }, algorithm);
+      }
+
+      if (config.MEMPOOL.INDEXING_BLOCKS_AMOUNT !== -1) {
+        currentDifficulty = await bitcoinClient.getDifficulty(algorithm);
+      }
+
+      let totalBlockChecked = 0;
+      let timer = new Date().getTime() / 1000;
+
+      logger.debug(`Indexing ${algorithmName} difficulty adjustments`, logger.tags.mining);
+
+      for (const block of blocks) {
+        // Get algorithm-specific difficulty for this block
+        const blockDifficulty = await bitcoinClient.getDifficulty(algorithm);
+        
+        if (blockDifficulty !== currentDifficulty) {
+          if (indexedHeights[block.height] === true) { // Already indexed
+            if (block.height >= oldestConsecutiveBlock.height) {
+              currentDifficulty = blockDifficulty;
+            }
+            continue;          
+          }
+
+          let adjustment = blockDifficulty / currentDifficulty;
+          adjustment = Math.round(adjustment * 1000000) / 1000000; // Remove float point noise
+
+          await DifficultyAdjustmentsRepository.$saveAdjustments({
+            time: block.time,
+            height: block.height,
+            difficulty: blockDifficulty,
+            adjustment: adjustment,
+          }, algorithm);
+
+          totalIndexed++;
+          if (block.height >= oldestConsecutiveBlock.height) {
+            currentDifficulty = blockDifficulty;
+          }
+        }
+
+        totalBlockChecked++;
+        const elapsedSeconds = Math.max(1, Math.round((new Date().getTime() / 1000) - timer));
+        if (elapsedSeconds > 5) {
+          const progress = Math.round(totalBlockChecked / blocks.length * 100);
+          logger.debug(`Indexing ${algorithmName} difficulty adjustment at block #${block.height} | Progress: ${progress}%`, logger.tags.mining);
+          timer = new Date().getTime() / 1000;
+        }
+      }
+
+      if (totalIndexed > 0) {
+        logger.info(`Indexed ${totalIndexed} ${algorithmName} difficulty adjustments`, logger.tags.mining);
+      } else {
+        logger.debug(`Indexed ${totalIndexed} ${algorithmName} difficulty adjustments`, logger.tags.mining);
+      }
     }
   }
 
