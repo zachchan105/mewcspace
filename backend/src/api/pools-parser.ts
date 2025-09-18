@@ -131,11 +131,31 @@ class PoolsParser {
     const oldestBlockHeight = oldestPoolBlock.length ?? 0 > 0 ? oldestPoolBlock[0].height : 130635;
     const [unknownPool] = await DB.query(`SELECT id from pools where slug = "unknown"`);
     this.uniqueLog(logger.notice, `Deleting blocks with unknown mining pool from height ${oldestBlockHeight} for re-indexing`);
-    await DB.query(`
-      DELETE FROM blocks
-      WHERE pool_id = ? AND height >= ${oldestBlockHeight}`,
-      [unknownPool[0].id]
-    );
+    
+    // Delete in batches to avoid timeouts and locks
+    const BATCH_SIZE = 10000;
+    let totalDeleted = 0;
+    let batchDeleted = 0;
+    
+    do {
+      const result = await DB.query(`
+        DELETE FROM blocks
+        WHERE pool_id = ? AND height >= ${oldestBlockHeight}
+        LIMIT ?`,
+        [unknownPool[0].id, BATCH_SIZE]
+      );
+      
+      batchDeleted = (result[0] as any).affectedRows;
+      totalDeleted += batchDeleted;
+      
+      if (batchDeleted > 0) {
+        logger.debug(`Deleted ${batchDeleted} unknown blocks (total: ${totalDeleted})`);
+        // Small delay between batches to reduce database load
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    } while (batchDeleted === BATCH_SIZE);
+    
+    logger.notice(`Completed deletion of ${totalDeleted} unknown blocks`);
     logger.notice(`Deleting blocks from ${pool.name} mining pool for re-indexing`);
     await DB.query(`
       DELETE FROM blocks
@@ -147,11 +167,31 @@ class PoolsParser {
   private async $deleteUnknownBlocks(): Promise<void> {
     const [unknownPool] = await DB.query(`SELECT id from pools where slug = "unknown"`);
     this.uniqueLog(logger.notice, `Deleting blocks with unknown mining pool from height 130635 for re-indexing`);
-    await DB.query(`
-      DELETE FROM blocks
-      WHERE pool_id = ? AND height >= 130635`,
-      [unknownPool[0].id]
-    );
+    
+    // Delete in batches to avoid timeouts and locks
+    const BATCH_SIZE = 10000;
+    let totalDeleted = 0;
+    let batchDeleted = 0;
+    
+    do {
+      const result = await DB.query(`
+        DELETE FROM blocks
+        WHERE pool_id = ? AND height >= 130635
+        LIMIT ?`,
+        [unknownPool[0].id, BATCH_SIZE]
+      );
+      
+      batchDeleted = (result[0] as any).affectedRows;
+      totalDeleted += batchDeleted;
+      
+      if (batchDeleted > 0) {
+        logger.debug(`Deleted ${batchDeleted} unknown blocks (total: ${totalDeleted})`);
+        // Small delay between batches to reduce database load
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    } while (batchDeleted === BATCH_SIZE);
+    
+    logger.notice(`Completed deletion of ${totalDeleted} unknown blocks`);
   }
 }
 
