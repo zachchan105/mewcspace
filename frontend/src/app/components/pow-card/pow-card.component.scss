@@ -1,7 +1,7 @@
 .pow-card{
   --bg:#1f2937; --rail:#2a2a2a; --muted:#a0a0a0; --txt:#fff;
   --up:#3bcc49; --down:#dc3545; --flat:#ffffff66;
-  background:var(--bg); color:var(--txt); border-radius:14px; padding:12px 14px; display:grid; gap:8px;
+  background:var(--bg); color:var(--txt); border-radius:0.25rem; padding:12px 14px; display:grid; gap:8px;
   transition:opacity .25s ease, filter .25s ease;
   isolation:isolate; overflow:hidden;
 
