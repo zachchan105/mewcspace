@@ -18,6 +18,12 @@
       </div>
     </div>
 
+    <!-- difficulty adjustment -->
+    <div class="col">
+      <div class="main-title" i18n="dashboard.difficulty-adjustment">Difficulty Adjustment</div>
+      <app-dual-difficulty-mining [attr.data-cy]="'difficulty-adjustment'" [showTitle]="false" [showProgress]="false" [showHalving]="true"></app-dual-difficulty-mining>
+    </div>
+
     <!-- pool distribution -->
     <div class="col" style="margin-bottom: 1.47rem">
       <div class="card graph-card">
