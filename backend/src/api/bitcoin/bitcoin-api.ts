@@ -45,6 +45,10 @@ class BitcoinApi implements AbstractBitcoinApi {
         if (skipConversion) {
           transaction.vout.forEach((vout) => {
             vout.value = Math.round(vout.value * 100000000);
+            // Extract addresses from raw RPC response for pool matching
+            if (vout.scriptPubKey && vout.scriptPubKey.addresses && vout.scriptPubKey.addresses.length > 0) {
+              vout.scriptPubKey.address = vout.scriptPubKey.addresses[0];
+            }
           });
           return transaction;
         }
