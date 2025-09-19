@@ -30,8 +30,7 @@ class TransactionUtils {
   public async $getTransactionExtended(txId: string, addPrevouts = false, lazyPrevouts = false, forceCore = false): Promise<TransactionExtended> {
     let transaction: IEsploraApi.Transaction;
     if (forceCore === true) {
-      // For coinbase transactions, we need to convert the transaction to get addresses
-      transaction  = await bitcoinCoreApi.$getRawTransaction(txId, false);
+      transaction  = await bitcoinCoreApi.$getRawTransaction(txId, true);
     } else {
       transaction  = await bitcoinApi.$getRawTransaction(txId, false, addPrevouts, lazyPrevouts);
     }
