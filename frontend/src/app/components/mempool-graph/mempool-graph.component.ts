@@ -23,7 +23,7 @@ import { download, formatterXAxis, formatterXAxisLabel } from '../../shared/grap
 })
 export class MempoolGraphComponent implements OnInit, OnChanges {
   @Input() data: any[];
-  @Input() filterSize = 100000;
+  @Input() filterSize = 10000; //Probably change later to a higher value
   @Input() limitFilterFee = 1;
   @Input() height: number | string = 200;
   @Input() top: number | string = 20;
