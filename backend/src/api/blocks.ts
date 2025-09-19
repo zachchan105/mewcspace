@@ -316,6 +316,10 @@ class Blocks {
     const asciiScriptSig = transactionUtils.hex2ascii(txMinerInfo.vin[0].scriptsig);
     const addresses = txMinerInfo.vout.map((vout) => vout.scriptpubkey_address).filter((address) => address);
 
+    // Debug logging for pool matching
+    logger.debug(`[POOL DEBUG] Coinbase addresses: ${JSON.stringify(addresses)}`);
+    logger.debug(`[POOL DEBUG] ASCII script sig: ${asciiScriptSig}`);
+
     let pools: PoolTag[] = [];
     if (config.DATABASE.ENABLED === true) {
       pools = await poolsRepository.$getPools();
@@ -327,8 +331,12 @@ class Blocks {
       if (addresses.length) {
         const poolAddresses: string[] = typeof pools[i].addresses === 'string' ?
           JSON.parse(pools[i].addresses) : pools[i].addresses;
+        
+        logger.debug(`[POOL DEBUG] Checking pool ${pools[i].name} (id: ${pools[i].id}) with addresses: ${JSON.stringify(poolAddresses)}`);
+        
         for (let y = 0; y < poolAddresses.length; y++) {
           if (addresses.indexOf(poolAddresses[y]) !== -1) {
+            logger.debug(`[POOL DEBUG] MATCH FOUND! Pool ${pools[i].name} matched address ${poolAddresses[y]}`);
             return pools[i];
           }
         }
@@ -340,11 +348,13 @@ class Blocks {
         const regex = new RegExp(regexes[y], 'i');
         const match = asciiScriptSig.match(regex);
         if (match !== null) {
+          logger.debug(`[POOL DEBUG] REGEX MATCH FOUND! Pool ${pools[i].name} matched regex ${regexes[y]}`);
           return pools[i];
         }
       }
     }
 
+    logger.debug(`[POOL DEBUG] No pool match found, returning unknown pool`);
     if (config.DATABASE.ENABLED === true) {
       return await poolsRepository.$getUnknownPool();
     } else {
