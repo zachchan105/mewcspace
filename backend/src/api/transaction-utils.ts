@@ -48,10 +48,6 @@ class TransactionUtils {
     const calculatedFee = feeInMewc / (transaction.weight / 4);
     const feePerVbytes = Math.max(Common.isLiquid() ? 0.1 : 0.00001, calculatedFee);
     
-    // Debug logging for fee calculation
-    if (transaction.fee && transaction.fee > 0) {
-      console.log(`[FEE DEBUG] TX ${transaction.txid}: fee=${transaction.fee} sat, feeInMewc=${feeInMewc}, weight=${transaction.weight}, vsize=${transaction.weight/4}, calculatedFee=${calculatedFee}, finalFeePerVbytes=${feePerVbytes}`);
-    }
     const transactionExtended: TransactionExtended = Object.assign({
       vsize: Math.round(transaction.weight / 4),
       feePerVsize: feePerVbytes,

@@ -77,16 +77,12 @@ class Statistics {
       // effectiveFeePerVsize is already in mew/vbyte (satoshis per vbyte)
       const feeInMewVbyte = transaction.effectiveFeePerVsize;
       
-      // Debug logging for fee bucket assignment
-      console.log(`[STATS DEBUG] TX ${transaction.txid}: effectiveFeePerVsize=${transaction.effectiveFeePerVsize} mew/vbyte, vsize=${transaction.vsize}`);
-      
       for (let i = 0; i < logFees.length; i++) {
         if (
           (Common.isLiquid() && (i === lastItem || feeInMewVbyte * 10 < logFees[i + 1]))
           ||
           (!Common.isLiquid() && (i === lastItem || feeInMewVbyte < logFees[i + 1]))
         ) {
-          console.log(`[STATS DEBUG] TX ${transaction.txid}: assigned to bucket ${logFees[i]} (${feeInMewVbyte} < ${logFees[i + 1] || 'last'})`);
           if (weightVsizeFees[logFees[i]]) {
             weightVsizeFees[logFees[i]] += transaction.vsize;
           } else {
@@ -97,10 +93,6 @@ class Statistics {
       }
     });
 
-    // Debug logging for final statistics
-    console.log(`[STATS DEBUG] Final weightVsizeFees:`, weightVsizeFees);
-    console.log(`[STATS DEBUG] Total transactions: ${memPoolArray.length}`);
-    
     try {
       const insertId = await statisticsApi.$create({
         added: 'NOW()',
