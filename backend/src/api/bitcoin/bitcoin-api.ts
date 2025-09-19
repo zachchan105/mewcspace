@@ -237,7 +237,8 @@ class BitcoinApi implements AbstractBitcoinApi {
 
     if (addPrevout) {
       esploraTransaction = await this.$calculateFeeFromInputs(esploraTransaction, false, lazyPrevouts);
-    } else if (!transaction.confirmations) {
+    } else if (!transaction.confirmations && !transaction.blockhash) {
+      // For unconfirmed transactions, get fee from mempool entry
       esploraTransaction = await this.$appendMempoolFeeData(esploraTransaction);
     }
 
