@@ -7,7 +7,7 @@ $gray-700: #fff;
 
 $nav-tabs-link-active-bg: #11131f;
 
-$primary: #2368d9;
+$primary: #bb8400;
 $secondary: #1a1a1a; // MEWCbrand: nav bar network selector
 $success: #1a9436;
 $info: #bb8400;
@@ -33,7 +33,7 @@ $custom-select-indicator-color: #FFF;
 
 $link-color:                #bb8400; // MEWCbrand: link text color
 $link-decoration:           none !default;
-$link-hover-color:          #2368d9 !default; // MEWCbrand: link text hover color
+$link-hover-color:          #bb8400 !default; // MEWCbrand: link text hover color
 $link-hover-decoration:     underline !default;
 
 $dropdown-bg: #0d0d0d;
@@ -731,7 +731,7 @@ h1, h2, h3 {
 }
 
 .progress.progress-health {
-  background: repeating-linear-gradient(to right, #4d4d4d, #4d4d4d 0%, #2368d9 0%, #1a9436 100%);
+  background: repeating-linear-gradient(to right, #4d4d4d, #4d4d4d 0%, #bb8400 0%, #1a9436 100%);
   justify-content: flex-end;
 }
 

@@ -29,8 +29,8 @@ export class ClockComponent implements OnInit {
   limitHeight: number;
 
   gradientColors = {
-    '': ['#2396d9', '#2368d9'],
-    bisq: ['#2396d9', '#2368d9'],
+    '': ['#2396d9', '#bb8400'],
+    bisq: ['#2396d9', '#bb8400'],
     liquid: ['#116761', '#183550'],
     'liquidtestnet': ['#494a4a', '#272e46'],
     testnet: ['#1d486f', '#183550'],

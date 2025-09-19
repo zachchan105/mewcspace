@@ -81,7 +81,7 @@
       right: -5px;
       top: 0;
       transform: translateY(-50%);
-      background: #2368d9;
+      background: #bb8400;
       border-radius: 5px;
     }
     &.first-node {
@@ -181,11 +181,11 @@
         width: 20px;
         height: 108px;
         bottom: 50%;
-        border-right: solid 10px #2368d9;
+        border-right: solid 10px #bb8400;
       }
 
       .corner {
-        border-bottom: solid 10px #2368d9;
+        border-bottom: solid 10px #bb8400;
         border-bottom-right-radius: 10px;
       }
     }
