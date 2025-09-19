@@ -30,8 +30,13 @@ class TransactionUtils {
   public async $getTransactionExtended(txId: string, addPrevouts = false, lazyPrevouts = false, forceCore = false): Promise<TransactionExtended> {
     let transaction: IEsploraApi.Transaction;
     if (forceCore === true) {
-      // For coinbase transactions, we need to convert the transaction to get addresses
-      transaction  = await bitcoinCoreApi.$getRawTransaction(txId, false);
+      // For coinbase transactions, use core RPC but ensure we get converted data with addresses
+      try {
+        transaction = await bitcoinCoreApi.$getRawTransaction(txId, false);
+      } catch (e) {
+        // If core RPC fails, try the regular API as fallback
+        transaction = await bitcoinApi.$getRawTransaction(txId, false, addPrevouts, lazyPrevouts);
+      }
     } else {
       transaction  = await bitcoinApi.$getRawTransaction(txId, false, addPrevouts, lazyPrevouts);
     }
