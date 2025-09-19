@@ -267,6 +267,7 @@ class BitcoinApi implements AbstractBitcoinApi {
 
   private async $appendMempoolFeeData(transaction: IEsploraApi.Transaction): Promise<IEsploraApi.Transaction> {
     if (transaction.fee) {
+      console.log(`[MEMPOOL FEE DEBUG] TX ${transaction.txid}: already has fee=${transaction.fee}`);
       return transaction;
     }
     let mempoolEntry: IBitcoinApi.MempoolEntry;
@@ -278,7 +279,9 @@ class BitcoinApi implements AbstractBitcoinApi {
     } else {
       mempoolEntry = await this.$getMempoolEntry(transaction.txid);
     }
-    transaction.fee = Math.round((mempoolEntry.fees?.base ?? mempoolEntry.fee ?? 0) * 100000000);
+    const originalFee = mempoolEntry.fees?.base ?? mempoolEntry.fee ?? 0;
+    transaction.fee = Math.round(originalFee * 100000000);
+    console.log(`[MEMPOOL FEE DEBUG] TX ${transaction.txid}: got fee from mempool: originalFee=${originalFee} MEWC, convertedFee=${transaction.fee} sat`);
     return transaction;
   }
 

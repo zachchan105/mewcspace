@@ -74,12 +74,16 @@ class Statistics {
     const lastItem = logFees.length - 1;
 
     memPoolArray.forEach((transaction) => {
+      // Debug logging for fee bucket assignment
+      console.log(`[STATS DEBUG] TX ${transaction.txid}: effectiveFeePerVsize=${transaction.effectiveFeePerVsize}, vsize=${transaction.vsize}`);
+      
       for (let i = 0; i < logFees.length; i++) {
         if (
           (Common.isLiquid() && (i === lastItem || transaction.effectiveFeePerVsize * 10 < logFees[i + 1]))
           ||
           (!Common.isLiquid() && (i === lastItem || transaction.effectiveFeePerVsize < logFees[i + 1]))
         ) {
+          console.log(`[STATS DEBUG] TX ${transaction.txid}: assigned to bucket ${logFees[i]} (${transaction.effectiveFeePerVsize} < ${logFees[i + 1] || 'last'})`);
           if (weightVsizeFees[logFees[i]]) {
             weightVsizeFees[logFees[i]] += transaction.vsize;
           } else {
@@ -90,6 +94,10 @@ class Statistics {
       }
     });
 
+    // Debug logging for final statistics
+    console.log(`[STATS DEBUG] Final weightVsizeFees:`, weightVsizeFees);
+    console.log(`[STATS DEBUG] Total transactions: ${memPoolArray.length}`);
+    
     try {
       const insertId = await statisticsApi.$create({
         added: 'NOW()',
