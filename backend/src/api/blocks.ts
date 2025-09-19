@@ -314,11 +314,6 @@ class Blocks {
     }
 
     const asciiScriptSig = transactionUtils.hex2ascii(txMinerInfo.vin[0].scriptsig);
-    
-    // Debug logging for address extraction
-    logger.debug(`[POOL DEBUG] txMinerInfo.vout: ${JSON.stringify(txMinerInfo.vout)}`);
-    logger.debug(`[POOL DEBUG] Raw addresses before filter: ${JSON.stringify(txMinerInfo.vout.map((vout) => vout.scriptpubkey_address))}`);
-    
     const addresses = txMinerInfo.vout.map((vout) => vout.scriptpubkey_address).filter((address) => address);
 
     // Debug logging for pool matching
