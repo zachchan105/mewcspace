@@ -47,7 +47,7 @@ function download(filename, url) {
 function downloadMiningPoolLogos() {
   const options = {
     host: "api.github.com",
-    path: "/repos/mempool/mining-pool-logos/contents/",
+    path: "/repos/meowcoin-foundation/mining-pool-logos/contents/",
     method: "GET",
     headers: { "user-agent": "node.js" },
   };
