@@ -97,6 +97,17 @@ class BitcoindElectrsApi extends BitcoinApi implements AbstractBitcoinApi {
       return [];
     }
 
+    // Block high-frequency addresses that cause "history too large" errors
+    const blockedAddresses = [
+      'MPyNGZSSZ4rbjkVJRLn3v64pMcktpEYJnU', // Known high-frequency address
+      // Add other problematic addresses here
+    ];
+
+    if (blockedAddresses.includes(address)) {
+      // Return empty array for blocked addresses to prevent electrum errors
+      return [];
+    }
+
     try {
       loadingIndicators.setProgress('address-' + address, 0);
 
