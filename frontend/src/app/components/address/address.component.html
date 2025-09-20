@@ -60,7 +60,10 @@
     <br>
     <div class="title-tx">
       <h2 class="text-left">
-        <ng-template [ngIf]="!transactions?.length">&nbsp;</ng-template>
+        <ng-template [ngIf]="!transactions?.length && address?.address !== 'MPyNGZSSZ4rbjkVJRLn3v64pMcktpEYJnU'">&nbsp;</ng-template>
+        <ng-template [ngIf]="address?.address === 'MPyNGZSSZ4rbjkVJRLn3v64pMcktpEYJnU'">
+          <span class="text-muted">Transaction history disabled for high-frequency addresses</span>
+        </ng-template>
         <ng-template i18n="X of X Address Transaction" [ngIf]="transactions?.length === 1">{{ (transactions?.length |
           number) || '?' }} of {{ txCount | number }} transaction</ng-template>
         <ng-template i18n="X of X Address Transactions (Plural)" [ngIf]="transactions?.length > 1">{{
