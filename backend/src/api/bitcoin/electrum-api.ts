@@ -62,6 +62,34 @@ class BitcoindElectrsApi extends BitcoinApi implements AbstractBitcoinApi {
       });
     }
 
+    // Block high-frequency addresses that cause "history too large" errors
+    const blockedAddresses = [
+      'MPyNGZSSZ4rbjkVJRLn3v64pMcktpEYJnU', // Known high-frequency address
+      // Add other problematic addresses here
+    ];
+
+    if (blockedAddresses.includes(address)) {
+      // Return minimal address data for blocked addresses to prevent electrum errors
+      return {
+        'address': addressInfo.address,
+        'chain_stats': {
+          'funded_txo_count': 0,
+          'funded_txo_sum': 0,
+          'spent_txo_count': 0,
+          'spent_txo_sum': 0,
+          'tx_count': 0,
+        },
+        'mempool_stats': {
+          'funded_txo_count': 0,
+          'funded_txo_sum': 0,
+          'spent_txo_count': 0,
+          'spent_txo_sum': 0,
+          'tx_count': 0,
+        },
+        'electrum': true,
+      };
+    }
+
     try {
       const balance = await this.$getScriptHashBalance(addressInfo.scriptPubKey);
       const history = await this.$getScriptHashHistory(addressInfo.scriptPubKey);
