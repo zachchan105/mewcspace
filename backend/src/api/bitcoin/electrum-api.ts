@@ -69,25 +69,48 @@ class BitcoindElectrsApi extends BitcoinApi implements AbstractBitcoinApi {
     ];
 
     if (blockedAddresses.includes(address)) {
-      // Return minimal address data for blocked addresses to prevent electrum errors
-      return {
-        'address': addressInfo.address,
-        'chain_stats': {
-          'funded_txo_count': 0,
-          'funded_txo_sum': 0,
-          'spent_txo_count': 0,
-          'spent_txo_sum': 0,
-          'tx_count': 0,
-        },
-        'mempool_stats': {
-          'funded_txo_count': 0,
-          'funded_txo_sum': 0,
-          'spent_txo_count': 0,
-          'spent_txo_sum': 0,
-          'tx_count': 0,
-        },
-        'electrum': true,
-      };
+      // For blocked addresses, try to get balance without history
+      try {
+        const balance = await this.$getScriptHashBalance(addressInfo.scriptPubKey);
+        return {
+          'address': addressInfo.address,
+          'chain_stats': {
+            'funded_txo_count': 0,
+            'funded_txo_sum': balance.confirmed ? balance.confirmed : 0,
+            'spent_txo_count': 0,
+            'spent_txo_sum': balance.confirmed < 0 ? balance.confirmed : 0,
+            'tx_count': 0, // We can't get this without history
+          },
+          'mempool_stats': {
+            'funded_txo_count': 0,
+            'funded_txo_sum': balance.unconfirmed > 0 ? balance.unconfirmed : 0,
+            'spent_txo_count': 0,
+            'spent_txo_sum': balance.unconfirmed < 0 ? -balance.unconfirmed : 0,
+            'tx_count': 0, // We can't get this without history
+          },
+          'electrum': true,
+        };
+      } catch (e: any) {
+        // If even balance fails, return zeros
+        return {
+          'address': addressInfo.address,
+          'chain_stats': {
+            'funded_txo_count': 0,
+            'funded_txo_sum': 0,
+            'spent_txo_count': 0,
+            'spent_txo_sum': 0,
+            'tx_count': 0,
+          },
+          'mempool_stats': {
+            'funded_txo_count': 0,
+            'funded_txo_sum': 0,
+            'spent_txo_count': 0,
+            'spent_txo_sum': 0,
+            'tx_count': 0,
+          },
+          'electrum': true,
+        };
+      }
     }
 
     try {
