@@ -100,28 +100,8 @@ class BitcoindElectrsApi extends BitcoinApi implements AbstractBitcoinApi {
     try {
       loadingIndicators.setProgress('address-' + address, 0);
 
-      // Special handling for high-frequency addresses to prevent excessive load
-      const highFrequencyAddresses = [
-        'MPyNGZSSZ4rbjkVJRLn3v64pMcktpEYJnU', // Known high-frequency address
-        // Add other known high-frequency addresses here
-      ];
-
-      if (highFrequencyAddresses.includes(address)) {
-        // For high-frequency addresses, return empty array to prevent excessive electrum calls
-        // The frontend will still show balance information from the address endpoint
-        loadingIndicators.setProgress('address-' + address, 100);
-        return [];
-      }
-
       const transactions: IEsploraApi.Transaction[] = [];
       const history = await this.$getScriptHashHistory(addressInfo.scriptPubKey);
-      
-      // Additional safety check: if history is extremely large, return empty array
-      if (history.length > 100000) { // 100k transaction threshold
-        loadingIndicators.setProgress('address-' + address, 100);
-        return [];
-      }
-      
       history.sort((a, b) => (b.height || 9999999) - (a.height || 9999999));
 
       let startingIndex = 0;
