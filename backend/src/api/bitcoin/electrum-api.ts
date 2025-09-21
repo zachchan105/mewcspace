@@ -176,7 +176,7 @@ class BitcoindElectrsApi extends BitcoinApi implements AbstractBitcoinApi {
       const endIndex = Math.min(startingIndex + 10, history.length);
 
       for (let i = startingIndex; i < endIndex; i++) {
-        const tx = await this.$getRawTransaction(history[i].tx_hash, false, true);
+        const tx = await this.$getRawTransaction(history[i].tx_hash, true, false);
         transactions.push(tx);
         loadingIndicators.setProgress('address-' + address, (i + 1) / endIndex * 100);
       }
