@@ -176,7 +176,7 @@ class BitcoindElectrsApi extends BitcoinApi implements AbstractBitcoinApi {
       const endIndex = Math.min(startingIndex + 10, history.length);
 
       for (let i = startingIndex; i < endIndex; i++) {
-        const tx = await this.$getRawTransaction(history[i].tx_hash, true, false);
+        const tx = await this.$getElectrumTransaction(history[i].tx_hash);
         transactions.push(tx);
         loadingIndicators.setProgress('address-' + address, (i + 1) / endIndex * 100);
       }
@@ -184,8 +184,28 @@ class BitcoindElectrsApi extends BitcoinApi implements AbstractBitcoinApi {
       return transactions;
     } catch (e: any) {
       loadingIndicators.setProgress('address-' + address, 100);
-      throw new Error(typeof e === 'string' ? e : e && e.message || e);
+      const errorMessage = typeof e === 'string' ? e : (e && e.message) || JSON.stringify(e) || 'Unknown error';
+      throw new Error(errorMessage);
     }
+  }
+
+  private async $getElectrumTransaction(txHash: string): Promise<IEsploraApi.Transaction> {
+    // Use electrum client directly to avoid mempool lookup issues
+    const rawTx = await this.electrumClient.blockchainTransaction_get(txHash, true);
+    
+    // Convert electrum transaction format to our format
+    return {
+      txid: rawTx.txid,
+      version: rawTx.version,
+      locktime: rawTx.locktime,
+      size: rawTx.size,
+      weight: rawTx.weight,
+      fee: rawTx.fee || 0,
+      vin: rawTx.vin || [],
+      vout: rawTx.vout || [],
+      status: rawTx.status || { confirmed: false },
+      hex: rawTx.hex || '',
+    };
   }
 
   private $getScriptHashBalance(scriptHash: string): Promise<IElectrumApi.ScriptHashBalance> {
