@@ -226,7 +226,7 @@ class BitcoinApi implements AbstractBitcoinApi {
       };
     });
 
-    if (transaction.confirmations) {
+    if (transaction.blockhash) {
       esploraTransaction.status = {
         confirmed: true,
         block_height: blocks.getCurrentBlockHeight() - transaction.confirmations + 1,
