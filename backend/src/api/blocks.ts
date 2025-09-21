@@ -97,9 +97,7 @@ class Blocks {
           logger.debug(`Indexing tx ${i + 1} of ${txIds.length} in block #${blockHeight}`);
         }
         try {
-          // For coinbase transactions (first tx in block), always use core RPC
-          const isCoinbase = i === 0;
-          const tx = await transactionUtils.$getTransactionExtended(txIds[i], false, false, isCoinbase);
+          const tx = await transactionUtils.$getTransactionExtended(txIds[i]);
           transactions.push(tx);
           transactionsFetched++;
         } catch (e) {

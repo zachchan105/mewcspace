@@ -24,7 +24,7 @@ class BitcoinApi implements AbstractBitcoinApi {
       nonce: block.nonce,
       difficulty: block.difficulty,
       merkle_root: block.merkleroot,
-      tx_count: block.nTx || (block.tx ? block.tx.length : 0),
+      tx_count: block.nTx,
       size: block.size,
       weight: block.weight,
       previousblockhash: block.previousblockhash,
@@ -45,10 +45,6 @@ class BitcoinApi implements AbstractBitcoinApi {
         if (skipConversion) {
           transaction.vout.forEach((vout) => {
             vout.value = Math.round(vout.value * 100000000);
-            // Extract addresses from raw RPC response for pool matching
-            if (vout.scriptPubKey && vout.scriptPubKey.addresses && vout.scriptPubKey.addresses.length > 0) {
-              vout.scriptPubKey.address = vout.scriptPubKey.addresses[0];
-            }
           });
           return transaction;
         }

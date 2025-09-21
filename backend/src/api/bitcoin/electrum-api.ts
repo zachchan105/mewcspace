@@ -176,17 +176,8 @@ class BitcoindElectrsApi extends BitcoinApi implements AbstractBitcoinApi {
       const endIndex = Math.min(startingIndex + 10, history.length);
 
       for (let i = startingIndex; i < endIndex; i++) {
-        try {
-          const tx = await this.$getRawTransaction(history[i].tx_hash, false, true);
-          transactions.push(tx);
-        } catch (e: any) {
-          // Skip transactions that fail with "Transaction not in mempool" error
-          if (e.message && e.message.includes('Transaction not in mempool')) {
-            logger.debug(`Skipping transaction ${history[i].tx_hash} - not in mempool (confirmed transaction)`);
-            continue;
-          }
-          throw e; // Re-throw other errors
-        }
+        const tx = await this.$getRawTransaction(history[i].tx_hash, false, true);
+        transactions.push(tx);
         loadingIndicators.setProgress('address-' + address, (i + 1) / endIndex * 100);
       }
 
