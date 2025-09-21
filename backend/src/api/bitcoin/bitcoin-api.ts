@@ -34,10 +34,12 @@ class BitcoinApi implements AbstractBitcoinApi {
 
 
   $getRawTransaction(txId: string, skipConversion = false, addPrevout = false, lazyPrevouts = false): Promise<IEsploraApi.Transaction> {
-    // If the transaction is in the mempool we already converted and fetched the fee. Only prevouts are missing
-    const txInMempool = mempool.getMempool()[txId];
-    if (txInMempool && addPrevout) {
-      return this.$addPrevouts(txInMempool);
+    // Only check mempool for unconfirmed transactions (when addPrevout is true)
+    if (addPrevout) {
+      const txInMempool = mempool.getMempool()[txId];
+      if (txInMempool) {
+        return this.$addPrevouts(txInMempool);
+      }
     }
 
     return this.bitcoindClient.getRawTransaction(txId, true)
