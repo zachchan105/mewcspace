@@ -1,0 +1,11 @@
+<div class="halving-card" *ngIf="halvingInfo$ | async as halvingInfo">
+  <div class="halving-content">
+    <fa-icon [icon]="['fas', 'clock']" [fixedWidth]="true"></fa-icon>
+    <span i18n="difficulty-box.next-halving">Next Halving</span>
+    <span class="halving-separator">:</span>
+    <span class="blocks-count">{{ halvingInfo.blocksUntilHalving | number }}</span>
+    <span class="blocks-label" i18n="shared.blocks">blocks</span>
+    <span class="halving-separator">•</span>
+    <app-time kind="until" [time]="halvingInfo.timeUntilHalving" [fastRender]="true" [precision]="1"></app-time>
+  </div>
+</div>

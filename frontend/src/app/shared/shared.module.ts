@@ -60,6 +60,7 @@ import { DifficultyComponent } from '../components/difficulty/difficulty.compone
 import { DifficultyTooltipComponent } from '../components/difficulty/difficulty-tooltip.component';
 import { DifficultyMiningComponent } from '../components/difficulty-mining/difficulty-mining.component';
 import { DualDifficultyMiningComponent } from '../components/dual-difficulty-mining/dual-difficulty-mining.component';
+import { HalvingInfoComponent } from '../components/halving-info/halving-info.component';
 import { HashrateChartComponent } from '../components/hashrate-chart/hashrate-chart.component';
 import { PowCardComponent } from '../components/pow-card/pow-card.component';
 import { TermsOfServiceComponent } from '../components/terms-of-service/terms-of-service.component';
@@ -149,6 +150,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     DifficultyComponent,
     DifficultyMiningComponent,
     DualDifficultyMiningComponent,
+    HalvingInfoComponent,
     HashrateChartComponent,
     PowCardComponent,
     DifficultyTooltipComponent,
@@ -271,6 +273,7 @@ import { ClockMempoolComponent } from '../components/clock/clock-mempool.compone
     DifficultyComponent,
     DifficultyMiningComponent,
     DualDifficultyMiningComponent,
+    HalvingInfoComponent,
     HashrateChartComponent,
     PowCardComponent,
     DifficultyTooltipComponent,

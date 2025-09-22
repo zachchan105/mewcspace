@@ -1,0 +1,55 @@
+.halving-card {
+  --bg: #1f2937;
+  --muted: #a0a0a0;
+  --txt: #fff;
+  --accent: #bb8400;
+  
+  background: var(--bg);
+  color: var(--txt);
+  border-radius: 0.25rem;
+  padding: 12px 14px;
+  margin-top: 8px;
+  transition: opacity 0.25s ease, filter 0.25s ease;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.halving-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  
+  fa-icon {
+    color: var(--accent);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+}
+
+.halving-separator {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.blocks-count {
+  font-weight: 600;
+  color: var(--txt);
+}
+
+.blocks-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 576px) {
+  .halving-card {
+    padding: 10px 12px;
+  }
+  
+  .halving-content {
+    font-size: 0.8rem;
+    gap: 6px;
+  }
+}
