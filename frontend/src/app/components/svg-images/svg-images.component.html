@@ -74,13 +74,15 @@
 
 <ng-template #bitcoinLogo let-color let-width="width" let-height="height" let-viewBox="viewBox">
   <svg [attr.width]="width" [attr.height]="height" [attr.viewBox]="viewBox" version="1.1"
-   xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-      <path [attr.fill]="color"
-        d="M19.7006797,12.4191226 C18.3649124,17.7762557 12.9383969,21.0365352 7.58001375,19.7006112 C2.22381828,18.3649998 -1.0368415,12.9388048 0.29955083,7.5819842 C1.63469303,2.22422608 7.06120849,-1.03636583 12.418029,0.299245611 C17.7760997,1.63485706 21.0364469,7.06167698 19.7006797,12.4191226 Z" id="Path"></path>
-      <polyline id="Path" fill="#FFFFFF" points="9.41323649 13.0799891 10.0653789 10.597377 11.6093457 10.0270988 11.9933858 8.56807713 11.9802735 8.53188367 10.4604578 9.09322136 11.5554935 4.92462312 8.44993439 4.92462312 7.01788014 10.36474 5.82221457 10.8063372 5.42713568 12.3104928 6.62188644 11.8692656 5.77787645 15.0753769 14.0430024 15.0753769 14.5728643 13.0799891 9.41323649 13.0799891"></polyline>
-    </g>
-  </svg>
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <g id="Placeholder" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+   <!-- Simple circular placeholder -->
+   <circle cx="12" cy="12" r="12" [attr.fill]="color"></circle>
+   <!-- Optional inner mark to show it's a placeholder -->
+   <text x="12" y="16" text-anchor="middle" font-size="10" fill="#FFFFFF">M</text>
+ </g>
+</svg>
+
 </ng-template>
 
 <ng-template #liquidLogo let-width="width" let-height="height" let-viewBox="viewBox" let-color1="color1"
